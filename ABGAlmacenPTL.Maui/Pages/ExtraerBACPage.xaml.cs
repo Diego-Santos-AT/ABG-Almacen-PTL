@@ -163,6 +163,12 @@ namespace ABGAlmacenPTL.Maui.Pages
         /// </summary>
         private async Task<bool> fValidarUbicacion(string stUbicacion, bool blMensaje = true)
         {
+            // Validación de longitud mínima para evitar excepciones
+            if (string.IsNullOrEmpty(stUbicacion) || stUbicacion.Length < 12)
+            {
+                return false;
+            }
+
             // VB6: iALF = 2
             // VB6: iALM = Val(Mid(stUbicacion, 1, 3))
             // VB6: iBLO = Val(Mid(stUbicacion, 4, 3))

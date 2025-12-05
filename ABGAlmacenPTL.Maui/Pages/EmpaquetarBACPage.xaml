@@ -46,7 +46,7 @@
 
                 <!-- Label8 - Instrucción -->
                 <Label x:Name="Label8" 
-                       Text="Leer BAC de PTL"
+                       Text="Leer BAC para Empaquetar"
                        FontSize="9"
                        HorizontalTextAlignment="Center"
                        BackgroundColor="{StaticResource ColorBlanco}"/>

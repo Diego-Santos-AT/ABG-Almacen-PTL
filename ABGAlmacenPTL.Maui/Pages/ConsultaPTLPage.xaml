@@ -27,7 +27,7 @@
                        Style="{StaticResource TituloStyle}"/>
 
                 <!-- Label8 - Instrucción -->
-                <Label Text="Leer BAC, CAJA o Artículo"
+                <Label Text="Leer BAC, CAJA (SSCC) o Art."
                        FontSize="10"
                        HorizontalTextAlignment="Center"
                        TextColor="White"/>
