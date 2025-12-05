@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- ***********************************************************************
+     Nombre: AppShell.xaml
+     Shell de la aplicación - Conversión fiel de VB6
+     
+     Creación:      Conversión de VB6 a .NET MAUI
+     Basado en:     frmMain (MDIForm) de VB6
+     *********************************************************************** -->
+<Shell
+    x:Class="ABGAlmacenPTL.Maui.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:ABGAlmacenPTL.Maui.Pages"
+    Shell.FlyoutBehavior="Flyout"
+    Title="PTL ALM">
+
+    <Shell.FlyoutHeader>
+        <Grid BackgroundColor="{StaticResource Primary}" HeightRequest="100">
+            <Label 
+                Text="ABG Almacén PTL"
+                TextColor="White"
+                FontSize="24"
+                FontAttributes="Bold"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"/>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <!-- Menú Principal - Equivalente a frmMenu -->
+    <FlyoutItem Title="Menú Principal" Icon="menu.png">
+        <ShellContent 
+            Title="Menú Principal"
+            ContentTemplate="{DataTemplate pages:MenuPage}"
+            Route="MenuPage" />
+    </FlyoutItem>
+
+    <!-- Formularios PTL -->
+    <FlyoutItem Title="Consultas PTL" Icon="search.png">
+        <ShellContent 
+            Title="Consultas PTL"
+            ContentTemplate="{DataTemplate pages:ConsultaPTLPage}"
+            Route="ConsultaPTLPage" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Extraer BAC" Icon="extract.png">
+        <ShellContent 
+            Title="Extraer BAC"
+            ContentTemplate="{DataTemplate pages:ExtraerBACPage}"
+            Route="ExtraerBACPage" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Ubicar BAC" Icon="location.png">
+        <ShellContent 
+            Title="Ubicar BAC"
+            ContentTemplate="{DataTemplate pages:UbicarBACPage}"
+            Route="UbicarBACPage" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Repartir Artículo" Icon="distribute.png">
+        <ShellContent 
+            Title="Repartir Artículo"
+            ContentTemplate="{DataTemplate pages:RepartirArticuloPage}"
+            Route="RepartirArticuloPage" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Empaquetar BAC" Icon="package.png">
+        <ShellContent 
+            Title="Empaquetar BAC"
+            ContentTemplate="{DataTemplate pages:EmpaquetarBACPage}"
+            Route="EmpaquetarBACPage" />
+    </FlyoutItem>
+
+</Shell>

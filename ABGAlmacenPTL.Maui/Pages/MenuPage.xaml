@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- ***********************************************************************
+     Nombre: MenuPage.xaml
+     Menú Principal - Conversión fiel de VB6
+     
+     Creación:      Conversión de VB6 a .NET MAUI
+     Basado en:     frmMenu.frm de VB6
+     *********************************************************************** -->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ABGAlmacenPTL.Maui.Pages.MenuPage"
+             Title="Menú Principal"
+             BackgroundColor="{StaticResource ColorFondoPrincipal}">
+
+    <Grid Padding="20">
+        <VerticalStackLayout Spacing="15" VerticalOptions="Center">
+            
+            <!-- Título -->
+            <Label Text="MENÚ PRINCIPAL" 
+                   Style="{StaticResource TituloStyle}"
+                   FontSize="24"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,20"/>
+
+            <!-- Botones de menú -->
+            <Button Text="Consultas PTL" 
+                    Style="{StaticResource BotonAccionStyle}"
+                    Clicked="OnConsultasPTLClicked"/>
+
+            <Button Text="Extraer BAC" 
+                    Style="{StaticResource BotonAccionStyle}"
+                    Clicked="OnExtraerBACClicked"/>
+
+            <Button Text="Ubicar BAC" 
+                    Style="{StaticResource BotonAccionStyle}"
+                    Clicked="OnUbicarBACClicked"/>
+
+            <Button Text="Repartir Artículo" 
+                    Style="{StaticResource BotonAccionStyle}"
+                    Clicked="OnRepartirArticuloClicked"/>
+
+            <Button Text="Empaquetar BAC" 
+                    Style="{StaticResource BotonAccionStyle}"
+                    Clicked="OnEmpaquetarBACClicked"/>
+
+            <BoxView HeightRequest="20" Color="Transparent"/>
+
+            <Button Text="SALIR" 
+                    Style="{StaticResource BotonSalirStyle}"
+                    Clicked="OnSalirClicked"/>
+
+        </VerticalStackLayout>
+    </Grid>
+
+</ContentPage>

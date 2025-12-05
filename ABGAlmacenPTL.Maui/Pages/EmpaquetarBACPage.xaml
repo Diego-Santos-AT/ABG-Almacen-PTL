@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- ***********************************************************************
+     Nombre: EmpaquetarBACPage.xaml
+     Formulario para el empaquetado de BACs en CAJAs de PTL
+     
+     Creación:      Conversión de VB6 a .NET MAUI
+     Basado en:     frmEmpaquetarBAC.frm de VB6 - línea por línea
+     
+     Realización:   A.Esteban (VB6) - 02/09/20
+     *********************************************************************** -->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ABGAlmacenPTL.Maui.Pages.EmpaquetarBACPage"
+             Title="EMPAQUETAR BAC"
+             BackgroundColor="{StaticResource ColorFondoFrame}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="10" Padding="10">
+
+            <!-- FrameLectura -->
+            <Frame Style="{StaticResource FrameContenedorStyle}">
+                <VerticalStackLayout Spacing="10">
+                    
+                    <!-- lbTexto - Título -->
+                    <Label x:Name="lbTexto" 
+                           Text="EMPAQUETAR BAC" 
+                           Style="{StaticResource TituloStyle}"/>
+
+                    <!-- Fila: txtLecturaCodigo + cmdSalir -->
+                    <Grid ColumnDefinitions="3*,*">
+                        <Entry x:Name="txtLecturaCodigo" 
+                               Style="{StaticResource EntradaCodigoStyle}"
+                               Placeholder="Leer BAC"
+                               MaxLength="36"
+                               Completed="TxtLecturaCodigo_Completed"
+                               Focused="TxtLecturaCodigo_Focused"
+                               Unfocused="TxtLecturaCodigo_Unfocused"/>
+                        
+                        <Button x:Name="cmdSalir" 
+                                Text="SALIR"
+                                Style="{StaticResource BotonSalirStyle}"
+                                Grid.Column="1"
+                                Clicked="CmdSalir_Clicked"/>
+                    </Grid>
+
+                    <!-- Label8 - Instrucción -->
+                    <Label x:Name="Label8" 
+                           Text="Leer BAC de PTL para Empaquetar"
+                           HorizontalTextAlignment="Center"
+                           BackgroundColor="{StaticResource ColorBlanco}"/>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- fraOpciones - Opciones de empaquetado -->
+            <Frame x:Name="fraOpciones" Style="{StaticResource FrameDatosStyle}">
+                <VerticalStackLayout Spacing="5">
+                    
+                    <Label x:Name="lbOpciones" 
+                           Text="OPCIONES" 
+                           FontAttributes="Bold" 
+                           BackgroundColor="{StaticResource ColorFondoFrame}"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"/>
+
+                    <!-- Opciones CheckBox -->
+                    <Grid ColumnDefinitions="*,*">
+                        <VerticalStackLayout Grid.Column="0">
+                            <HorizontalStackLayout>
+                                <CheckBox x:Name="chkCerrarBAC" IsChecked="True"/>
+                                <Label Text="Cerrar BAC" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout>
+                                <CheckBox x:Name="chkExtraerBAC" IsChecked="True"/>
+                                <Label Text="Extraer BAC" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout>
+                                <CheckBox x:Name="chkCrearCAJA" IsChecked="True"/>
+                                <Label Text="Crear CAJA" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                        
+                        <VerticalStackLayout Grid.Column="1">
+                            <HorizontalStackLayout>
+                                <CheckBox x:Name="chkImprimirCAJA" IsChecked="True"/>
+                                <Label Text="Imprimir CAJA" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout>
+                                <CheckBox x:Name="chkRelContenido" IsChecked="False"/>
+                                <Label Text="Rel. Contenido" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout>
+                                <CheckBox x:Name="chkEmpaquetado" IsChecked="False"/>
+                                <Label Text="Empaquetado" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- fraAcciones - Botones de acción -->
+            <Frame x:Name="fraAcciones" Style="{StaticResource FrameDatosStyle}" IsVisible="False">
+                <VerticalStackLayout Spacing="5">
+                    
+                    <Label x:Name="lbAcciones" 
+                           Text="ACCIONES" 
+                           FontAttributes="Bold" 
+                           BackgroundColor="{StaticResource ColorFondoFrame}"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"/>
+
+                    <!-- Botones de acción -->
+                    <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto,Auto">
+                        <Button x:Name="cmdCerrarBAC" Text="Cerrar BAC" 
+                                Grid.Row="0" Grid.Column="0"
+                                Style="{StaticResource BotonAccionStyle}"
+                                Clicked="CmdCerrarBAC_Clicked"/>
+                        <Button x:Name="cmdExtraerBAC" Text="Extraer BAC" 
+                                Grid.Row="0" Grid.Column="1"
+                                Style="{StaticResource BotonAccionStyle}"
+                                Clicked="CmdExtraerBAC_Clicked"/>
+                        <Button x:Name="cmdCrearCAJA" Text="Crear CAJA" 
+                                Grid.Row="0" Grid.Column="2"
+                                Style="{StaticResource BotonAccionStyle}"
+                                Clicked="CmdCrearCAJA_Clicked"/>
+                        
+                        <Button x:Name="cmdImprimirCAJA" Text="Imprimir" 
+                                Grid.Row="1" Grid.Column="0"
+                                Style="{StaticResource BotonAccionStyle}"
+                                Clicked="CmdImprimirCAJA_Clicked"/>
+                        <Button x:Name="cmdRelContenido" Text="Rel. Contenido" 
+                                Grid.Row="1" Grid.Column="1"
+                                Style="{StaticResource BotonAccionStyle}"
+                                Clicked="CmdRelContenido_Clicked"/>
+                        <Button x:Name="cmdEmpaquetado" Text="Empaquetado" 
+                                Grid.Row="1" Grid.Column="2"
+                                Style="{StaticResource BotonAccionStyle}"
+                                Clicked="CmdEmpaquetado_Clicked"/>
+                        
+                        <Button x:Name="cmdCambiarCAJA" Text="Cambiar CAJA" 
+                                Grid.Row="2" Grid.Column="0"
+                                Style="{StaticResource BotonAccionStyle}"
+                                Clicked="CmdCambiarCAJA_Clicked"/>
+                        <Button x:Name="cmdCambiarUDS" Text="Cambiar UDS" 
+                                Grid.Row="2" Grid.Column="1"
+                                Style="{StaticResource BotonAccionStyle}"
+                                Clicked="CmdCambiarUDS_Clicked"/>
+                        <Button x:Name="cmdCombinarCAJAS" Text="Combinar" 
+                                Grid.Row="2" Grid.Column="2"
+                                Style="{StaticResource BotonAccionStyle}"
+                                Clicked="CmdCombinarCAJAS_Clicked"/>
+                    </Grid>
+
+                    <!-- Botón Volver -->
+                    <Button x:Name="cmdVolver" Text="VOLVER" 
+                            Style="{StaticResource BotonSalirStyle}"
+                            Clicked="CmdVolver_Clicked"/>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- fraBAC - Datos del BAC -->
+            <Frame x:Name="fraBAC" Style="{StaticResource FrameDatosStyle}">
+                <VerticalStackLayout Spacing="5">
+                    
+                    <Label Text="DATOS BAC" 
+                           FontAttributes="Bold" 
+                           BackgroundColor="{StaticResource ColorFondoFrame}"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"/>
+                    
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                          ColumnDefinitions="Auto,*,Auto,*">
+
+                        <!-- BAC + Estado -->
+                        <Label Text="BAC" Grid.Row="0" Grid.Column="0"/>
+                        <Label x:Name="lbBAC" 
+                               Style="{StaticResource ValorGrandeStyle}"
+                               Grid.Row="0" Grid.Column="1"/>
+                        <Label x:Name="lbEstadoBAC" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"/>
+
+                        <!-- Grupo + Tablilla -->
+                        <Label Text="Grupo" Grid.Row="1" Grid.Column="0"/>
+                        <Label x:Name="lbGrupo" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="1" Grid.Column="1"/>
+                        <Label Text="Tablilla" Grid.Row="1" Grid.Column="2"/>
+                        <Label x:Name="lbTablilla" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="1" Grid.Column="3"/>
+
+                        <!-- Peso + Volumen -->
+                        <Label Text="Peso" Grid.Row="2" Grid.Column="0"/>
+                        <Label x:Name="lbPeso" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="2" Grid.Column="1"/>
+                        <Label Text="Volumen" Grid.Row="2" Grid.Column="2"/>
+                        <Label x:Name="lbVolumen" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="2" Grid.Column="3"/>
+
+                        <!-- Tipo Caja -->
+                        <Label Text="Tipo Caja" Grid.Row="3" Grid.Column="0"/>
+                        <Label x:Name="lbTipoCaja" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"/>
+
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- fraCAJA - Datos de la CAJA -->
+            <Frame x:Name="fraCAJA" Style="{StaticResource FrameDatosStyle}" IsVisible="False">
+                <VerticalStackLayout Spacing="5">
+                    
+                    <Label Text="DATOS CAJA" 
+                           FontAttributes="Bold" 
+                           BackgroundColor="{StaticResource ColorFondoFrame}"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"/>
+                    
+                    <Grid RowDefinitions="Auto,Auto,Auto"
+                          ColumnDefinitions="Auto,*,Auto,*">
+
+                        <!-- SSCC -->
+                        <Label Text="SSCC" Grid.Row="0" Grid.Column="0"/>
+                        <Label x:Name="lbSSCC" 
+                               Style="{StaticResource ValorGrandeStyle}"
+                               Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"/>
+
+                        <!-- Peso + Volumen -->
+                        <Label Text="Peso" Grid.Row="1" Grid.Column="0"/>
+                        <Label x:Name="lbPesoCAJA" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="1" Grid.Column="1"/>
+                        <Label Text="Volumen" Grid.Row="1" Grid.Column="2"/>
+                        <Label x:Name="lbVolumenCAJA" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="1" Grid.Column="3"/>
+
+                        <!-- Tipo -->
+                        <Label Text="Tipo" Grid.Row="2" Grid.Column="0"/>
+                        <Label x:Name="lbTipoCAJA" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"/>
+
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Lista de contenido -->
+            <Frame x:Name="fraLista" Style="{StaticResource FrameDatosStyle}" IsVisible="False">
+                <VerticalStackLayout Spacing="5">
+                    
+                    <Label x:Name="lbTituloLista" 
+                           Text="CONTENIDO BAC" 
+                           FontAttributes="Bold" 
+                           BackgroundColor="{StaticResource ColorFondoFrame}"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"/>
+                    
+                    <CollectionView x:Name="lstContenido" 
+                                    SelectionMode="Single"
+                                    HeightRequest="150"
+                                    SelectionChanged="LstContenido_SelectionChanged">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="5" ColumnDefinitions="Auto,*,Auto">
+                                    <Label Text="{Binding Articulo}" Grid.Column="0"/>
+                                    <Label Text="{Binding Nombre}" Grid.Column="1"/>
+                                    <Label Text="{Binding Cantidad}" Grid.Column="2"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Tipos de caja -->
+            <Frame x:Name="fraTiposCaja" Style="{StaticResource FrameDatosStyle}" IsVisible="False">
+                <VerticalStackLayout Spacing="5">
+                    
+                    <Label Text="TIPOS DE CAJA" 
+                           FontAttributes="Bold" 
+                           BackgroundColor="{StaticResource ColorFondoFrame}"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"/>
+                    
+                    <Picker x:Name="cmbTiposCaja" 
+                            Style="{StaticResource ComboStyle}"
+                            SelectedIndexChanged="CmbTiposCaja_SelectedIndexChanged"/>
+                    
+                    <Button x:Name="cmdAplicarTipoCaja" Text="APLICAR TIPO" 
+                            Style="{StaticResource BotonAccionStyle}"
+                            Clicked="CmdAplicarTipoCaja_Clicked"/>
+
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

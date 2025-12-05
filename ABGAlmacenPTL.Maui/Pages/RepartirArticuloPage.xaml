@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- ***********************************************************************
+     Nombre: RepartirArticuloPage.xaml
+     Formulario para el reparto de Artículos en BACs casilleros de PTL
+     
+     Creación:      Conversión de VB6 a .NET MAUI
+     Basado en:     frmRepartirArticulo.frm de VB6 - línea por línea
+     
+     Realización:   A.Esteban (VB6) - 02/09/20
+     *********************************************************************** -->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ABGAlmacenPTL.Maui.Pages.RepartirArticuloPage"
+             Title="REPARTIR ARTICULO"
+             BackgroundColor="{StaticResource ColorFondoFrame}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="10" Padding="10">
+
+            <!-- FrameLectura -->
+            <Frame Style="{StaticResource FrameContenedorStyle}">
+                <VerticalStackLayout Spacing="10">
+                    
+                    <!-- lbTexto - Título -->
+                    <Label Text="REPARTIR ARTICULO" 
+                           Style="{StaticResource TituloStyle}"/>
+
+                    <!-- Label8 - Instrucción -->
+                    <Label Text="Leer o teclear Artículo"
+                           HorizontalTextAlignment="Center"
+                           TextColor="White"/>
+
+                    <!-- txtLecturaCodigo - Entrada de código -->
+                    <Entry x:Name="txtLecturaCodigo" 
+                           Style="{StaticResource EntradaCodigoStyle}"
+                           Placeholder="Código de artículo"
+                           MaxLength="36"
+                           Completed="TxtLecturaCodigo_Completed"
+                           Focused="TxtLecturaCodigo_Focused"
+                           Unfocused="TxtLecturaCodigo_Unfocused"/>
+
+                    <!-- Label4 + Combo1 + pColor -->
+                    <Grid ColumnDefinitions="Auto,*,50">
+                        <Label Text="Puesto" 
+                               VerticalOptions="Center"/>
+                        
+                        <Picker x:Name="Combo1" 
+                                Style="{StaticResource ComboStyle}"
+                                Grid.Column="1"
+                                SelectedIndexChanged="Combo1_SelectedIndexChanged"/>
+                        
+                        <!-- pColor - Indicador de color -->
+                        <BoxView x:Name="pColor" 
+                                 Color="#808080"
+                                 Grid.Column="2"
+                                 HeightRequest="30"
+                                 WidthRequest="50"
+                                 VerticalOptions="Center"/>
+                    </Grid>
+
+                    <!-- Datos del artículo -->
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                          ColumnDefinitions="Auto,*">
+
+                        <!-- Código -->
+                        <Label Text="Código" Grid.Row="0" Grid.Column="0"/>
+                        <Label x:Name="lbArticulo" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="0" Grid.Column="1"/>
+
+                        <!-- Nombre -->
+                        <Label x:Name="lbNombreArticulo" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                               HeightRequest="60"
+                               LineBreakMode="WordWrap"/>
+
+                        <!-- EAN13 -->
+                        <Label Text="EAN13" Grid.Row="2" Grid.Column="0"/>
+                        <Label x:Name="lbEAN13" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="2" Grid.Column="1"/>
+
+                        <!-- STD -->
+                        <Label Text="STD" Grid.Row="3" Grid.Column="0"/>
+                        <Label x:Name="lbSTD" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="3" Grid.Column="1"/>
+
+                        <!-- Peso + Volumen -->
+                        <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                              ColumnDefinitions="Auto,*,Auto,*">
+                            <Label Text="Peso" Grid.Column="0"/>
+                            <Label x:Name="lbPeso" 
+                                   Style="{StaticResource ValorStyle}"
+                                   Grid.Column="1"/>
+                            <Label Text="Volumen" Grid.Column="2"/>
+                            <Label x:Name="lbVolumen" 
+                                   Style="{StaticResource ValorStyle}"
+                                   Grid.Column="3"/>
+                        </Grid>
+
+                    </Grid>
+
+                    <!-- cmdAccion(990) - SALIR -->
+                    <Button x:Name="cmdSalir" 
+                            Text="SALIR"
+                            Style="{StaticResource BotonSalirStyle}"
+                            Clicked="CmdSalir_Clicked"/>
+
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- ***********************************************************************
+     Nombre: Styles.xaml
+     Estilos de la aplicación - Conversión fiel de VB6
+     
+     Creación:      Conversión de VB6 a .NET MAUI
+     Basado en:     Estilos de los formularios VB6
+     *********************************************************************** -->
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Estilo para títulos (equivalente a lbTexto en VB6) -->
+    <!-- VB6: Font MS Sans Serif 12pt Bold, ForeColor White, BackColor Gray -->
+    <Style x:Key="TituloStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource ColorTextoEncabezado}"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorFondoFrame}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="5"/>
+    </Style>
+
+    <!-- Estilo para etiquetas normales -->
+    <Style x:Key="EtiquetaStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Estilo para valores (Labels con fondo blanco como en VB6) -->
+    <!-- VB6: BackColor = &H00FFFFFF&, Alignment = Center -->
+    <Style x:Key="ValorStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorBlanco}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="5"/>
+    </Style>
+
+    <!-- Estilo para valores grandes (como lbBAC con Font Bold) -->
+    <Style x:Key="ValorGrandeStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorBlanco}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="5"/>
+    </Style>
+
+    <!-- Estilo para entrada de texto (txtLecturaCodigo) -->
+    <!-- VB6: Font Arial 14.25pt, Appearance Flat, MaxLength 36 -->
+    <Style x:Key="EntradaCodigoStyle" TargetType="Entry">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorBlanco}"/>
+        <Setter Property="MaxLength" Value="36"/>
+        <Setter Property="Keyboard" Value="Default"/>
+    </Style>
+
+    <!-- Estilo para botones de acción -->
+    <!-- VB6: CommandButton -->
+    <Style x:Key="BotonAccionStyle" TargetType="Button">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="Margin" Value="5"/>
+    </Style>
+
+    <!-- Estilo para botón Salir -->
+    <Style x:Key="BotonSalirStyle" TargetType="Button">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="BackgroundColor" Value="#C0C0C0"/>
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="Margin" Value="5"/>
+    </Style>
+
+    <!-- Estilo para Frame contenedor (FrameLectura, fraArticulo) -->
+    <Style x:Key="FrameContenedorStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorFondoFrame}"/>
+        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="Padding" Value="10"/>
+        <Setter Property="HasShadow" Value="False"/>
+    </Style>
+
+    <!-- Estilo para Frame de datos (fraArticulo) -->
+    <Style x:Key="FrameDatosStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorFondoArticulo}"/>
+        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="Padding" Value="10"/>
+        <Setter Property="HasShadow" Value="False"/>
+    </Style>
+
+    <!-- Estilo para CheckBox (opciones) -->
+    <Style x:Key="OpcionCheckStyle" TargetType="CheckBox">
+        <Setter Property="Color" Value="{StaticResource Primary}"/>
+    </Style>
+
+    <!-- Estilo para Picker (ComboBox) -->
+    <Style x:Key="ComboStyle" TargetType="Picker">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorBlanco}"/>
+    </Style>
+
+    <!-- Estilo para CollectionView (equivalente a UltraGrid) -->
+    <Style x:Key="ListaArticulosStyle" TargetType="CollectionView">
+        <Setter Property="BackgroundColor" Value="#FFDCCE"/>
+    </Style>
+
+    <!-- Estilo implícito para ActivityIndicator -->
+    <Style TargetType="ActivityIndicator">
+        <Setter Property="Color" Value="{StaticResource Primary}"/>
+    </Style>
+
+    <!-- Estilo implícito para Button -->
+    <Style TargetType="Button">
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Padding" Value="10,5"/>
+    </Style>
+
+    <!-- Estilo implícito para Entry -->
+    <Style TargetType="Entry">
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="BackgroundColor" Value="White"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <!-- Estilo implícito para Label -->
+    <Style TargetType="Label">
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+</ResourceDictionary>
