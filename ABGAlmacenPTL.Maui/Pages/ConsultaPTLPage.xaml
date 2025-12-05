@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- ***********************************************************************
+     Nombre: ConsultaPTLPage.xaml
+     Formulario para consulta de BACs, Cajas y Artículos de PTL
+     
+     Creación:      Conversión de VB6 a .NET MAUI
+     Basado en:     frmConsultaPTL.frm de VB6 - línea por línea
+     
+     Realización:   A.Esteban (VB6) - 02/09/20
+     *********************************************************************** -->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ABGAlmacenPTL.Maui.Pages.ConsultaPTLPage"
+             Title="CONSULTAS PTL"
+             BackgroundColor="{StaticResource ColorFondoFrame}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="10" Padding="10">
+
+            <!-- FrameLectura -->
+            <Frame Style="{StaticResource FrameContenedorStyle}">
+                <VerticalStackLayout Spacing="10">
+                    
+                    <!-- lbTexto - Título -->
+                    <Label Text="CONSULTAS PTL" 
+                           Style="{StaticResource TituloStyle}"/>
+
+                    <!-- Label8 - Instrucción -->
+                    <Label Text="Leer BAC, CAJA (SSCC) o Artículo"
+                           HorizontalTextAlignment="Center"
+                           TextColor="White"/>
+
+                    <!-- Fila: txtLecturaCodigo + cmdAccion(990) SALIR -->
+                    <Grid ColumnDefinitions="3*,*">
+                        <Entry x:Name="txtLecturaCodigo" 
+                               Style="{StaticResource EntradaCodigoStyle}"
+                               Placeholder="Leer código"
+                               MaxLength="36"
+                               Completed="TxtLecturaCodigo_Completed"
+                               Focused="TxtLecturaCodigo_Focused"
+                               Unfocused="TxtLecturaCodigo_Unfocused"/>
+                        
+                        <Button x:Name="cmdSalir" 
+                                Text="SALIR"
+                                Style="{StaticResource BotonSalirStyle}"
+                                Grid.Column="1"
+                                Clicked="CmdSalir_Clicked"/>
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- fraBAC - Datos del BAC -->
+            <Frame x:Name="fraBAC" Style="{StaticResource FrameDatosStyle}">
+                <VerticalStackLayout Spacing="5">
+                    
+                    <Label Text="DATOS BAC" 
+                           FontAttributes="Bold" 
+                           BackgroundColor="{StaticResource ColorFondoFrame}"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"/>
+                    
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                          ColumnDefinitions="Auto,*,Auto,*">
+
+                        <!-- Ubicación -->
+                        <Label Text="Ubicación" Grid.Row="0" Grid.Column="0"/>
+                        <Label x:Name="lbUbicacion" 
+                               Style="{StaticResource ValorGrandeStyle}"
+                               Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"/>
+
+                        <!-- BAC + Estado -->
+                        <Label Text="BAC" Grid.Row="1" Grid.Column="0"/>
+                        <Label x:Name="lbBAC" 
+                               Style="{StaticResource ValorGrandeStyle}"
+                               Grid.Row="1" Grid.Column="1"/>
+                        <Label x:Name="lbEstadoBAC" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"/>
+
+                        <!-- Grupo + Tablilla -->
+                        <Label Text="Grupo" Grid.Row="2" Grid.Column="0"/>
+                        <Label x:Name="lbGrupo" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="2" Grid.Column="1"/>
+                        <Label Text="Tablilla" Grid.Row="2" Grid.Column="2"/>
+                        <Label x:Name="lbTablilla" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="2" Grid.Column="3"/>
+
+                        <!-- Peso + Volumen -->
+                        <Label Text="Peso" Grid.Row="3" Grid.Column="0"/>
+                        <Label x:Name="lbPeso" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="3" Grid.Column="1"/>
+                        <Label Text="Volumen" Grid.Row="3" Grid.Column="2"/>
+                        <Label x:Name="lbVolumen" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="3" Grid.Column="3"/>
+
+                        <!-- Tipo Caja + Nombre -->
+                        <Label Text="Tipo Caja" Grid.Row="4" Grid.Column="0"/>
+                        <Label x:Name="lbTipoCaja" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="4" Grid.Column="1"/>
+                        <Label x:Name="lbNombreCaja" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2"/>
+
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- fraCAJA - Datos de la CAJA -->
+            <Frame x:Name="fraCAJA" Style="{StaticResource FrameDatosStyle}" IsVisible="False">
+                <VerticalStackLayout Spacing="5">
+                    
+                    <Label Text="DATOS CAJA" 
+                           FontAttributes="Bold" 
+                           BackgroundColor="{StaticResource ColorFondoFrame}"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"/>
+                    
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+                          ColumnDefinitions="Auto,*,Auto,*">
+
+                        <!-- SSCC -->
+                        <Label Text="SSCC" Grid.Row="0" Grid.Column="0"/>
+                        <Label x:Name="lbSSCC" 
+                               Style="{StaticResource ValorGrandeStyle}"
+                               Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"/>
+
+                        <!-- Grupo + Tablilla -->
+                        <Label Text="Grupo" Grid.Row="1" Grid.Column="0"/>
+                        <Label x:Name="lbGrupoCaja" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="1" Grid.Column="1"/>
+                        <Label Text="Tablilla" Grid.Row="1" Grid.Column="2"/>
+                        <Label x:Name="lbTablillaCaja" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="1" Grid.Column="3"/>
+
+                        <!-- Peso + Volumen -->
+                        <Label Text="Peso" Grid.Row="2" Grid.Column="0"/>
+                        <Label x:Name="lbPesoCaja" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="2" Grid.Column="1"/>
+                        <Label Text="Volumen" Grid.Row="2" Grid.Column="2"/>
+                        <Label x:Name="lbVolumenCaja" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="2" Grid.Column="3"/>
+
+                        <!-- Tipo -->
+                        <Label Text="Tipo" Grid.Row="3" Grid.Column="0"/>
+                        <Label x:Name="lbTipoCajaCaja" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"/>
+
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- fraArticulo - Datos del Artículo -->
+            <Frame x:Name="fraArticulo" Style="{StaticResource FrameDatosStyle}" IsVisible="False">
+                <VerticalStackLayout Spacing="5">
+                    
+                    <Label Text="DATOS ARTICULO" 
+                           FontAttributes="Bold" 
+                           BackgroundColor="{StaticResource ColorFondoFrame}"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"/>
+                    
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                          ColumnDefinitions="Auto,*">
+
+                        <!-- Código -->
+                        <Label Text="Código" Grid.Row="0" Grid.Column="0"/>
+                        <Label x:Name="lbArticulo" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="0" Grid.Column="1"/>
+
+                        <!-- Nombre -->
+                        <Label x:Name="lbNombreArticulo" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                               HeightRequest="60"
+                               LineBreakMode="WordWrap"/>
+
+                        <!-- EAN13 -->
+                        <Label Text="EAN13" Grid.Row="2" Grid.Column="0"/>
+                        <Label x:Name="lbEAN13" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="2" Grid.Column="1"/>
+
+                        <!-- STD -->
+                        <Label Text="STD" Grid.Row="3" Grid.Column="0"/>
+                        <Label x:Name="lbSTD" 
+                               Style="{StaticResource ValorStyle}"
+                               Grid.Row="3" Grid.Column="1"/>
+
+                        <!-- Peso + Volumen -->
+                        <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                              ColumnDefinitions="Auto,*,Auto,*">
+                            <Label Text="Peso" Grid.Column="0"/>
+                            <Label x:Name="lbPesoArt" 
+                                   Style="{StaticResource ValorStyle}"
+                                   Grid.Column="1"/>
+                            <Label Text="Volumen" Grid.Column="2"/>
+                            <Label x:Name="lbVolumenArt" 
+                                   Style="{StaticResource ValorStyle}"
+                                   Grid.Column="3"/>
+                        </Grid>
+
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

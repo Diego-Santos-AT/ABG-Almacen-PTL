@@ -1,0 +1,7 @@
+<!-- Placeholder SVG for splash screen -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <rect fill="#0060B0" width="128" height="128"/>
+  <text x="64" y="50" font-size="24" text-anchor="middle" fill="white">ABG</text>
+  <text x="64" y="75" font-size="20" text-anchor="middle" fill="white">Almacén</text>
+  <text x="64" y="100" font-size="20" text-anchor="middle" fill="white">PTL</text>
+</svg>
