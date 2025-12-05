@@ -28,6 +28,7 @@ namespace ABGAlmacenPTL.Maui.Pages
         private int tTablilla = 0;
         private string stSSCC = string.Empty;
         private int tEstadoBAC = 0;
+        private int tUbicacionBAC = 0;  // VB6: tUbicacionBAC
 
         // Lista de tipos de caja
         private List<TipoCaja> tiposCaja = new List<TipoCaja>();
@@ -200,43 +201,160 @@ namespace ABGAlmacenPTL.Maui.Pages
 
         /// <summary>
         /// fValidarBAC - Valida y carga datos del BAC
+        /// Equivalente a fValidarBAC de VB6 - frmEmpaquetarBAC.frm líneas 1778-1858
         /// </summary>
         private async Task<bool> fValidarBAC(string stBACInput, bool blMensaje = true)
         {
+            // VB6: fValidarBAC = False
+            bool bCalculoPeso = false;
+            bool bCalculoVolumen = false;
+
+            // VB6: If ed.rsDameDatosBACdePTL.State <> adStateClosed Then ed.rsDameDatosBACdePTL.Close
+            // VB6: ed.DameDatosBACdePTL stBAC
             var datos = await ed.DameDatosBACdePTL(stBACInput);
 
+            // VB6: With ed.rsDameDatosBACdePTL
+            // VB6:     'Existencia del registro
+            // VB6:     If .RecordCount > 0 Then
             if (datos != null)
             {
-                bool bCalculoPeso = datos.Unipes > datos.Unipma;
-                bool bCalculoVolumen = datos.Univol > datos.Univma;
+                // VB6: fValidarBAC = True
+                // VB6: bCalculoPeso = !unipes > !unipma
+                // VB6: bCalculoVolumen = !univol > !univma
+                bCalculoPeso = datos.Unipes > datos.Unipma;
+                bCalculoVolumen = datos.Univol > datos.Univma;
+                tEstadoBAC = datos.Uniest;
+                tUbicacionBAC = datos.Uninum;
 
-                RefrescarDatosBAC(false, stBACInput, datos.Uniest, datos.Unigru, datos.Unitab, 
-                    datos.Unipes, datos.Univol, datos.Tipdes ?? "", bCalculoPeso, bCalculoVolumen);
+                // VB6: 'Se muestran los datos
+                if (datos.Ubicod == null || datos.Ubicod == 0)
+                {
+                    // VB6: RefrescarDatos False, 0, 0, 0, 0, 0, !unicod, !uniest, !unigru, !unitab, !unipes, !univol, !unicaj, !tipdes, !uninca, bCalculoPeso, bCalculoVolumen
+                    RefrescarDatosBAC(false, datos.Unicod!, datos.Uniest, datos.Unigru, datos.Unitab,
+                        datos.Unipes, datos.Univol, datos.Tipdes ?? "", bCalculoPeso, bCalculoVolumen);
+                    lbUbicacion.Text = "SIN UBICACION";
+                }
+                else
+                {
+                    // VB6: RefrescarDatos False, !ubicod, !ubialm, !ubiblo, !ubifil, !ubialt, !unicod, !uniest, !unigru, !unitab, !unipes, !univol, !unicaj, !tipdes, !uninca, bCalculoPeso, bCalculoVolumen
+                    RefrescarDatosBAC(false, datos.Unicod!, datos.Uniest, datos.Unigru, datos.Unitab,
+                        datos.Unipes, datos.Univol, datos.Tipdes ?? "", bCalculoPeso, bCalculoVolumen);
+                    lbUbicacion.Text = GeneralFunctions.FormatearUbicacion(datos.Ubicod.Value, datos.Ubialm, datos.Ubiblo, datos.Ubifil, datos.Ubialt);
+                }
 
                 stBAC = stBACInput;
                 tGrupo = datos.Unigru;
                 tTablilla = datos.Unitab;
-                tEstadoBAC = datos.Uniest;
+                lbNumCaja.Text = datos.Uninca ?? "";
 
-                // Procesar según opciones
-                if (chkEmpaquetado.IsChecked)
+                // VB6: 'Lista de artículos contenidos en el BAC
+                // VB6: Call sRefrescarArticulosBAC(!unigru, !unicod)
+                await sRefrescarArticulosBAC(datos.Unigru, datos.Unicod!);
+
+                // VB6: 'Comprueba el estado del BAC
+                // VB6: If !uniest = 0 Then
+                if (datos.Uniest == 0)
                 {
-                    await ProcesarEmpaquetado();
+                    // VB6: If Check1(OPC_CerrarBAC).Value = 1 Then
+                    if (chkCerrarBAC.IsChecked)
+                    {
+                        // VB6: CerrarBAC
+                        await CerrarBAC();
+                    }
+                    else
+                    {
+                        // VB6: If blMensaje Then Call wsMensaje(" El BAC está abierto!!", vbCritical)
+                        if (blMensaje)
+                        {
+                            await MessageService.Instance.WsMensaje(" El BAC está abierto!!", 16);
+                        }
+                    }
+                }
+
+                // VB6: 'Comprueba si está ubicado el BAC
+                // VB6: If !uninum > 0 Then
+                if (datos.Uninum > 0)
+                {
+                    // VB6: If Check1(OPC_ExtraerBAC).Value = 1 Then
+                    if (chkExtraerBAC.IsChecked)
+                    {
+                        // VB6: ExtraerBAC
+                        await ExtraerBAC();
+                    }
+                    else
+                    {
+                        // VB6: If blMensaje Then Call wsMensaje(" El BAC está ubicado!!", vbCritical)
+                        if (blMensaje)
+                        {
+                            await MessageService.Instance.WsMensaje(" El BAC está ubicado!!", 16);
+                        }
+                    }
+                }
+
+                // VB6: 'Acciones de la lectura
+                // VB6: cmdAccion(CML_Acciones).Caption = ACC_Empaquetar
+                lbTexto.Text = Constants.ACC_Empaquetar;
+
+                // VB6: 'Obtener el SSCC de la caja si existe
+                if (!string.IsNullOrEmpty(datos.Uninca) && int.TryParse(datos.Uninca, out int numCaja) && numCaja > 0)
+                {
+                    // VB6: ed.DameCajaGrupoTablillaPTL sGrupo, sTablilla, CStr(sNumCaja)
+                    var datosCaja = await ed.DameCajaGrupoTablillaPTL(datos.Unigru, datos.Unitab, datos.Uninca);
+                    if (datosCaja != null)
+                    {
+                        lbSSCC.Text = datosCaja.Ltcssc ?? "";
+                        stSSCC = datosCaja.Ltcssc ?? "";
+                    }
+                    else
+                    {
+                        lbSSCC.Text = "ERROR EN LA CAJA";
+                    }
                 }
                 else
                 {
-                    // Mostrar acciones
-                    MostrarAcciones();
+                    lbSSCC.Text = "";
+                    stSSCC = "";
                 }
+
+                // Mostrar acciones
+                MostrarAcciones();
 
                 return true;
             }
             else
             {
-                if (blMensaje)
+                // VB6: 'Cuando no existe el bac se busca la última caja a la que se ha traspasado desde ese BAC
+                // VB6: If ed.rsDameUltimaCajaDeBAC.State <> adStateClosed Then ed.rsDameUltimaCajaDeBAC.Close
+                // VB6: ed.DameUltimaCajaDeBAC stBAC
+                var ultimaCaja = await ed.DameUltimaCajaDeBAC(stBACInput);
+
+                // VB6: With ed.rsDameUltimaCajaDeBAC
+                // VB6:     If .RecordCount = 0 Then
+                if (string.IsNullOrEmpty(ultimaCaja))
                 {
-                    await MessageService.Instance.WsMensaje("No existe el BAC", 16);
+                    // VB6: If blMensaje Then Call wsMensaje(" No existe el BAC ", vbCritical)
+                    if (blMensaje)
+                    {
+                        await MessageService.Instance.WsMensaje(" No existe el BAC ", 16);
+                    }
                 }
+                else
+                {
+                    // VB6: If MsgBox("¿Recuperar última caja de este BAC?", vbInformation + vbYesNo, "BAC vacío!!") = vbYes Then
+                    bool respuesta = await DisplayAlert("BAC vacío!!", "¿Recuperar última caja de este BAC?", "Sí", "No");
+                    if (respuesta)
+                    {
+                        // VB6: Label3.Caption = "CAJA"
+                        // VB6: fValidarCaja !ltcssc, True
+                        Label3.Text = "CAJA";
+                        await fValidarCaja(ultimaCaja, true);
+                        return true;
+                    }
+                }
+
+                // VB6: 'Acciones de la lectura
+                // VB6: cmdAccion(CML_Acciones).Caption = ACC_General
+                lbTexto.Text = Constants.ACC_General;
             }
 
             return false;
@@ -313,6 +431,192 @@ namespace ABGAlmacenPTL.Maui.Pages
             fraOpciones.IsVisible = false;
             fraAcciones.IsVisible = true;
             lbTexto.Text = "ACCIONES";
+        }
+
+        /// <summary>
+        /// CerrarBAC - Cierra el BAC
+        /// Equivalente a CerrarBAC de VB6 - frmEmpaquetarBAC.frm líneas 2146-2161
+        /// </summary>
+        private async Task CerrarBAC()
+        {
+            // VB6: If tEstadoBAC = 1 Then 'El BAC ya está cerrado - Exit Sub
+            if (tEstadoBAC == 1)
+            {
+                return;
+            }
+
+            // VB6: 'Cambiar estado de BAC de 0 a 1
+            // VB6: If CambiarEstadoBAC(lbBAC.Caption, 1) Then
+            var resultado = await ed.CambiaEstadoBACdePTL(stBAC, 1, AppSettings.Instance.Usuario.Id);
+            if (resultado.Exitoso)
+            {
+                tEstadoBAC = 1;
+                // VB6: lbBAC.BackColor = IIf(tEstadoBAC = 0, vbWhite, ColorVerde)
+                lbEstadoBAC.Text = "CERRADO";
+                lbEstadoBAC.BackgroundColor = Constants.ColorVerde;
+            }
+        }
+
+        /// <summary>
+        /// ExtraerBAC - Extrae el BAC de la ubicación
+        /// Equivalente a ExtraerBAC de VB6 - frmEmpaquetarBAC.frm líneas 2181-2220
+        /// </summary>
+        private async Task ExtraerBAC()
+        {
+            // VB6: If tUbicacionBAC = 0 Then 'El BAC ya está extraido - Exit Sub
+            if (tUbicacionBAC == 0)
+            {
+                return;
+            }
+
+            // VB6: If RetirarBAC(lbBAC.Caption, tEstadoBAC, True) Then
+            var resultado = await ed.RetirarBACdePTL(stBAC, AppSettings.Instance.Usuario.Id);
+            if (resultado.Exitoso)
+            {
+                tUbicacionBAC = 0;
+                lbUbicacion.Text = "-------------";
+
+                // VB6: 'Cambiar estado de BAC si es necesario
+                if (tEstadoBAC == 0)
+                {
+                    // Cambiar a cerrado
+                    var resultadoEstado = await ed.CambiaEstadoBACdePTL(stBAC, 1, AppSettings.Instance.Usuario.Id);
+                    if (resultadoEstado.Exitoso)
+                    {
+                        tEstadoBAC = 1;
+                        lbEstadoBAC.Text = "CERRADO";
+                        lbEstadoBAC.BackgroundColor = Constants.ColorVerde;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// sRefrescarArticulosBAC - Refresca la lista de artículos del BAC
+        /// Equivalente a sRefrescarArticulosBAC de VB6 - frmEmpaquetarBAC.frm líneas 1995-2029
+        /// </summary>
+        private async Task sRefrescarArticulosBAC(int sGrupo, string sBAC)
+        {
+            contenidoItems.Clear();
+            int iUds = 0;
+
+            // VB6: If ed.rsDameContenidoBacGrupo.State <> adStateClosed Then ed.rsDameContenidoBacGrupo.Close
+            // VB6: ed.DameContenidoBacGrupo sGrupo, sBAC
+            var contenido = await ed.DameContenidoBacGrupo(sGrupo, sBAC);
+
+            // VB6: With ed.rsDameContenidoBacGrupo
+            // VB6:     If .RecordCount > 0 Then
+            foreach (var item in contenido)
+            {
+                contenidoItems.Add(new ContenidoItem
+                {
+                    Articulo = item.Uniart.ToString(),
+                    Nombre = item.Artnom ?? "",
+                    Cantidad = item.Unican.ToString()
+                });
+                iUds += item.Unican;
+            }
+
+            // VB6: lbUds = iUds
+            // VB6: lbArts = r_Art.RecordCount
+            lbUds.Text = iUds.ToString();
+            lbArts.Text = contenidoItems.Count.ToString();
+        }
+
+        /// <summary>
+        /// sRefrescarArticulosCAJA - Refresca la lista de artículos de la CAJA
+        /// Equivalente a sRefrescarArticulosCAJA de VB6 - frmEmpaquetarBAC.frm líneas 2031-2065
+        /// </summary>
+        private async Task sRefrescarArticulosCAJA(int sGrupo, int sTablilla, string sCaja)
+        {
+            contenidoItems.Clear();
+            int iUds = 0;
+
+            // VB6: If ed.rsDameContenidoCajaGrupo.State <> adStateClosed Then ed.rsDameContenidoCajaGrupo.Close
+            // VB6: ed.DameContenidoCajaGrupo sGrupo, sTablilla, sCaja
+            var contenido = await ed.DameContenidoCajaGrupo(sGrupo, sTablilla, sCaja);
+
+            // VB6: With ed.rsDameContenidoCajaGrupo
+            // VB6:     If .RecordCount > 0 Then
+            foreach (var item in contenido)
+            {
+                contenidoItems.Add(new ContenidoItem
+                {
+                    Articulo = item.Ltcart.ToString(),
+                    Nombre = item.Artnom ?? "",
+                    Cantidad = item.Ltccan.ToString()
+                });
+                iUds += Convert.ToInt32(Math.Round(item.Ltccan));
+            }
+
+            // VB6: lbUds = iUds
+            // VB6: lbArts = r_ArtC.RecordCount
+            lbUds.Text = iUds.ToString();
+            lbArts.Text = contenidoItems.Count.ToString();
+        }
+
+        /// <summary>
+        /// fValidarCaja - Valida y carga datos de una CAJA
+        /// Equivalente a fValidarCaja de VB6 - frmEmpaquetarBAC.frm líneas 1861-1900
+        /// </summary>
+        private async Task<bool> fValidarCaja(string stSSCCInput, bool blMensaje = true)
+        {
+            // VB6: fValidarCaja = False
+            bool bCalculoPeso = false;
+            bool bCalculoVolumen = false;
+            int bEstado = 0;
+
+            // VB6: If ed.rsDameDatosCAJAdePTL.State <> adStateClosed Then ed.rsDameDatosCAJAdePTL.Close
+            // VB6: ed.DameDatosCAJAdePTL stSSCC
+            var datos = await ed.DameDatosCAJAdePTL(stSSCCInput);
+
+            // VB6: With ed.rsDameDatosCAJAdePTL
+            // VB6:     'Existencia del registro
+            // VB6:     If .RecordCount > 0 Then
+            if (datos != null)
+            {
+                // VB6: fValidarCaja = True
+                // VB6: bEstado = IIf(!ltcvol > 0, 1, 0)
+                bEstado = datos.Ltcvol > 0 ? 1 : 0;
+
+                tGrupo = datos.Ltcgru;
+                tTablilla = datos.Ltctab;
+                stSSCC = stSSCCInput;
+
+                // VB6: 'Se muestran los datos
+                // VB6: RefrescarDatos False, 0, 0, 0, 0, 0, !ltcssc, bEstado, !ltcgru, !ltctab, !ltcpes, !ltcvol, !ltctip, !tipdes, !ltccaj, bCalculoPeso, bCalculoVolumen
+                RefrescarDatosBAC(false, stSSCCInput, bEstado, datos.Ltcgru, datos.Ltctab,
+                    datos.Ltcpes, datos.Ltcvol, datos.Tipdes ?? "", bCalculoPeso, bCalculoVolumen);
+
+                lbSSCC.Text = stSSCCInput;
+                lbNumCaja.Text = datos.Ltccaj ?? "";
+
+                // VB6: 'Lista de artículos contenidos en la CAJA
+                // VB6: Call sRefrescarArticulosCAJA(!ltcgru, !ltctab, !ltccaj)
+                await sRefrescarArticulosCAJA(datos.Ltcgru, datos.Ltctab, datos.Ltccaj ?? "");
+
+                // VB6: 'Acciones de la lectura
+                // VB6: cmdAccion(CML_Acciones).Caption = ACC_Etiquetas
+                lbTexto.Text = Constants.ACC_Etiquetas;
+
+                MostrarAcciones();
+
+                return true;
+            }
+            else
+            {
+                // VB6: If blMensaje Then Call wsMensaje(" No existe la CAJA ", vbCritical)
+                if (blMensaje)
+                {
+                    await MessageService.Instance.WsMensaje(" No existe la CAJA ", 16);
+                }
+
+                // VB6: 'Acciones de la lectura
+                // VB6: cmdAccion(CML_Acciones).Caption = ACC_General
+                lbTexto.Text = Constants.ACC_General;
+            }
+
+            return false;
         }
 
         // ==================== Botones de acción ====================
