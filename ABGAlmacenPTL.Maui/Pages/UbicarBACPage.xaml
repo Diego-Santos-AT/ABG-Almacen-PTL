@@ -2,6 +2,7 @@
 <!-- ***********************************************************************
      Nombre: UbicarBACPage.xaml
      Formulario para la ubicación de un BAC en una ubicación de PTL
+     OPTIMIZADO para pistola Zebra de 4" (480x640 aprox)
      
      Creación:      Conversión de VB6 a .NET MAUI
      Basado en:     frmUbicarBAC.frm de VB6 - línea por línea
@@ -14,132 +15,138 @@
              Title="UBICAR BAC"
              BackgroundColor="{StaticResource ColorFondoFrame}">
 
-    <ScrollView>
-        <VerticalStackLayout Spacing="10" Padding="10">
+    <!-- OPTIMIZADO: Sin ScrollView para mejor rendimiento en pantalla 4" -->
+    <VerticalStackLayout Spacing="4" Padding="4">
 
-            <!-- FrameLectura -->
-            <Frame Style="{StaticResource FrameContenedorStyle}">
-                <VerticalStackLayout Spacing="10">
+        <!-- FrameLectura -->
+        <Frame Style="{StaticResource FrameContenedorStyle}">
+            <VerticalStackLayout Spacing="4">
+                
+                <!-- lbTexto - Título -->
+                <Label Text="UBICAR BAC" 
+                       Style="{StaticResource TituloStyle}"/>
+
+                <!-- Fila: txtLecturaCodigo + cmdAccion(990) SALIR -->
+                <Grid ColumnDefinitions="3*,*" ColumnSpacing="4">
+                    <Entry x:Name="txtLecturaCodigo" 
+                           Style="{StaticResource EntradaCodigoStyle}"
+                           Placeholder="Leer código"
+                           MaxLength="36"
+                           Completed="TxtLecturaCodigo_Completed"
+                           Focused="TxtLecturaCodigo_Focused"
+                           Unfocused="TxtLecturaCodigo_Unfocused"/>
                     
-                    <!-- lbTexto - Título -->
-                    <Label Text="UBICAR BAC" 
-                           Style="{StaticResource TituloStyle}"/>
-
-                    <!-- Fila: txtLecturaCodigo + cmdAccion(990) SALIR -->
-                    <Grid ColumnDefinitions="3*,*">
-                        <Entry x:Name="txtLecturaCodigo" 
-                               Style="{StaticResource EntradaCodigoStyle}"
-                               Placeholder="Leer código"
-                               MaxLength="36"
-                               Completed="TxtLecturaCodigo_Completed"
-                               Focused="TxtLecturaCodigo_Focused"
-                               Unfocused="TxtLecturaCodigo_Unfocused"/>
-                        
-                        <Button x:Name="cmdSalir" 
-                                Text="SALIR"
-                                Style="{StaticResource BotonSalirStyle}"
-                                Grid.Column="1"
-                                Clicked="CmdSalir_Clicked"/>
-                    </Grid>
-
-                    <!-- Label8 - Instrucción -->
-                    <Label Text="Leer BAC o Ubicación de PTL"
-                           HorizontalTextAlignment="Center"
-                           BackgroundColor="{StaticResource ColorBlanco}"/>
-
-                </VerticalStackLayout>
-            </Frame>
-
-            <!-- Picture1 - Opciones de estado -->
-            <Frame BackgroundColor="{StaticResource ColorFondoArticulo}" Padding="10">
-                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="2*,*">
-                    
-                    <!-- oEstado(0) - Cerrar BAC -->
-                    <HorizontalStackLayout Grid.Row="0" Grid.Column="0">
-                        <RadioButton x:Name="oEstadoCerrar"
-                                     Content="Cerrar BAC"
-                                     GroupName="EstadoBAC"
-                                     CheckedChanged="OEstado_CheckedChanged"/>
-                    </HorizontalStackLayout>
-
-                    <!-- oEstado(1) - Abrir BAC (Default True) -->
-                    <HorizontalStackLayout Grid.Row="1" Grid.Column="0">
-                        <RadioButton x:Name="oEstadoAbrir"
-                                     Content="Abrir BAC"
-                                     GroupName="EstadoBAC"
-                                     IsChecked="True"
-                                     CheckedChanged="OEstado_CheckedChanged"/>
-                    </HorizontalStackLayout>
-
-                    <!-- cmdAccion(0) - CANCELAR -->
-                    <Button x:Name="cmdCancelar"
-                            Text="CANCELAR"
-                            Grid.Row="0" Grid.Column="1"
-                            Grid.RowSpan="2"
-                            VerticalOptions="Center"
-                            Clicked="CmdCancelar_Clicked"/>
+                    <Button x:Name="cmdSalir" 
+                            Text="SALIR"
+                            Style="{StaticResource BotonSalirStyle}"
+                            Grid.Column="1"
+                            Clicked="CmdSalir_Clicked"/>
                 </Grid>
-            </Frame>
 
-            <!-- fraArticulo - Datos del BAC -->
-            <Frame Style="{StaticResource FrameDatosStyle}">
-                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
-                      ColumnDefinitions="Auto,*,Auto,*">
+                <!-- Label8 - Instrucción -->
+                <Label Text="Leer BAC o Ubicación PTL"
+                       FontSize="10"
+                       HorizontalTextAlignment="Center"
+                       BackgroundColor="{StaticResource ColorBlanco}"/>
 
-                    <!-- Ubicación -->
-                    <Label Text="Ubicación" Grid.Row="0" Grid.Column="0"/>
-                    <Label x:Name="lbUbicacion" 
-                           Style="{StaticResource ValorGrandeStyle}"
-                           Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"/>
+            </VerticalStackLayout>
+        </Frame>
 
-                    <!-- BAC + Estado -->
-                    <Label Text="BAC" Grid.Row="1" Grid.Column="0"/>
-                    <Label x:Name="lbBAC" 
-                           Style="{StaticResource ValorGrandeStyle}"
-                           Grid.Row="1" Grid.Column="1"/>
-                    <Label x:Name="lbEstadoBAC" 
-                           Style="{StaticResource ValorStyle}"
-                           Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"/>
+        <!-- Picture1 - Opciones de estado -->
+        <Frame BackgroundColor="{StaticResource ColorFondoArticulo}" Padding="4">
+            <Grid RowDefinitions="28,28" ColumnDefinitions="2*,*" RowSpacing="2" ColumnSpacing="4">
+                
+                <!-- oEstado(0) - Cerrar BAC -->
+                <HorizontalStackLayout Grid.Row="0" Grid.Column="0" Spacing="2">
+                    <RadioButton x:Name="oEstadoCerrar"
+                                 Content=""
+                                 GroupName="EstadoBAC"
+                                 Scale="0.85"
+                                 CheckedChanged="OEstado_CheckedChanged"/>
+                    <Label Text="Cerrar BAC" FontSize="11" VerticalTextAlignment="Center"/>
+                </HorizontalStackLayout>
 
-                    <!-- Grupo + Tablilla + Uds -->
-                    <Label Text="Grupo" Grid.Row="2" Grid.Column="0"/>
-                    <Label x:Name="lbGrupo" 
-                           Style="{StaticResource ValorStyle}"
-                           Grid.Row="2" Grid.Column="1"/>
-                    <Label Text="Tablilla" Grid.Row="2" Grid.Column="2"/>
-                    <Label x:Name="lbTablilla" 
-                           Style="{StaticResource ValorStyle}"
-                           Grid.Row="2" Grid.Column="3"/>
+                <!-- oEstado(1) - Abrir BAC (Default True) -->
+                <HorizontalStackLayout Grid.Row="1" Grid.Column="0" Spacing="2">
+                    <RadioButton x:Name="oEstadoAbrir"
+                                 Content=""
+                                 GroupName="EstadoBAC"
+                                 IsChecked="True"
+                                 Scale="0.85"
+                                 CheckedChanged="OEstado_CheckedChanged"/>
+                    <Label Text="Abrir BAC" FontSize="11" VerticalTextAlignment="Center"/>
+                </HorizontalStackLayout>
 
-                    <!-- Uds -->
-                    <Label Text="Uds" Grid.Row="3" Grid.Column="2"/>
-                    <Label x:Name="lbUds" 
-                           Style="{StaticResource ValorStyle}"
-                           Grid.Row="3" Grid.Column="3"/>
+                <!-- cmdAccion(0) - CANCELAR -->
+                <Button x:Name="cmdCancelar"
+                        Text="CANCELAR"
+                        Grid.Row="0" Grid.Column="1"
+                        Grid.RowSpan="2"
+                        Style="{StaticResource BotonSalirStyle}"
+                        VerticalOptions="Center"
+                        Clicked="CmdCancelar_Clicked"/>
+            </Grid>
+        </Frame>
 
-                    <!-- Peso + Volumen -->
-                    <Label Text="Peso" Grid.Row="4" Grid.Column="0"/>
-                    <Label x:Name="lbPeso" 
-                           Style="{StaticResource ValorStyle}"
-                           Grid.Row="4" Grid.Column="1"/>
-                    <Label Text="Volumen" Grid.Row="4" Grid.Column="2"/>
-                    <Label x:Name="lbVolumen" 
-                           Style="{StaticResource ValorStyle}"
-                           Grid.Row="4" Grid.Column="3"/>
+        <!-- fraArticulo - Datos del BAC -->
+        <Frame Style="{StaticResource FrameDatosStyle}">
+            <Grid RowDefinitions="22,22,22,22,22,22"
+                  ColumnDefinitions="55,*,55,*"
+                  RowSpacing="2" ColumnSpacing="2">
 
-                    <!-- Tipo Caja + Nombre -->
-                    <Label Text="Tipo Caja" Grid.Row="5" Grid.Column="0"/>
-                    <Label x:Name="lbTipoCaja" 
-                           Style="{StaticResource ValorStyle}"
-                           Grid.Row="5" Grid.Column="1"/>
-                    <Label x:Name="lbNombreCaja" 
-                           Style="{StaticResource ValorStyle}"
-                           Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2"/>
+                <!-- Ubicación -->
+                <Label Text="Ubic." Grid.Row="0" Grid.Column="0" FontSize="10" VerticalTextAlignment="Center"/>
+                <Label x:Name="lbUbicacion" 
+                       Style="{StaticResource ValorGrandeStyle}"
+                       Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"/>
 
-                </Grid>
-            </Frame>
+                <!-- BAC + Estado -->
+                <Label Text="BAC" Grid.Row="1" Grid.Column="0" FontSize="10" VerticalTextAlignment="Center"/>
+                <Label x:Name="lbBAC" 
+                       Style="{StaticResource ValorGrandeStyle}"
+                       Grid.Row="1" Grid.Column="1"/>
+                <Label x:Name="lbEstadoBAC" 
+                       Style="{StaticResource ValorStyle}"
+                       Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"/>
 
-        </VerticalStackLayout>
-    </ScrollView>
+                <!-- Grupo + Tablilla -->
+                <Label Text="Grupo" Grid.Row="2" Grid.Column="0" FontSize="10" VerticalTextAlignment="Center"/>
+                <Label x:Name="lbGrupo" 
+                       Style="{StaticResource ValorStyle}"
+                       Grid.Row="2" Grid.Column="1"/>
+                <Label Text="Tablilla" Grid.Row="2" Grid.Column="2" FontSize="10" VerticalTextAlignment="Center"/>
+                <Label x:Name="lbTablilla" 
+                       Style="{StaticResource ValorStyle}"
+                       Grid.Row="2" Grid.Column="3"/>
+
+                <!-- Uds -->
+                <Label Text="Uds" Grid.Row="3" Grid.Column="2" FontSize="10" VerticalTextAlignment="Center"/>
+                <Label x:Name="lbUds" 
+                       Style="{StaticResource ValorStyle}"
+                       Grid.Row="3" Grid.Column="3"/>
+
+                <!-- Peso + Volumen -->
+                <Label Text="Peso" Grid.Row="4" Grid.Column="0" FontSize="10" VerticalTextAlignment="Center"/>
+                <Label x:Name="lbPeso" 
+                       Style="{StaticResource ValorStyle}"
+                       Grid.Row="4" Grid.Column="1"/>
+                <Label Text="Vol." Grid.Row="4" Grid.Column="2" FontSize="10" VerticalTextAlignment="Center"/>
+                <Label x:Name="lbVolumen" 
+                       Style="{StaticResource ValorStyle}"
+                       Grid.Row="4" Grid.Column="3"/>
+
+                <!-- Tipo Caja + Nombre -->
+                <Label Text="T.Caja" Grid.Row="5" Grid.Column="0" FontSize="10" VerticalTextAlignment="Center"/>
+                <Label x:Name="lbTipoCaja" 
+                       Style="{StaticResource ValorStyle}"
+                       Grid.Row="5" Grid.Column="1"/>
+                <Label x:Name="lbNombreCaja" 
+                       Style="{StaticResource ValorStyle}"
+                       Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2"/>
+
+            </Grid>
+        </Frame>
+
+    </VerticalStackLayout>
 
 </ContentPage>
