@@ -546,7 +546,7 @@ namespace ABGAlmacenPTL.Maui.Pages
                     Nombre = item.Artnom ?? "",
                     Cantidad = item.Ltccan.ToString()
                 });
-                iUds += (int)item.Ltccan;
+                iUds += Convert.ToInt32(Math.Round(item.Ltccan));
             }
 
             // VB6: lbUds = iUds
