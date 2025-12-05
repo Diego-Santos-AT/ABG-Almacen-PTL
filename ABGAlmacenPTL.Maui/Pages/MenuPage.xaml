@@ -2,6 +2,7 @@
 <!-- ***********************************************************************
      Nombre: MenuPage.xaml
      Menú Principal - Conversión fiel de VB6
+     OPTIMIZADO para pistola Zebra de 4" (480x640 aprox)
      
      Creación:      Conversión de VB6 a .NET MAUI
      Basado en:     frmMenu.frm de VB6
@@ -12,41 +13,53 @@
              Title="Menú Principal"
              BackgroundColor="{StaticResource ColorFondoPrincipal}">
 
-    <Grid Padding="20">
-        <VerticalStackLayout Spacing="15" VerticalOptions="Center">
+    <Grid Padding="8">
+        <VerticalStackLayout Spacing="8" VerticalOptions="Center">
             
             <!-- Título -->
             <Label Text="MENÚ PRINCIPAL" 
                    Style="{StaticResource TituloStyle}"
-                   FontSize="24"
+                   FontSize="16"
                    HorizontalOptions="Center"
-                   Margin="0,0,0,20"/>
+                   Margin="0,0,0,10"/>
 
-            <!-- Botones de menú -->
+            <!-- Botones de menú (altura optimizada para 4") -->
             <Button Text="Consultas PTL" 
                     Style="{StaticResource BotonAccionStyle}"
+                    HeightRequest="40"
+                    FontSize="12"
                     Clicked="OnConsultasPTLClicked"/>
 
             <Button Text="Extraer BAC" 
                     Style="{StaticResource BotonAccionStyle}"
+                    HeightRequest="40"
+                    FontSize="12"
                     Clicked="OnExtraerBACClicked"/>
 
             <Button Text="Ubicar BAC" 
                     Style="{StaticResource BotonAccionStyle}"
+                    HeightRequest="40"
+                    FontSize="12"
                     Clicked="OnUbicarBACClicked"/>
 
             <Button Text="Repartir Artículo" 
                     Style="{StaticResource BotonAccionStyle}"
+                    HeightRequest="40"
+                    FontSize="12"
                     Clicked="OnRepartirArticuloClicked"/>
 
             <Button Text="Empaquetar BAC" 
                     Style="{StaticResource BotonAccionStyle}"
+                    HeightRequest="40"
+                    FontSize="12"
                     Clicked="OnEmpaquetarBACClicked"/>
 
-            <BoxView HeightRequest="20" Color="Transparent"/>
+            <BoxView HeightRequest="10" Color="Transparent"/>
 
             <Button Text="SALIR" 
                     Style="{StaticResource BotonSalirStyle}"
+                    HeightRequest="40"
+                    FontSize="12"
                     Clicked="OnSalirClicked"/>
 
         </VerticalStackLayout>
