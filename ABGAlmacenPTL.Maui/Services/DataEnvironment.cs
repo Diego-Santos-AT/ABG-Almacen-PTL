@@ -7,7 +7,7 @@
 // ***********************************************************************
 
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using ABGAlmacenPTL.Maui.Models;
 
 namespace ABGAlmacenPTL.Maui.Services
