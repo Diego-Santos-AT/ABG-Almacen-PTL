@@ -175,4 +175,24 @@ namespace ABGAlmacenPTL.Maui.Models
         public string MsgSalida { get; set; } = string.Empty;
         public bool Exitoso => Retorno == 0;
     }
+
+    /// <summary>
+    /// Datos de consulta de BAC en GAUBIBAC - Equivalente a rsConsultaBACdePTL
+    /// VB6: frmUbicarBAC.frm líneas 497-519
+    /// </summary>
+    public class DatosBACConsulta
+    {
+        public string? Ubibac { get; set; }     // Código BAC en GAUBIBAC
+    }
+
+    /// <summary>
+    /// Numerador de SSCC - Equivalente a rsDameNumeradorSSCCHipodromo
+    /// VB6: frmEmpaquetarBAC.frm líneas 2654-2677
+    /// </summary>
+    public class NumeradorSSCC
+    {
+        public long Numnum { get; set; }        // Numerador actual
+        public long Numdes { get; set; }        // Desde (inicio del rango)
+        public long Numhas { get; set; }        // Hasta (fin del rango)
+    }
 }

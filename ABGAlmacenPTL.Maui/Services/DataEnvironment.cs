@@ -346,6 +346,187 @@ namespace ABGAlmacenPTL.Maui.Services
         }
 
         /// <summary>
+        /// ConsultaBACdePTL - Consulta si existe la definición del BAC en GAUBIBAC
+        /// Equivalente a rsConsultaBACdePTL en VB6 - frmUbicarBAC.frm líneas 497-519
+        /// </summary>
+        public async Task<DatosBACConsulta?> ConsultaBACdePTL(string bac)
+        {
+            using var cmd = new SqlCommand("dbo.ConsultaBACdePTL", GestionAlmacen);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@BAC", bac);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+            if (await reader.ReadAsync())
+            {
+                return new DatosBACConsulta
+                {
+                    Ubibac = reader["ubibac"]?.ToString()
+                };
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// DameCajaGrupoTablillaPTL - Obtiene datos de una caja específica de un grupo y tablilla
+        /// Equivalente a rsDameCajaGrupoTablillaPTL en VB6 - frmEmpaquetarBAC.frm líneas 1970-1978
+        /// </summary>
+        public async Task<DatosCajaPTL?> DameCajaGrupoTablillaPTL(int grupo, int tablilla, string caja)
+        {
+            using var cmd = new SqlCommand("dbo.DameCajaGrupoTablillaPTL", GestionAlmacen);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Grupo", grupo);
+            cmd.Parameters.AddWithValue("@Tablilla", tablilla);
+            cmd.Parameters.AddWithValue("@CAJA", caja);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+            if (await reader.ReadAsync())
+            {
+                return new DatosCajaPTL
+                {
+                    Ltcgru = reader["ltcgru"] != DBNull.Value ? Convert.ToInt32(reader["ltcgru"]) : 0,
+                    Ltctab = reader["ltctab"] != DBNull.Value ? Convert.ToInt32(reader["ltctab"]) : 0,
+                    Ltccaj = reader["ltccaj"]?.ToString(),
+                    Ltctip = reader["ltctip"] != DBNull.Value ? Convert.ToInt32(reader["ltctip"]) : 0,
+                    Ltcide = reader["ltcide"] != DBNull.Value ? Convert.ToInt64(reader["ltcide"]) : 0,
+                    Ltcpes = reader["ltcpes"] != DBNull.Value ? Convert.ToDouble(reader["ltcpes"]) : 0,
+                    Ltcssc = reader["ltcssc"]?.ToString(),
+                    Ltcvol = reader["ltcvol"] != DBNull.Value ? Convert.ToDouble(reader["ltcvol"]) : 0,
+                    Tipdes = reader["tipdes"]?.ToString()
+                };
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// ActualizaCajaBACPTL - Actualiza la caja de un BAC
+        /// Equivalente a ActualizaCajaBACPTL en VB6 - frmEmpaquetarBAC.frm línea 2290
+        /// </summary>
+        public async Task ActualizaCajaBACPTL(string bac, string caja)
+        {
+            using var cmd = new SqlCommand("dbo.ActualizaCajaBACPTL", GestionAlmacen);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@BAC", bac);
+            cmd.Parameters.AddWithValue("@CAJA", caja);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>
+        /// CrearCajaGrupoTablillaPTL - Crea una nueva caja en un grupo y tablilla
+        /// Equivalente a CrearCajaGrupoTablillaPTL en VB6 - frmEmpaquetarBAC.frm línea 2287
+        /// </summary>
+        public async Task CrearCajaGrupoTablillaPTL(int grupo, int tablilla, string caja, int tipoCaja, string sscc, string bac)
+        {
+            using var cmd = new SqlCommand("dbo.CrearCajaGrupoTablillaPTL", GestionAlmacen);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@inGrupo", grupo);
+            cmd.Parameters.AddWithValue("@inTablilla", tablilla);
+            cmd.Parameters.AddWithValue("@stCaja", caja);
+            cmd.Parameters.AddWithValue("@inTipo", tipoCaja);
+            cmd.Parameters.AddWithValue("@SSCC", sscc);
+            cmd.Parameters.AddWithValue("@BAC", bac);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>
+        /// InsertaLogEmpaquetado - Inserta un registro de log de empaquetado
+        /// Equivalente a InsertaLogEmpaquetado en VB6 - frmEmpaquetarBAC.frm línea 2293
+        /// </summary>
+        public async Task InsertaLogEmpaquetado(int grupo, int tablilla, int accion, string codigo, 
+            int articulo, int cantidad, int resultado, string mensaje, int caja, string sscc, 
+            string descripcion, int puesto, int usuario)
+        {
+            using var cmd = new SqlCommand("dbo.InsertaLogEmpaquetado", GestionAlmacen);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Grupo", grupo);
+            cmd.Parameters.AddWithValue("@Tablilla", tablilla);
+            cmd.Parameters.AddWithValue("@Accion", accion);
+            cmd.Parameters.AddWithValue("@Codigo", codigo);
+            cmd.Parameters.AddWithValue("@Articulo", articulo);
+            cmd.Parameters.AddWithValue("@Cantidad", cantidad);
+            cmd.Parameters.AddWithValue("@Resultado", resultado);
+            cmd.Parameters.AddWithValue("@Mensaje", mensaje);
+            cmd.Parameters.AddWithValue("@Caja", caja);
+            cmd.Parameters.AddWithValue("@SSCC", sscc);
+            cmd.Parameters.AddWithValue("@Descripcion", descripcion);
+            cmd.Parameters.AddWithValue("@Puesto", puesto);
+            cmd.Parameters.AddWithValue("@Usuario", usuario);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>
+        /// DameNumeradorSSCCHipodromo - Obtiene el numerador de SSCC para Hipódromo
+        /// Equivalente a rsDameNumeradorSSCCHipodromo en VB6 - frmEmpaquetarBAC.frm líneas 2654-2677
+        /// </summary>
+        public async Task<NumeradorSSCC?> DameNumeradorSSCCHipodromo()
+        {
+            using var cmd = new SqlCommand("dbo.DameNumeradorSSCCHipodromo", GestionAlmacen);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            using var reader = await cmd.ExecuteReaderAsync();
+            if (await reader.ReadAsync())
+            {
+                return new NumeradorSSCC
+                {
+                    Numnum = reader["numnum"] != DBNull.Value ? Convert.ToInt64(reader["numnum"]) : 0,
+                    Numdes = reader["numdes"] != DBNull.Value ? Convert.ToInt64(reader["numdes"]) : 0,
+                    Numhas = reader["numhas"] != DBNull.Value ? Convert.ToInt64(reader["numhas"]) : 0
+                };
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// ActualizaNumeradorSSCCHipodromo - Actualiza el numerador de SSCC para Hipódromo
+        /// Equivalente a ActualizaNumeradorSSCCHipodromo en VB6 - frmEmpaquetarBAC.frm línea 2568
+        /// </summary>
+        public async Task ActualizaNumeradorSSCCHipodromo(long numerador)
+        {
+            using var cmd = new SqlCommand("dbo.ActualizaNumeradorSSCCHipodromo", GestionAlmacen);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Numerador", numerador);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>
+        /// InsertaHistoricoSSCCHipodromo - Inserta un registro en el histórico de SSCC
+        /// Equivalente a InsertaHistoricoSSCCHipodromo en VB6 - frmEmpaquetarBAC.frm línea 2574
+        /// </summary>
+        public async Task InsertaHistoricoSSCCHipodromo(int tipo, string sscc, string descripcion, int grupo, int tablilla)
+        {
+            using var cmd = new SqlCommand("dbo.InsertaHistoricoSSCCHipodromo", GestionAlmacen);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Tipo", tipo);
+            cmd.Parameters.AddWithValue("@SSCC", sscc);
+            cmd.Parameters.AddWithValue("@Descripcion", descripcion);
+            cmd.Parameters.AddWithValue("@Grupo", grupo);
+            cmd.Parameters.AddWithValue("@Tablilla", tablilla);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        /// <summary>
+        /// DameUltimaCajaDeBAC - Obtiene la última caja de un BAC
+        /// Equivalente a rsDameUltimaCajaDeBAC en VB6 - frmEmpaquetarBAC.frm líneas 1835-1850
+        /// </summary>
+        public async Task<string?> DameUltimaCajaDeBAC(string bac)
+        {
+            using var cmd = new SqlCommand("dbo.DameUltimaCajaDeBAC", GestionAlmacen);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@BAC", bac);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+            if (await reader.ReadAsync())
+            {
+                return reader["ltcssc"]?.ToString();
+            }
+            return null;
+        }
+
+        /// <summary>
         /// DameArticuloConsulta - Obtiene datos de un artículo
         /// </summary>
         public async Task<Articulo?> DameArticuloConsulta(int articulo)
