@@ -312,7 +312,19 @@ namespace ABGAlmacenPTL.Maui.Pages
             // VB6: If oEstado(0).Value = True Then tEstado = 1 Else tEstado = 0
             int tEstado = oEstadoCerrar.IsChecked ? 1 : 0;
 
-            // VB6: ed.UbicarBACenPTL bac, ubicacion, tEstado, Usuario.Id, Retorno, msgSalida
+            // VB6: Primero cambia el estado del BAC si es necesario
+            if (tEstado == 1)
+            {
+                var resultadoEstado = await ed.CambiaEstadoBACdePTL(bac, tEstado, AppSettings.Instance.Usuario.Id);
+                if (!resultadoEstado.Exitoso)
+                {
+                    await MessageService.Instance.WsMensaje(
+                        $"No se ha podido cambiar el estado del BAC. {resultadoEstado.MsgSalida}", 16);
+                    return false;
+                }
+            }
+
+            // VB6: ed.UbicarBACenPTL bac, ubicacion, Usuario.Id, Retorno, msgSalida
             var resultado = await ed.UbicarBACenPTL(bac, ubicacion, AppSettings.Instance.Usuario.Id);
 
             // VB6: If Retorno = 0 Then

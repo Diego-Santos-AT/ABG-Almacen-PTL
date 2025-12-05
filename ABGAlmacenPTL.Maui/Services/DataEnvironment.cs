@@ -202,17 +202,17 @@ namespace ABGAlmacenPTL.Maui.Services
             {
                 result.Add(new ContenidoCajaGrupo
                 {
-                    Ltagru = reader["ltcgru"] != DBNull.Value ? Convert.ToInt32(reader["ltcgru"]) : 0,
-                    Ltatab = reader["ltctab"] != DBNull.Value ? Convert.ToInt32(reader["ltctab"]) : 0,
-                    Ltaart = reader["ltcart"] != DBNull.Value ? Convert.ToInt32(reader["ltcart"]) : 0,
-                    Ltacaj = reader["ltccaj"]?.ToString(),
-                    Ltacan = reader["ltccan"] != DBNull.Value ? Convert.ToDouble(reader["ltccan"]) : 0,
-                    Ltafin = reader["ltcfin"]?.ToString(),
+                    Ltcgru = reader["ltcgru"] != DBNull.Value ? Convert.ToInt32(reader["ltcgru"]) : 0,
+                    Ltctab = reader["ltctab"] != DBNull.Value ? Convert.ToInt32(reader["ltctab"]) : 0,
+                    Ltcart = reader["ltcart"] != DBNull.Value ? Convert.ToInt32(reader["ltcart"]) : 0,
+                    Ltccaj = reader["ltccaj"]?.ToString(),
+                    Ltccan = reader["ltccan"] != DBNull.Value ? Convert.ToDouble(reader["ltccan"]) : 0,
+                    Ltcfin = reader["ltcfin"]?.ToString(),
                     Ltcusu = reader["ltcusu"] != DBNull.Value ? Convert.ToInt32(reader["ltcusu"]) : 0,
                     Ltcfal = reader["ltcfal"] != DBNull.Value ? Convert.ToDateTime(reader["ltcfal"]) : null,
                     Ltcfmd = reader["ltcfmd"] != DBNull.Value ? Convert.ToDateTime(reader["ltcfmd"]) : null,
-                    Ltapes = reader["ltcpes"] != DBNull.Value ? Convert.ToDouble(reader["ltcpes"]) : 0,
-                    Ltavol = reader["ltcvol"] != DBNull.Value ? Convert.ToDouble(reader["ltcvol"]) : 0,
+                    Ltcpes = reader["ltcpes"] != DBNull.Value ? Convert.ToDouble(reader["ltcpes"]) : 0,
+                    Ltcvol = reader["ltcvol"] != DBNull.Value ? Convert.ToDouble(reader["ltcvol"]) : 0,
                     Ltcide = reader["ltcide"] != DBNull.Value ? Convert.ToInt64(reader["ltcide"]) : 0,
                     Artnom = reader["artnom"]?.ToString()
                 });

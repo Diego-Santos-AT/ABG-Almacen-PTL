@@ -40,14 +40,37 @@ namespace ABGAlmacenPTL.Maui.Services
 
         /// <summary>
         /// Genera un SSCC
-        /// Equivalente a Dame_SSCC de VB6
+        /// Equivalente a Dame_SSCC de VB6 (GDFunc04.bas)
+        /// 
+        /// Formato SSCC: DigitoExtension(1) + EAN_Empresa(7) + Codigo_Serie(2) + Numerador(7) + DigitoControl(1)
         /// </summary>
-        public static string DameSSCC(int codigoEmpresa, string eanEmpresa, long numerador, int incrementoSerie)
+        public static string DameSSCC(int empresaFabricante, string eanEmpresaFabricante, long numerador, int incrementoSerie = 0)
         {
-            // Formato SSCC: 0 + EAN empresa (7 dígitos) + Serie (9 dígitos) + Dígito control
-            // VB6: stSSCC = "0" & Mid(EAN, 1, 7) & CStr(Format(Numerador, "000000000"))
-            string ssccSinDigito = $"0{eanEmpresa[..Math.Min(7, eanEmpresa.Length)]}{numerador + incrementoSerie:D9}";
+            // VB6: Digito_Extension = "3"
+            string digitoExtension = "3";
+
+            // VB6: Ean_Empresa = Ean_Empresa_Fabricante
+            string eanEmpresa = eanEmpresaFabricante.Length > 7 
+                ? eanEmpresaFabricante[..7] 
+                : eanEmpresaFabricante.PadRight(7, '0');
+
+            // VB6: Codigo_Serie = Format(Empresa_Fabricante + IncrementoSerie, "00")
+            // VB6: If Len(Codigo_Serie) > 2 Then Codigo_Serie = Mid(Codigo_Serie, Len(Codigo_Serie) - 1, 2)
+            string codigoSerieCompleto = (empresaFabricante + incrementoSerie).ToString("00");
+            string codigoSerie = codigoSerieCompleto.Length > 2 
+                ? codigoSerieCompleto.Substring(codigoSerieCompleto.Length - 2, 2) 
+                : codigoSerieCompleto;
+
+            // VB6: Numerador_Unico_Bultos = Format(Numerador, "0000000")
+            string numeradorUnicoBultos = numerador.ToString("0000000");
+
+            // VB6: SSCC_Sin_DigitoControl = Digito_Extension & Ean_Empresa & Codigo_Serie & Numerador_Unico_Bultos
+            string ssccSinDigito = $"{digitoExtension}{eanEmpresa}{codigoSerie}{numeradorUnicoBultos}";
+
+            // Calcular dígito de control
             int digitoControl = DameDigitoControlEAN(ssccSinDigito);
+
+            // VB6: SSCC = Digito_Extension & Ean_Empresa & Codigo_Serie & Numerador_Unico_Bultos & Digito_Control
             return $"{ssccSinDigito}{digitoControl}";
         }
 

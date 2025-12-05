@@ -84,17 +84,17 @@ namespace ABGAlmacenPTL.Maui.Models
     /// </summary>
     public class ContenidoCajaGrupo
     {
-        public int Ltagru { get; set; }
-        public int Ltatab { get; set; }
-        public int Ltaart { get; set; }
-        public string? Ltacaj { get; set; }
-        public double Ltacan { get; set; }
-        public string? Ltafin { get; set; }
+        public int Ltcgru { get; set; }
+        public int Ltctab { get; set; }
+        public int Ltcart { get; set; }
+        public string? Ltccaj { get; set; }
+        public double Ltccan { get; set; }
+        public string? Ltcfin { get; set; }
         public int Ltcusu { get; set; }
         public DateTime? Ltcfal { get; set; }
         public DateTime? Ltcfmd { get; set; }
-        public double Ltapes { get; set; }
-        public double Ltavol { get; set; }
+        public double Ltcpes { get; set; }
+        public double Ltcvol { get; set; }
         public long Ltcide { get; set; }
         public string? Artnom { get; set; }
     }
