@@ -68,8 +68,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<!-- Embed appsettings.json as resource -->
+		<!-- Embed appsettings.json and abg.ini as resources -->
 		<EmbeddedResource Include="appsettings.json" />
+		<MauiAsset Include="abg.ini" LogicalName="abg.ini" />
 	</ItemGroup>
 
 </Project>

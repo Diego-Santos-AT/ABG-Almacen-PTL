@@ -806,6 +806,42 @@
             Migrado desde VB6 frmUbicarBAC.frm
             </summary>
         </member>
+        <member name="T:ABGAlmacenPTL.Services.ABGConfigService">
+            <summary>
+            Servicio para gestionar la configuración desde abg.ini
+            Migrado fielmente desde VB6 Gestion.bas
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.ABGConfigService.LoadConfiguration">
+            <summary>
+            Lee los parámetros desde abg.ini
+            Migrado desde VB6: LeerParamentrosIni
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.ABGConfigService.GetConfigConnectionString">
+            <summary>
+            Construye la cadena de conexión para Config
+            Migrado desde VB6: ConexionConfig
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.ABGConfigService.GetGestionConnectionString(System.String,System.String,System.String)">
+            <summary>
+            Construye la cadena de conexión para Gestion
+            Migrado desde VB6: ConexionGestion
+            Requiere parámetros de empresa (desde tabla gdeemp en Config)
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.ABGConfigService.GetGestionAlmacenConnectionString(System.String,System.String,System.String,System.String)">
+            <summary>
+            Construye la cadena de conexión para GestionAlmacen
+            Migrado desde VB6: ConexionGestionAlmacen (desde empbga, empuga, empkga)
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.ABGConfigService.Reload">
+            <summary>
+            Refresca la configuración desde el archivo .ini
+            </summary>
+        </member>
         <member name="T:ABGAlmacenPTL.Services.PTLService">
             <summary>
             Service for PTL (Pick-to-Light) operations

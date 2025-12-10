@@ -36,12 +36,36 @@ public static class MauiProgram
 		builder.Logging.AddDebug();
 #endif
 
-		// Database configuration from appsettings.json
-		var connectionString = config.GetConnectionString("ABGAlmacenDB") 
-			?? "Server=(localdb)\\mssqllocaldb;Database=ABGAlmacenPTL;Trusted_Connection=true;MultipleActiveResultSets=true";
+		// ========================================================================
+		// CONFIGURACIÓN FIEL AL VB6 ORIGINAL
+		// Lee abg.ini y configura conexiones a múltiples bases de datos
+		// ========================================================================
 		
+		// Copiar abg.ini desde recursos a carpeta de datos de la aplicación
+		var iniPath = Path.Combine(FileSystem.AppDataDirectory, "abg.ini");
+		if (!File.Exists(iniPath))
+		{
+			// Copiar desde recursos en primera ejecución
+			using var iniStream = assembly.GetManifestResourceStream("ABGAlmacenPTL.abg.ini");
+			if (iniStream != null)
+			{
+				using var fileStream = File.Create(iniPath);
+				iniStream.CopyTo(fileStream);
+			}
+		}
+		
+		// Crear servicio de configuración que lee abg.ini (como VB6)
+		var abgConfig = new ABGConfigService(iniPath);
+		builder.Services.AddSingleton(abgConfig);
+		
+		// Obtener connection string para Config DB (servidor local GROOT)
+		var configConnectionString = abgConfig.GetConfigConnectionString();
+		
+		// NOTA: En VB6, después de login se obtiene la empresa del usuario desde Config DB
+		// y luego se construyen las conexiones a Gestion y GestionAlmacen dinámicamente.
+		// Por ahora usamos Config DB que es el que tiene usuarios y configuración.
 		builder.Services.AddDbContext<ABGAlmacenContext>(options =>
-			options.UseSqlServer(connectionString));
+			options.UseSqlServer(configConnectionString));
 
 		// Register repositories
 		builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
