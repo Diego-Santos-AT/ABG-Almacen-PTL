@@ -1,25 +1,29 @@
 using ABGAlmacenPTL.Modules;
 using ABGAlmacenPTL.Configuration;
+using ABGAlmacenPTL.Services;
+using ABGAlmacenPTL.Models.Config;
 
 namespace ABGAlmacenPTL.Pages
 {
     /// <summary>
     /// Form de pantalla de Inicio de la aplicación
-    /// Muestra el nombre de programa, versión, etc
-    /// Control de la conexión con BD
-    /// Validación de Usuario
-    /// Migrado desde VB6 frmInicio.frm
-    /// Creado: 04/04/01
+    /// Validación de Usuario contra Config DB
+    /// Selección de Empresa
+    /// Migrado fielmente desde VB6 frmInicio.frm
     /// </summary>
     public partial class InicioPage : ContentPage
     {
+        private readonly AuthService _authService;
+        private readonly ABGConfigService _abgConfig;
         private int reintentos = 0;
-        private const int CMD_Aceptar = 0;
-        private const int CMD_Cancelar = 1;
+        private List<Empresa> _empresasDisponibles = new List<Empresa>();
 
-        public InicioPage()
+        public InicioPage(AuthService authService, ABGConfigService abgConfig)
         {
             InitializeComponent();
+            
+            _authService = authService;
+            _abgConfig = abgConfig;
             
             // Configurar versión y comentarios
             lblVersion.Text = "Versión 23.4.2";
@@ -28,226 +32,222 @@ namespace ABGAlmacenPTL.Pages
             // Inicializar
             reintentos = 0;
             Gestion.LoginSucceeded = false;
-            
-            // Cargar datos iniciales
-            CargarDatosIniciales();
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
             
-            lblEstado.Text = $"Conectando con el Servidor {Gestion.BDDServLocal}...";
+            lblEstado.Text = $"Conectando con el Servidor {_abgConfig.BDDServLocal}...";
             
-            // Cargar usuario por defecto si existe
-            if (!string.IsNullOrEmpty(Gestion.UsrDefault))
-            {
-                txtUsuario.Text = Gestion.UsrDefault;
-            }
+            // Cargar usuario por defecto desde abg.ini
+            txtUsuario.Text = _abgConfig.UsrDefault;
             
-            lblEstado.Text = "Iniciando...";
+            // Cargar puestos de trabajo (desde tabla o hardcoded como VB6)
+            await CargarPuestosAsync();
+            
+            lblEstado.Text = "Listo para iniciar sesión";
         }
 
-        private void CargarDatosIniciales()
+        private async Task CargarPuestosAsync()
         {
-            // Cargar lista de empresas
-            // TODO: Implementar carga desde base de datos cuando esté el Data Access Layer
-            var empresas = new List<string>
-            {
-                "ATOSA",
-                "BOYSTOYS",
-                "GIEPOOL",
-                "DISTRIELITE"
-            };
+            // Puestos de trabajo (como VB6)
+            pickerPuesto.Items.Clear();
+            pickerPuesto.Items.Add("Puesto 1");
+            pickerPuesto.Items.Add("Puesto 2");
+            pickerPuesto.Items.Add("Puesto 3");
+            pickerPuesto.Items.Add("Puesto 4");
+            pickerPuesto.Items.Add("Puesto 5");
             
-            foreach (var empresa in empresas)
+            // Seleccionar puesto por defecto desde abg.ini
+            if (_abgConfig.PueDefault > 0 && _abgConfig.PueDefault <= pickerPuesto.Items.Count)
             {
-                pickerEmpresa.Items.Add(empresa);
+                pickerPuesto.SelectedIndex = _abgConfig.PueDefault - 1;
+            }
+        }
+
+        private async Task ValidarUsuarioAsync()
+        {
+            if (string.IsNullOrWhiteSpace(txtUsuario.Text))
+            {
+                await DisplayAlert("Error", "Debe ingresar un usuario", "OK");
+                txtUsuario.Focus();
+                return;
             }
             
-            // Cargar lista de puestos
-            // TODO: Implementar carga desde base de datos
-            var puestos = new List<string>
-            {
-                "Puesto 1",
-                "Puesto 2",
-                "Puesto 3",
-                "Puesto 4"
-            };
+            lblEstado.Text = "Validando usuario...";
             
-            foreach (var puesto in puestos)
+            try
             {
-                pickerPuesto.Items.Add(puesto);
+                // Buscar usuario en Config DB (VB6: edC.BuscaUsuario)
+                var usuario = await _authService.BuscarUsuarioAsync(txtUsuario.Text);
+                
+                if (usuario == null)
+                {
+                    await DisplayAlert("Error", "Usuario no encontrado", "OK");
+                    txtUsuario.Text = string.Empty;
+                    txtUsuario.Focus();
+                    lblEstado.Text = "Usuario inválido";
+                    return;
+                }
+                
+                // Cargar empresas del usuario (VB6: edC.DameEmpresasAccesoUsuario)
+                _empresasDisponibles = await _authService.ObtenerEmpresasUsuarioAsync(usuario.UsuarioId);
+                
+                if (_empresasDisponibles.Count == 0)
+                {
+                    await DisplayAlert("Error", 
+                        "No tiene asignada empresa actualmente.\nConsulte con el dpto. de informática.", 
+                        "OK");
+                    lblEstado.Text = "Sin empresas asignadas";
+                    return;
+                }
+                
+                // Mostrar empresas en el picker
+                pickerEmpresa.Items.Clear();
+                foreach (var empresa in _empresasDisponibles)
+                {
+                    pickerEmpresa.Items.Add($"{empresa.CodigoEmpresa} - {empresa.NombreEmpresa}");
+                }
+                
+                // Seleccionar empresa por defecto si existe en abg.ini
+                if (!string.IsNullOrEmpty(_abgConfig.CodEmpresa))
+                {
+                    var empDefault = _empresasDisponibles.FindIndex(e => e.CodigoEmpresa.ToString() == _abgConfig.CodEmpresa);
+                    if (empDefault >= 0)
+                    {
+                        pickerEmpresa.SelectedIndex = empDefault;
+                    }
+                }
+                
+                // Verificar si tiene contraseña (VB6: HayPassword)
+                if (string.IsNullOrEmpty(usuario.Contraseña))
+                {
+                    // Sin contraseña - login directo
+                    txtPassword.IsVisible = false;
+                    var (exito, mensaje) = await _authService.ValidarCredencialesAsync(txtUsuario.Text, null);
+                    if (exito)
+                    {
+                        // Continuar sin pedir contraseña
+                        lblEstado.Text = "Usuario validado";
+                    }
+                }
+                else
+                {
+                    // Con contraseña - mostrar campo
+                    txtPassword.IsVisible = true;
+                    txtPassword.Focus();
+                    lblEstado.Text = "Ingrese contraseña";
+                }
             }
-            
-            // Seleccionar valores por defecto
-            if (!string.IsNullOrEmpty(Gestion.CodEmpresa?.ToString()))
+            catch (Exception ex)
             {
-                // Seleccionar empresa por defecto
-                pickerEmpresa.SelectedIndex = 0;
-            }
-            
-            if (Gestion.wPuestoTrabajo.Id > 0)
-            {
-                // Seleccionar puesto por defecto
-                pickerPuesto.SelectedIndex = Gestion.wPuestoTrabajo.Id - 1;
+                lblEstado.Text = "Error de conexión";
+                await DisplayAlert("Error", 
+                    $"Error al conectar con el servidor Config: {ex.Message}", 
+                    "OK");
             }
         }
 
         private async void OnAceptarClicked(object sender, EventArgs e)
         {
-            await Accion(CMD_Aceptar);
-        }
-
-        private async void OnCancelarClicked(object sender, EventArgs e)
-        {
-            await Accion(CMD_Cancelar);
-        }
-
-        private async Task Accion(int index)
-        {
-            switch (index)
-            {
-                case CMD_Aceptar:
-                    await ValidarYConectar();
-                    break;
-                    
-                case CMD_Cancelar:
-                    // Salir de la aplicación
-                    Gestion.LoginSucceeded = false;
-                    Application.Current?.Quit();
-                    break;
-            }
-        }
-
-        private async Task ValidarYConectar()
-        {
             // Validar campos
             if (string.IsNullOrWhiteSpace(txtUsuario.Text))
             {
-                await DisplayAlertAsync("Error", "Debe ingresar un usuario", "OK");
+                await DisplayAlert("Error", "Debe ingresar un usuario", "OK");
                 txtUsuario.Focus();
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(txtPassword.Text))
-            {
-                await DisplayAlertAsync("Error", "Debe ingresar una contraseña", "OK");
-                txtPassword.Focus();
                 return;
             }
 
             if (pickerEmpresa.SelectedIndex < 0)
             {
-                await DisplayAlertAsync("Error", "Debe seleccionar una empresa", "OK");
+                // Si no hay empresas cargadas, validar usuario primero
+                await ValidarUsuarioAsync();
                 return;
             }
 
             if (pickerPuesto.SelectedIndex < 0)
             {
-                await DisplayAlertAsync("Error", "Debe seleccionar un puesto", "OK");
+                await DisplayAlert("Error", "Debe seleccionar un puesto", "OK");
                 return;
             }
 
-            lblEstado.Text = "Validando usuario...";
+            lblEstado.Text = "Iniciando sesión...";
             
             try
             {
-                // TODO: Implementar validación real contra base de datos
-                // Por ahora, validación básica de ejemplo
-                bool usuarioValido = await ValidarUsuario(
+                // Validar credenciales (VB6: ValidaContraseña)
+                var (exito, mensaje) = await _authService.ValidarCredencialesAsync(
                     txtUsuario.Text, 
-                    txtPassword.Text);
+                    txtPassword.IsVisible ? txtPassword.Text : null);
 
-                if (usuarioValido)
-                {
-                    // Usuario válido
-                    Gestion.LoginSucceeded = true;
-                    Gestion.Usuario.Nombre = txtUsuario.Text;
-                    
-                    // Guardar valores en INI
-                    GuardarPreferencias();
-                    
-                    lblEstado.Text = "Conexión exitosa";
-                    
-                    // Navegar al menú principal
-                    await Shell.Current.GoToAsync("//MenuPage");
-                }
-                else
+                if (!exito)
                 {
                     reintentos++;
                     
                     if (reintentos >= 3)
                     {
-                        await DisplayAlertAsync("Error", 
+                        await DisplayAlert("Error", 
                             "Ha excedido el número de intentos permitidos. La aplicación se cerrará.", 
                             "OK");
                         Application.Current?.Quit();
                     }
                     else
                     {
-                        await DisplayAlertAsync("Error", 
-                            $"Usuario o contraseña incorrectos. Intentos restantes: {3 - reintentos}", 
+                        await DisplayAlert("Error", 
+                            $"{mensaje}\nIntentos restantes: {3 - reintentos}", 
                             "OK");
                         txtPassword.Text = string.Empty;
                         txtPassword.Focus();
                     }
                     
                     lblEstado.Text = "Error de autenticación";
+                    return;
                 }
+                
+                // Seleccionar empresa (VB6: ConfiguracionEmpresa)
+                var empresaSeleccionada = _empresasDisponibles[pickerEmpresa.SelectedIndex];
+                _authService.SeleccionarEmpresa(empresaSeleccionada);
+                
+                // Guardar puesto de trabajo
+                Gestion.wPuestoTrabajo.Id = pickerPuesto.SelectedIndex + 1;
+                
+                // Login exitoso
+                Gestion.LoginSucceeded = true;
+                Gestion.Usuario.Id = _authService.UsuarioActual!.UsuarioId;
+                Gestion.Usuario.Nombre = _authService.UsuarioActual.NombreUsuario;
+                Gestion.CodEmpresa = empresaSeleccionada.CodigoEmpresa;
+                Gestion.Empresa = empresaSeleccionada.NombreEmpresa;
+                
+                lblEstado.Text = $"Conexión exitosa - Empresa: {empresaSeleccionada.NombreEmpresa}";
+                
+                // Navegar al menú principal
+                await Task.Delay(500); // Breve delay para mostrar mensaje
+                await Shell.Current.GoToAsync("//MenuPage");
             }
             catch (Exception ex)
             {
                 lblEstado.Text = "Error de conexión";
-                await DisplayAlertAsync("Error", 
-                    $"Error al conectar con el servidor: {ex.Message}", 
+                await DisplayAlert("Error", 
+                    $"Error al iniciar sesión: {ex.Message}", 
                     "OK");
             }
         }
 
-        private async Task<bool> ValidarUsuario(string usuario, string password)
+        private void OnCancelarClicked(object sender, EventArgs e)
         {
-            // TODO: Implementar validación real contra base de datos
-            // Por ahora, simulamos un delay y aceptamos cualquier usuario
-            await Task.Delay(500);
-            
-            // Validación temporal - aceptar cualquier usuario para desarrollo
-            return !string.IsNullOrEmpty(usuario) && !string.IsNullOrEmpty(password);
+            // Salir de la aplicación
+            Gestion.LoginSucceeded = false;
+            Application.Current?.Quit();
         }
 
-        private void GuardarPreferencias()
+        /// <summary>
+        /// Cuando el usuario termina de escribir su nombre, validar contra Config DB
+        /// Migrado desde VB6: txtUsuarios_LostFocus → ValidaUsuario
+        /// </summary>
+        private async void txtUsuario_Completed(object sender, EventArgs e)
         {
-            // Guardar usuario y empresa por defecto en INI
-            if (!string.IsNullOrEmpty(Gestion.ficINI))
-            {
-                ProfileManager.GuardarIni(Gestion.ficINI, "Varios", "UsrDefault", txtUsuario.Text);
-                
-                if (pickerEmpresa.SelectedIndex >= 0)
-                {
-                    // Guardar código de empresa
-                    ProfileManager.GuardarIni(Gestion.ficINI, "Varios", "EmpDefault", 
-                        (pickerEmpresa.SelectedIndex + 1).ToString());
-                }
-                
-                if (pickerPuesto.SelectedIndex >= 0)
-                {
-                    // Guardar puesto
-                    ProfileManager.GuardarIni(Gestion.ficINI, "Varios", "PueDefault", 
-                        (pickerPuesto.SelectedIndex + 1).ToString());
-                }
-            }
-        }
-
-        private void RegistrarVersion()
-        {
-            // Registrar versión en archivo INI local
-            #if WINDOWS
-            string ficheroIniLocal = "C:\\Archivos de programa\\ABG\\abg.ini";
-            if (System.IO.Directory.Exists("C:\\Archivos de programa\\ABG\\"))
-            {
-                ProfileManager.GuardarIni(ficheroIniLocal, "Versiones", "ABG", "23.4.2");
-            }
-            #endif
+            await ValidarUsuarioAsync();
         }
     }
 }

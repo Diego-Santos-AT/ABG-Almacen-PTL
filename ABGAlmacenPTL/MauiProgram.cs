@@ -58,15 +58,23 @@ public static class MauiProgram
 		var abgConfig = new ABGConfigService(iniPath);
 		builder.Services.AddSingleton(abgConfig);
 		
-		// Obtener connection string para Config DB (servidor local GROOT)
-		var configConnectionString = abgConfig.GetConfigConnectionString();
+		// ========================================================================
+		// CONFIGURACIÓN DE BASES DE DATOS MÚLTIPLES (FIEL AL VB6)
+		// ========================================================================
 		
-		// NOTA: En VB6, después de login se obtiene la empresa del usuario desde Config DB
-		// y luego se construyen las conexiones a Gestion y GestionAlmacen dinámicamente.
-		// Por ahora usamos Config DB que es el que tiene usuarios y configuración.
+		// 1. Config DB (GROOT) - Usuarios, empresas, configuración
+		var configConnectionString = abgConfig.GetConfigConnectionString();
+		builder.Services.AddDbContext<ConfigContext>(options =>
+			options.UseSqlServer(configConnectionString));
+		
+		// 2. GestionAlmacen DB (PTL) - Se configura después del login
+		// Por ahora usamos Config DB como base, después del login se cambiará
 		builder.Services.AddDbContext<ABGAlmacenContext>(options =>
 			options.UseSqlServer(configConnectionString));
 
+		// Register authentication service (VB6-faithful)
+		builder.Services.AddScoped<AuthService>();
+		
 		// Register repositories
 		builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 		

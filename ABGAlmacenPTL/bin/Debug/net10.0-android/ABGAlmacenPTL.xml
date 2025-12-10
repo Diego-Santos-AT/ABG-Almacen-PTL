@@ -262,6 +262,13 @@
             Necesario para que EF Core tools (dotnet ef migrations) funcione correctamente
             </summary>
         </member>
+        <member name="T:ABGAlmacenPTL.Data.ConfigContext">
+            <summary>
+            Contexto de Entity Framework Core para Config DB
+            Migrado desde VB6 - base de datos de configuración (GROOT/BDDServLocal)
+            Tablas: gdeusr, gdeemp, gdusremp
+            </summary>
+        </member>
         <member name="T:ABGAlmacenPTL.Data.Repositories.IRepository`1">
             <summary>
             Generic repository interface for CRUD operations
@@ -334,6 +341,24 @@
         <member name="T:ABGAlmacenPTL.Models.CajaArticulo">
             <summary>
             Tabla de unión para relación muchos-a-muchos Caja-Artículo
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.Config.Usuario">
+            <summary>
+            Modelo para tabla gdeusr (Usuarios del sistema Config)
+            Migrado desde VB6 - tabla en base de datos Config
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.Config.Empresa">
+            <summary>
+            Modelo para tabla gdeemp (Empresas)
+            Migrado desde VB6 - tabla en base de datos Config
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.Config.UsuarioEmpresa">
+            <summary>
+            Modelo para tabla gdusremp (Relación Usuario-Empresa)
+            Migrado desde VB6 - tabla en base de datos Config
             </summary>
         </member>
         <member name="T:ABGAlmacenPTL.Models.ColorPuesto">
@@ -723,11 +748,15 @@
         <member name="T:ABGAlmacenPTL.Pages.InicioPage">
             <summary>
             Form de pantalla de Inicio de la aplicación
-            Muestra el nombre de programa, versión, etc
-            Control de la conexión con BD
-            Validación de Usuario
-            Migrado desde VB6 frmInicio.frm
-            Creado: 04/04/01
+            Validación de Usuario contra Config DB
+            Selección de Empresa
+            Migrado fielmente desde VB6 frmInicio.frm
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Pages.InicioPage.txtUsuario_Completed(System.Object,System.EventArgs)">
+            <summary>
+            Cuando el usuario termina de escribir su nombre, validar contra Config DB
+            Migrado desde VB6: txtUsuarios_LostFocus → ValidaUsuario
             </summary>
         </member>
         <member name="T:ABGAlmacenPTL.Pages.MenuPage">
@@ -840,6 +869,51 @@
         <member name="M:ABGAlmacenPTL.Services.ABGConfigService.Reload">
             <summary>
             Refresca la configuración desde el archivo .ini
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Services.AuthService">
+            <summary>
+            Servicio de autenticación
+            Migrado desde VB6: frmInicio.frm - ValidaUsuario/ValidaContraseña
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.AuthService.BuscarUsuarioAsync(System.String)">
+            <summary>
+            Busca y valida un usuario en la base de datos Config
+            Migrado desde VB6: edC.BuscaUsuario txtUsuarios.Text
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.AuthService.ValidarCredencialesAsync(System.String,System.String)">
+            <summary>
+            Valida las credenciales del usuario
+            Migrado desde VB6: ValidaContraseña
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.AuthService.ObtenerEmpresasUsuarioAsync(System.Int32)">
+            <summary>
+            Obtiene las empresas a las que el usuario tiene acceso
+            Migrado desde VB6: edC.DameEmpresasAccesoUsuario
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.AuthService.SeleccionarEmpresa(ABGAlmacenPTL.Models.Config.Empresa)">
+            <summary>
+            Selecciona una empresa para trabajar
+            Migrado desde VB6: ConfiguracionEmpresa
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.AuthService.ObtenerConnectionStringGestion">
+            <summary>
+            Obtiene la connection string para Gestion DB de la empresa actual
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.AuthService.ObtenerConnectionStringGestionAlmacen">
+            <summary>
+            Obtiene la connection string para GestionAlmacen DB de la empresa actual
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.AuthService.CerrarSesion">
+            <summary>
+            Cierra la sesión actual
             </summary>
         </member>
         <member name="T:ABGAlmacenPTL.Services.PTLService">
