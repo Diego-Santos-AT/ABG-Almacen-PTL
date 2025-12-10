@@ -198,6 +198,7 @@ namespace ABGAlmacenPTL.Pages
             catch (Exception ex)
             {
                 lblEstado.Text = "Error de conexión";
+                _ultimoUsuarioValidado = string.Empty; // Reset on connection error
                 await DisplayAlert("Error", 
                     $"Error al conectar con el servidor Config: {ex.Message}", 
                     "OK");
@@ -412,7 +413,7 @@ namespace ABGAlmacenPTL.Pages
         private void txtUsuario_TextChanged(object sender, TextChangedEventArgs e)
         {
             // Si el usuario cambia el texto, limpiar empresas y estado de validación
-            if (e.NewTextValue != _ultimoUsuarioValidado)
+            if (!string.IsNullOrEmpty(e.NewTextValue) && e.NewTextValue != _ultimoUsuarioValidado)
             {
                 _empresasDisponibles.Clear();
                 pickerEmpresa.Items.Clear();
