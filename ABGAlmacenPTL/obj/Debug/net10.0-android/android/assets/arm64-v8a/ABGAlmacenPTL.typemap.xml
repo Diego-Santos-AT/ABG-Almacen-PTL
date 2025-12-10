@@ -1,0 +1,10 @@
+<api type="debug" assembly-name="ABGAlmacenPTL" mvid="8a1d541f7f5e492bb7ed24ccdc6ea179">
+  <java-to-managed>
+    <entry java-name="crc640301e046e7c5726d/MainActivity" managed-name="ABGAlmacenPTL.MainActivity, ABGAlmacenPTL" managed-type-token-id="33554441" />
+    <entry java-name="crc640301e046e7c5726d/MainApplication" managed-name="ABGAlmacenPTL.MainApplication, ABGAlmacenPTL" managed-type-token-id="33554442" />
+  </java-to-managed>
+  <managed-to-java>
+    <entry java-name="crc640301e046e7c5726d/MainActivity" managed-name="ABGAlmacenPTL.MainActivity, ABGAlmacenPTL" managed-type-token-id="33554441" />
+    <entry java-name="crc640301e046e7c5726d/MainApplication" managed-name="ABGAlmacenPTL.MainApplication, ABGAlmacenPTL" managed-type-token-id="33554442" />
+  </managed-to-java>
+</api>

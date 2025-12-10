@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ABGAlmacenPTL</name>
+    </assembly>
+    <members>
+        <member name="T:ABGAlmacenPTL.Models.TipoEmpresa">
+            <summary>
+            Tipo de datos para Empresa
+            Migrado desde VB6 Type TipoEmpresa
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.TipoOpcion">
+            <summary>
+            Tipo de datos para Opción
+            Migrado desde VB6 Type TipoOpcion
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.TipoMenu">
+            <summary>
+            Tipo de datos para menu
+            Migrado desde VB6 Type TipoMenu
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.TipoUsuario">
+            <summary>
+            Tipo de Datos para Usuario
+            Migrado desde VB6 Type TipoUsuario
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.PuestoTrabajo">
+            <summary>
+            Tipo de Datos para Puesto de trabajo
+            Migrado desde VB6 Type PuestoTrabajo
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Modules.Gestion">
+            <summary>
+            Módulo principal de gestión - Variables y constantes globales
+            Migrado desde VB6 Gestion.bas
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Resource">
+            <summary>
+            Android Resource Designer class.
+            Exposes the Android Resource designer assembly into the project Namespace.
+            </summary>
+        </member>
+    </members>
+</doc>
