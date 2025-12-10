@@ -67,13 +67,28 @@ public static class MauiProgram
 		builder.Services.AddDbContext<ConfigContext>(options =>
 			options.UseSqlServer(configConnectionString));
 		
-		// 2. GestionAlmacen DB (PTL) - Se configura después del login
-		// Por ahora usamos Config DB como base, después del login se cambiará
-		builder.Services.AddDbContext<ABGAlmacenContext>(options =>
-			options.UseSqlServer(configConnectionString));
+		// 2. GestionAlmacen DB (PTL) - Se reconfigura dinámicamente después del login
+		// Factory pattern para permitir reconexión según empresa seleccionada
+		builder.Services.AddScoped<ABGAlmacenContext>(serviceProvider =>
+		{
+			var authService = serviceProvider.GetRequiredService<AuthService>();
+			var optionsBuilder = new DbContextOptionsBuilder<ABGAlmacenContext>();
+			
+			// Si hay empresa seleccionada, usar su GestionAlmacen DB
+			// Si no, usar Config DB temporalmente
+			var connectionString = authService.EmpresaActual != null
+				? authService.ObtenerConnectionStringGestionAlmacen()
+				: configConnectionString;
+			
+			optionsBuilder.UseSqlServer(connectionString ?? configConnectionString);
+			return new ABGAlmacenContext(optionsBuilder.Options);
+		});
 
 		// Register authentication service (VB6-faithful)
 		builder.Services.AddScoped<AuthService>();
+		
+		// Register database connection manager (VB6-faithful)
+		builder.Services.AddScoped<DatabaseConnectionManager>();
 		
 		// Register repositories
 		builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

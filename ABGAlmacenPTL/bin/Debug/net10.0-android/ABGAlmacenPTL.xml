@@ -916,6 +916,29 @@
             Cierra la sesión actual
             </summary>
         </member>
+        <member name="T:ABGAlmacenPTL.Services.DatabaseConnectionManager">
+            <summary>
+            Servicio para gestionar conexiones dinámicas a bases de datos
+            Migrado desde VB6 - reconexión dinámica según empresa seleccionada
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.DatabaseConnectionManager.ConfigurarConexionGestionAlmacen">
+            <summary>
+            Reconfigura ABGAlmacenContext para usar la base de datos GestionAlmacen
+            de la empresa seleccionada
+            Migrado desde VB6: Después de ConfiguracionEmpresa
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.DatabaseConnectionManager.CrearContextoGestionAlmacen">
+            <summary>
+            Crea una nueva instancia de ABGAlmacenContext con la conexión correcta
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.DatabaseConnectionManager.VerificarConexionGestionAlmacenAsync">
+            <summary>
+            Verifica si la conexión a GestionAlmacen está configurada y disponible
+            </summary>
+        </member>
         <member name="T:ABGAlmacenPTL.Services.PTLService">
             <summary>
             Service for PTL (Pick-to-Light) operations

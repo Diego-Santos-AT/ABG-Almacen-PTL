@@ -212,6 +212,33 @@ namespace ABGAlmacenPTL.Pages
                 // Guardar puesto de trabajo
                 Gestion.wPuestoTrabajo.Id = pickerPuesto.SelectedIndex + 1;
                 
+                lblEstado.Text = "Verificando conexión a base de datos...";
+                
+                // Verificar conexión a GestionAlmacen DB (VB6: ConexionGestionAlmacen)
+                try
+                {
+                    var dbManager = Handler?.MauiContext?.Services.GetService<DatabaseConnectionManager>();
+                    if (dbManager != null)
+                    {
+                        bool conexionOk = await dbManager.VerificarConexionGestionAlmacenAsync();
+                        if (!conexionOk)
+                        {
+                            await DisplayAlert("Advertencia", 
+                                $"No se pudo conectar a la base de datos GestionAlmacen.\n" +
+                                $"Empresa: {empresaSeleccionada.NombreEmpresa}\n" +
+                                $"Servidor: {empresaSeleccionada.ServidorGA}\n" +
+                                $"BD: {empresaSeleccionada.BaseDatosGA}", 
+                                "OK");
+                        }
+                    }
+                }
+                catch (Exception exDB)
+                {
+                    await DisplayAlert("Advertencia", 
+                        $"Error al verificar conexión a base de datos: {exDB.Message}", 
+                        "OK");
+                }
+                
                 // Login exitoso
                 Gestion.LoginSucceeded = true;
                 Gestion.Usuario.Id = _authService.UsuarioActual!.UsuarioId;
