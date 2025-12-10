@@ -4,12 +4,207 @@
         <name>ABGAlmacenPTL</name>
     </assembly>
     <members>
+        <member name="T:ABGAlmacenPTL.Classes.DataFilter">
+            <summary>
+            Clase para filtrado de datos en recordsets
+            Migrado desde VB6 clsDataFilter.cls
+            </summary>
+        </member>
+        <member name="P:ABGAlmacenPTL.Classes.DataFilter.SourceTable">
+            <summary>
+            Tabla de datos origen
+            </summary>
+        </member>
+        <member name="P:ABGAlmacenPTL.Classes.DataFilter.Filter">
+            <summary>
+            Expresión de filtro
+            </summary>
+        </member>
+        <member name="P:ABGAlmacenPTL.Classes.DataFilter.Sort">
+            <summary>
+            Expresión de ordenamiento
+            </summary>
+        </member>
+        <member name="P:ABGAlmacenPTL.Classes.DataFilter.FilteredView">
+            <summary>
+            Vista filtrada de los datos
+            </summary>
+        </member>
+        <member name="P:ABGAlmacenPTL.Classes.DataFilter.RecordCount">
+            <summary>
+            Número de registros filtrados
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Classes.DataFilter.ApplyFilter">
+            <summary>
+            Aplica el filtro y ordenamiento
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Classes.DataFilter.ClearFilter">
+            <summary>
+            Limpia el filtro
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Classes.DataFilter.GetFilteredTable">
+            <summary>
+            Obtiene el DataTable filtrado
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Classes.GenericRecordset">
+            <summary>
+            Clase genérica de Recordset de memoria
+            Migrado desde VB6 clGenericaRecordset.cls
+            Fecha creación: 07/12/2000
+            Autor: A. Moreno Marquéz
+            </summary>
+        </member>
+        <member name="P:ABGAlmacenPTL.Classes.GenericRecordset.DataTable">
+            <summary>
+            DataTable interno que simula el recordset
+            </summary>
+        </member>
+        <member name="P:ABGAlmacenPTL.Classes.GenericRecordset.RecordCount">
+            <summary>
+            Obtiene el número de registros
+            </summary>
+        </member>
+        <member name="P:ABGAlmacenPTL.Classes.GenericRecordset.EOF">
+            <summary>
+            Indica si estamos al final del recordset
+            </summary>
+        </member>
+        <member name="P:ABGAlmacenPTL.Classes.GenericRecordset.BOF">
+            <summary>
+            Indica si estamos al inicio del recordset
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Classes.GenericRecordset.ConfigurarClase(System.Object[])">
+            <summary>
+            Configura la clase y crea la estructura del recordset
+            Migrado desde VB6: Configura_Clase
+            </summary>
+            <param name="columns">Array de columnas (nombre, tipo)</param>
+        </member>
+        <member name="M:ABGAlmacenPTL.Classes.GenericRecordset.AddNew">
+            <summary>
+            Añade un nuevo registro
+            Migrado desde VB6: AddNew
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Classes.GenericRecordset.Update(System.Data.DataRow)">
+            <summary>
+            Actualiza el registro actual
+            Migrado desde VB6: Update
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Classes.GenericRecordset.MoveFirst">
+            <summary>
+            Mueve al primer registro
+            Migrado desde VB6: MoveFirst
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Classes.GenericRecordset.MoveLast">
+            <summary>
+            Mueve al último registro
+            Migrado desde VB6: MoveLast
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Classes.GenericRecordset.MoveNext">
+            <summary>
+            Mueve al siguiente registro
+            Migrado desde VB6: MoveNext
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Classes.GenericRecordset.MovePrevious">
+            <summary>
+            Mueve al registro anterior
+            Migrado desde VB6: MovePrevious
+            </summary>
+        </member>
+        <member name="P:ABGAlmacenPTL.Classes.GenericRecordset.CurrentRow">
+            <summary>
+            Obtiene el registro actual
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Classes.GenericRecordset.Close">
+            <summary>
+            Cierra el recordset
+            Migrado desde VB6: Close
+            </summary>
+        </member>
+        <member name="P:ABGAlmacenPTL.Classes.GenericRecordset.Item(System.String)">
+            <summary>
+            Obtiene un valor del registro actual por nombre de columna
+            </summary>
+        </member>
         <member name="T:ABGAlmacenPTL.Classes.Memory">
             <summary>
             Class for manipulating API memory blocks
             Migrado desde VB6 cMemory.cls
             Author: Steve McMahon
             Date: 24 May 1998
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Classes.RowLoop">
+            <summary>
+            Clase para iteración de filas en recordsets
+            Migrado desde VB6 clsRowLoop.cls
+            </summary>
+        </member>
+        <member name="P:ABGAlmacenPTL.Classes.RowLoop.DataTable">
+            <summary>
+            Tabla de datos para iterar
+            </summary>
+        </member>
+        <member name="P:ABGAlmacenPTL.Classes.RowLoop.Filter">
+            <summary>
+            Expresión de filtro
+            </summary>
+        </member>
+        <member name="P:ABGAlmacenPTL.Classes.RowLoop.CurrentIndex">
+            <summary>
+            Índice actual de iteración
+            </summary>
+        </member>
+        <member name="P:ABGAlmacenPTL.Classes.RowLoop.RowCount">
+            <summary>
+            Número total de filas
+            </summary>
+        </member>
+        <member name="P:ABGAlmacenPTL.Classes.RowLoop.HasMore">
+            <summary>
+            Indica si hay más filas para iterar
+            </summary>
+        </member>
+        <member name="P:ABGAlmacenPTL.Classes.RowLoop.CurrentRow">
+            <summary>
+            Fila actual
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Classes.RowLoop.ApplyFilter">
+            <summary>
+            Aplica el filtro
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Classes.RowLoop.MoveNext">
+            <summary>
+            Mueve al siguiente registro
+            </summary>
+            <returns>True si hay más registros, False si llegó al final</returns>
+        </member>
+        <member name="M:ABGAlmacenPTL.Classes.RowLoop.Reset">
+            <summary>
+            Reinicia el iterador al inicio
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Classes.RowLoop.GetEnumerator">
+            <summary>
+            Obtiene el enumerador genérico
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Classes.RowLoop.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Obtiene el enumerador no genérico
             </summary>
         </member>
         <member name="T:ABGAlmacenPTL.Configuration.ProfileManager">
@@ -49,6 +244,141 @@
             <param name="lpAppName">Nombre de la sección a leer</param>
             <returns>Diccionario con las claves y valores de la sección</returns>
         </member>
+        <member name="T:ABGAlmacenPTL.Data.ABGAlmacenContext">
+            <summary>
+            Contexto de Entity Framework Core para ABG Almacén PTL
+            Migrado desde VB6 ADO/Recordset a EF Core
+            Gestiona acceso a base de datos SQL Server
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Data.ABGAlmacenContext.SeedData(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            Datos iniciales para desarrollo/pruebas
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Data.ABGAlmacenContextFactory">
+            <summary>
+            Factory para crear ABGAlmacenContext en tiempo de diseño
+            Necesario para que EF Core tools (dotnet ef migrations) funcione correctamente
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Data.ConfigContext">
+            <summary>
+            Contexto de Entity Framework Core para Config DB
+            Migrado desde VB6 - base de datos de configuración (GROOT/BDDServLocal)
+            Tablas: gdeusr, gdeemp, gdusremp
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Data.Repositories.IRepository`1">
+            <summary>
+            Generic repository interface for CRUD operations
+            </summary>
+            <typeparam name="T">Entity type</typeparam>
+        </member>
+        <member name="T:ABGAlmacenPTL.Data.Repositories.IUnitOfWork">
+            <summary>
+            Unit of Work pattern interface for coordinating repository operations
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Data.Repositories.Repository`1">
+            <summary>
+            Generic repository implementation using Entity Framework Core
+            </summary>
+            <typeparam name="T">Entity type</typeparam>
+        </member>
+        <member name="T:ABGAlmacenPTL.Data.Repositories.UnitOfWork">
+            <summary>
+            Unit of Work implementation for managing database operations
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Data.SeedData">
+            <summary>
+            Clase para inicializar datos de prueba en la base de datos
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.Articulo">
+            <summary>
+            Modelo de datos para Artículos/Productos
+            Migrado desde VB6 - representa productos en el sistema PTL
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.ArticuloItem">
+            <summary>
+            Item de artículo para el CollectionView de páginas PTL
+            Usado en ConsultaPTL y EmpaquetarBAC
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.EstadoBAC">
+            <summary>
+            Estado del BAC - migrado desde VB6
+            ABIERTO = 0, CERRADO = 1
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.BAC">
+            <summary>
+            Modelo de datos para BAC (contenedor de almacenamiento PTL)
+            Migrado desde VB6 - representa contenedores en el sistema PTL
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.BACArticulo">
+            <summary>
+            Tabla de unión para relación muchos-a-muchos BAC-Artículo
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.EstadoCaja">
+            <summary>
+            Estado de la Caja - migrado desde VB6
+            Abierta = en proceso, Cerrada = finalizada
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.Caja">
+            <summary>
+            Modelo de datos para Cajas (contenedores de empaquetado)
+            Migrado desde VB6 - representa cajas con código SSCC
+            SSCC: 18 dígitos con dígito de control (GS1 estándar)
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.CajaArticulo">
+            <summary>
+            Tabla de unión para relación muchos-a-muchos Caja-Artículo
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.Config.Usuario">
+            <summary>
+            Modelo para tabla gdeusr (Usuarios del sistema Config)
+            Migrado desde VB6 - tabla en base de datos Config
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.Config.Empresa">
+            <summary>
+            Modelo para tabla gdeemp (Empresas)
+            Migrado desde VB6 - tabla en base de datos Config
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.Config.UsuarioEmpresa">
+            <summary>
+            Modelo para tabla gdusremp (Relación Usuario-Empresa)
+            Migrado desde VB6 - tabla en base de datos Config
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.ColorPuesto">
+            <summary>
+            Colores de puestos de trabajo PTL - migrado desde VB6
+            Matching exacto con colores VB6
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.Puesto">
+            <summary>
+            Modelo de datos para Puestos de Trabajo PTL
+            Migrado desde VB6 - representa estaciones de trabajo con luces de colores
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.TipoCaja">
+            <summary>
+            Modelo de datos para Tipos de Caja
+            Migrado desde VB6 - representa tipos/categorías de contenedores
+            </summary>
+        </member>
         <member name="T:ABGAlmacenPTL.Models.TipoEmpresa">
             <summary>
             Tipo de datos para Empresa
@@ -78,6 +408,52 @@
             Tipo de Datos para Puesto de trabajo
             Migrado desde VB6 Type PuestoTrabajo
             </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.Ubicacion">
+            <summary>
+            Modelo de datos para Ubicaciones PTL
+            Migrado desde VB6 - representa posiciones físicas en el almacén
+            Formato: 12 dígitos AAABBBCCCDD (Almacén.Bloque.Fila.Altura)
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.Usuario">
+            <summary>
+            Modelo de datos para Usuarios del sistema
+            Migrado desde VB6 - representa usuarios con acceso al sistema PTL
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Modules.CodeModule">
+            <summary>
+            Módulo genérico de funciones auxiliares
+            Migrado desde VB6 CodeModule.bas
+            Contiene funciones para ZIP/UNZIP y otras utilidades
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.CodeModule.VBZip(System.String,System.String)">
+            <summary>
+            Comprime archivos en formato ZIP
+            Migrado desde VB6: VBZip
+            </summary>
+            <param name="sourceDirectory">Directorio de origen</param>
+            <param name="zipFileName">Nombre del archivo ZIP de destino</param>
+            <returns>True si se completó exitosamente</returns>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.CodeModule.VBUnzip(System.String,System.String)">
+            <summary>
+            Descomprime archivos ZIP
+            Migrado desde VB6: VBUnzip
+            </summary>
+            <param name="zipFileName">Nombre del archivo ZIP</param>
+            <param name="extractDirectory">Directorio de extracción</param>
+            <returns>True si se completó exitosamente</returns>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.CodeModule.SzTrim(System.String)">
+            <summary>
+            Recorta espacios en blanco de una cadena
+            Migrado desde VB6: szTrim
+            </summary>
+            <param name="szString">Cadena a recortar</param>
+            <returns>Cadena recortada</returns>
         </member>
         <member name="T:ABGAlmacenPTL.Modules.GDConstantes">
             <summary>
@@ -222,15 +598,350 @@
             Módulo principal de gestión - Variables y constantes globales
             Migrado desde VB6 Gestion.bas
             </summary>
+            <summary>
+            Módulo principal de gestión - Métodos
+            Migrado desde VB6 Gestion.bas
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.Gestion.Main">
+            <summary>
+            Punto de entrada principal de la aplicación
+            Migrado desde VB6: Sub Main()
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.Gestion.CrearAGBIni(System.String)">
+            <summary>
+            Crea el fichero de inicio ABG.INI
+            Migrado desde VB6: Private Sub CrearAGBIni(Fichero As String)
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.Gestion.LeerParamentrosIni(System.String)">
+            <summary>
+            Lee los parámetros del fichero INI
+            Migrado desde VB6: Private Sub LeerParamentrosIni(Fichero As String)
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.Gestion.InicializarVariablesGenerales">
+            <summary>
+            Inicializa las variables generales de la aplicación
+            Migrado desde VB6: Private Sub InicializarVariablesGenerales()
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.Gestion.ConfiguracionEmpresa(System.Object)">
+            <summary>
+            Configura la empresa de trabajo
+            Migrado desde VB6: Private Sub ConfiguracionEmpresa(codemp)
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.Gestion.CargarParametrosEmpresa">
+            <summary>
+            Carga los parámetros de la empresa activa
+            Migrado desde VB6: Public Sub CargarParametrosEmpresa()
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.Gestion.LeerDSN">
+            <summary>
+            Lee y verifica el archivo DSN
+            Migrado desde VB6: Public Sub LeerDSN()
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.Gestion.NombrePC">
+            <summary>
+            Obtiene el nombre del PC
+            Migrado desde VB6: Public Function nombrePC() As String
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.Gestion.InstanciasPrograma">
+            <summary>
+            Verifica si hay múltiples instancias del programa
+            Migrado desde VB6: Private Function InstanciasPrograma() As Boolean
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.Gestion.DameGrupoEmpresaUsuario(System.Int32)">
+            <summary>
+            Obtiene el grupo de empresa del usuario
+            Migrado desde VB6: Private Function DameGrupoEmpresaUsuario(usr As Integer) As Integer
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Pages.Generic.ErrorTransaccionPage">
+            <summary>
+            Formulario para mostrar errores de transacción con temporizador
+            Migrado desde VB6 frmErrorTransaccion.frm
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Pages.Generic.ErrorTransaccionPage.ShowAsync(System.String,System.String,System.Int32)">
+            <summary>
+            Muestra el formulario de error con temporizador
+            </summary>
+            <param name="mensaje">Mensaje de error a mostrar</param>
+            <param name="titulo">Título de la ventana</param>
+            <param name="tiempoSegundos">Tiempo de espera en segundos antes de cerrar automáticamente</param>
+            <returns>True si el usuario aceptó, False si canceló o expiró el tiempo</returns>
+        </member>
+        <member name="T:ABGAlmacenPTL.Pages.Generic.MensajePage">
+            <summary>
+            Formulario genérico para mostrar mensajes simples
+            Migrado desde VB6 frmMensaje.frm
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Pages.Generic.MensajePage.ShowAsync(System.String,System.String)">
+            <summary>
+            Muestra un mensaje simple con botón Aceptar
+            </summary>
+            <param name="mensaje">Mensaje a mostrar</param>
+            <param name="titulo">Título de la ventana</param>
+        </member>
+        <member name="T:ABGAlmacenPTL.Pages.Generic.MsgBoxPage">
+            <summary>
+            Formulario genérico para mostrar mensajes personalizados
+            Migrado desde VB6 frmMsgBox.frm
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Pages.Generic.MsgBoxPage.ShowAsync(System.String,System.String,ABGAlmacenPTL.Pages.Generic.MsgBoxPage.MsgBoxButtons,ABGAlmacenPTL.Pages.Generic.MsgBoxPage.MsgBoxIcon)">
+            <summary>
+            Configura y muestra el cuadro de mensaje
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Pages.Generic.SeleccionTabla2Page">
+            <summary>
+            Formulario de selección de datos desde una tabla/recordset
+            Migrado desde VB6 frmSeleccionTabla2.frm
+            Creado: Original VB6
+            Ult. Mod.: 23/04/02 (VB6)
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Pages.Generic.SeleccionTabla2Page.ShowAsync(System.String,System.Data.DataTable,System.String,System.String)">
+            <summary>
+            Muestra el formulario de selección con datos de un DataTable
+            </summary>
+            <param name="titulo">Título del formulario</param>
+            <param name="dataTable">DataTable con los datos</param>
+            <param name="displayColumn">Nombre de la columna a mostrar</param>
+            <param name="valueColumn">Nombre de la columna del valor (opcional, usa displayColumn si no se especifica)</param>
+            <returns>Tupla con (seleccionado: bool, valor: object?)</returns>
+        </member>
+        <member name="M:ABGAlmacenPTL.Pages.Generic.SeleccionTabla2Page.ShowAsync(System.String,System.Collections.Generic.IEnumerable{ABGAlmacenPTL.Pages.Generic.SelectionItem})">
+            <summary>
+            Muestra el formulario de selección con una lista de items
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Pages.Generic.SelectionItem">
+            <summary>
+            Item de selección para el formulario
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Pages.Generic.VerFotoPage">
+            <summary>
+            Formulario para mostrar la foto de un artículo
+            Migrado desde VB6 frmVerFoto.frm
+            Creado: 7/02/00
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Pages.Generic.VerFotoPage.ShowAsync(System.Int64,System.String,System.String)">
+            <summary>
+            Muestra la foto de un artículo
+            </summary>
+            <param name="codigo">Código del artículo</param>
+            <param name="nombre">Nombre del artículo</param>
+            <param name="ruta">Ruta donde se encuentran las fotos</param>
         </member>
         <member name="T:ABGAlmacenPTL.Pages.InicioPage">
             <summary>
             Form de pantalla de Inicio de la aplicación
-            Muestra el nombre de programa, versión, etc
-            Control de la conexión con BD
-            Validación de Usuario
-            Migrado desde VB6 frmInicio.frm
-            Creado: 04/04/01
+            Validación de Usuario contra Config DB
+            Selección de Empresa
+            Migrado fielmente desde VB6 frmInicio.frm
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Pages.InicioPage.txtUsuario_Completed(System.Object,System.EventArgs)">
+            <summary>
+            Cuando el usuario termina de escribir su nombre, validar contra Config DB
+            Migrado desde VB6: txtUsuarios_LostFocus → ValidaUsuario
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Pages.MenuPage">
+            <summary>
+            Menú Principal de la aplicación PTL
+            Migrado desde VB6: frmMenu.frm
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Pages.MenuPage.OnConsultasPTLClicked(System.Object,System.EventArgs)">
+            <summary>
+            Navegar a Consultas PTL
+            Migrado desde VB6: cmdAccionMenu_Click(0)
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Pages.MenuPage.OnUbicarBACClicked(System.Object,System.EventArgs)">
+            <summary>
+            Navegar a Ubicar BAC
+            Migrado desde VB6: cmdAccionMenu_Click(1)
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Pages.MenuPage.OnExtraerBACClicked(System.Object,System.EventArgs)">
+            <summary>
+            Navegar a Extraer BAC
+            Migrado desde VB6: cmdAccionMenu_Click(2)
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Pages.MenuPage.OnRepartoClicked(System.Object,System.EventArgs)">
+            <summary>
+            Navegar a Reparto de Artículos
+            Migrado desde VB6: cmdAccionMenu_Click(3)
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Pages.MenuPage.OnEmpaquetadoClicked(System.Object,System.EventArgs)">
+            <summary>
+            Navegar a Empaquetado BAC
+            Migrado desde VB6: cmdAccionMenu_Click(4)
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Pages.MenuPage.OnSalirClicked(System.Object,System.EventArgs)">
+            <summary>
+            Salir de la aplicación
+            Migrado desde VB6: cmdAccionMenu_Click(5)
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Pages.MenuPage.OnBackButtonPressed">
+            <summary>
+            Manejo de teclas (KeyPreview en VB6)
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Pages.PTL.ConsultaPTLPage">
+            <summary>
+            Formulario de consultas PTL
+            Migrado desde VB6 frmConsultaPTL.frm
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Pages.PTL.ExtraerBACPage">
+            <summary>
+            Formulario para extraer BAC del sistema PTL
+            Migrado desde VB6 frmExtraerBAC.frm
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Pages.PTL.RepartirArticuloPage">
+            <summary>
+            Formulario para repartir artículos en el sistema PTL
+            Migrado desde VB6 frmRepartirArticulo.frm
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Pages.PTL.RepartirArticuloPage.ValidarDigitoControlEAN13(System.String)">
+            <summary>
+            Valida el dígito de control de un código EAN13
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Pages.PTL.UbicarBACPage">
+            <summary>
+            Formulario para ubicar BAC en el sistema PTL
+            Migrado desde VB6 frmUbicarBAC.frm
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Services.ABGConfigService">
+            <summary>
+            Servicio para gestionar la configuración desde abg.ini
+            Migrado fielmente desde VB6 Gestion.bas
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.ABGConfigService.LoadConfiguration">
+            <summary>
+            Lee los parámetros desde abg.ini
+            Migrado desde VB6: LeerParamentrosIni
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.ABGConfigService.GetConfigConnectionString">
+            <summary>
+            Construye la cadena de conexión para Config
+            Migrado desde VB6: ConexionConfig
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.ABGConfigService.GetGestionConnectionString(System.String,System.String,System.String)">
+            <summary>
+            Construye la cadena de conexión para Gestion
+            Migrado desde VB6: ConexionGestion
+            Requiere parámetros de empresa (desde tabla gdeemp en Config)
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.ABGConfigService.GetGestionAlmacenConnectionString(System.String,System.String,System.String,System.String)">
+            <summary>
+            Construye la cadena de conexión para GestionAlmacen
+            Migrado desde VB6: ConexionGestionAlmacen (desde empbga, empuga, empkga)
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.ABGConfigService.Reload">
+            <summary>
+            Refresca la configuración desde el archivo .ini
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Services.AuthService">
+            <summary>
+            Servicio de autenticación
+            Migrado desde VB6: frmInicio.frm - ValidaUsuario/ValidaContraseña
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.AuthService.BuscarUsuarioAsync(System.String)">
+            <summary>
+            Busca y valida un usuario en la base de datos Config
+            Migrado desde VB6: edC.BuscaUsuario txtUsuarios.Text
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.AuthService.ValidarCredencialesAsync(System.String,System.String)">
+            <summary>
+            Valida las credenciales del usuario
+            Migrado desde VB6: ValidaContraseña
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.AuthService.ObtenerEmpresasUsuarioAsync(System.Int32)">
+            <summary>
+            Obtiene las empresas a las que el usuario tiene acceso
+            Migrado desde VB6: edC.DameEmpresasAccesoUsuario
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.AuthService.SeleccionarEmpresa(ABGAlmacenPTL.Models.Config.Empresa)">
+            <summary>
+            Selecciona una empresa para trabajar
+            Migrado desde VB6: ConfiguracionEmpresa
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.AuthService.ObtenerConnectionStringGestion">
+            <summary>
+            Obtiene la connection string para Gestion DB de la empresa actual
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.AuthService.ObtenerConnectionStringGestionAlmacen">
+            <summary>
+            Obtiene la connection string para GestionAlmacen DB de la empresa actual
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.AuthService.CerrarSesion">
+            <summary>
+            Cierra la sesión actual
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Services.DatabaseConnectionManager">
+            <summary>
+            Servicio para gestionar conexiones dinámicas a bases de datos
+            Migrado desde VB6 - reconexión dinámica según empresa seleccionada
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.DatabaseConnectionManager.ConfigurarConexionGestionAlmacen">
+            <summary>
+            Reconfigura ABGAlmacenContext para usar la base de datos GestionAlmacen
+            de la empresa seleccionada
+            Migrado desde VB6: Después de ConfiguracionEmpresa
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.DatabaseConnectionManager.CrearContextoGestionAlmacen">
+            <summary>
+            Crea una nueva instancia de ABGAlmacenContext con la conexión correcta
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Services.DatabaseConnectionManager.VerificarConexionGestionAlmacenAsync">
+            <summary>
+            Verifica si la conexión a GestionAlmacen está configurada y disponible
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Services.PTLService">
+            <summary>
+            Service for PTL (Pick-to-Light) operations
             </summary>
         </member>
         <member name="T:ABGAlmacenPTL.Resource">

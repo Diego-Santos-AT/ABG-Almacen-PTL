@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.Reflection;
 using ABGAlmacenPTL.Data;
 using ABGAlmacenPTL.Data.Repositories;
 using ABGAlmacenPTL.Services;
@@ -22,17 +24,72 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
 
+		// Load configuration from appsettings.json
+		var assembly = Assembly.GetExecutingAssembly();
+		using var stream = assembly.GetManifestResourceStream("ABGAlmacenPTL.appsettings.json");
+		
+		var config = new ConfigurationBuilder()
+			.AddJsonStream(stream!)
+			.Build();
+
 #if DEBUG
 		builder.Logging.AddDebug();
 #endif
 
-		// Database configuration
-		// TODO: Move connection string to secure configuration
-		var connectionString = "Server=localhost;Database=ABGAlmacen;User Id=sa;Password=YourPassword;TrustServerCertificate=True";
+		// ========================================================================
+		// CONFIGURACIÓN FIEL AL VB6 ORIGINAL
+		// Lee abg.ini y configura conexiones a múltiples bases de datos
+		// ========================================================================
 		
-		builder.Services.AddDbContext<ABGAlmacenContext>(options =>
-			options.UseSqlServer(connectionString));
+		// Copiar abg.ini desde recursos a carpeta de datos de la aplicación
+		var iniPath = Path.Combine(FileSystem.AppDataDirectory, "abg.ini");
+		if (!File.Exists(iniPath))
+		{
+			// Copiar desde recursos en primera ejecución
+			using var iniStream = assembly.GetManifestResourceStream("ABGAlmacenPTL.abg.ini");
+			if (iniStream != null)
+			{
+				using var fileStream = File.Create(iniPath);
+				iniStream.CopyTo(fileStream);
+			}
+		}
+		
+		// Crear servicio de configuración que lee abg.ini (como VB6)
+		var abgConfig = new ABGConfigService(iniPath);
+		builder.Services.AddSingleton(abgConfig);
+		
+		// ========================================================================
+		// CONFIGURACIÓN DE BASES DE DATOS MÚLTIPLES (FIEL AL VB6)
+		// ========================================================================
+		
+		// 1. Config DB (GROOT) - Usuarios, empresas, configuración
+		var configConnectionString = abgConfig.GetConfigConnectionString();
+		builder.Services.AddDbContext<ConfigContext>(options =>
+			options.UseSqlServer(configConnectionString));
+		
+		// 2. GestionAlmacen DB (PTL) - Se reconfigura dinámicamente después del login
+		// Factory pattern para permitir reconexión según empresa seleccionada
+		builder.Services.AddScoped<ABGAlmacenContext>(serviceProvider =>
+		{
+			var authService = serviceProvider.GetRequiredService<AuthService>();
+			var optionsBuilder = new DbContextOptionsBuilder<ABGAlmacenContext>();
+			
+			// Si hay empresa seleccionada, usar su GestionAlmacen DB
+			// Si no, usar Config DB temporalmente
+			var connectionString = authService.EmpresaActual != null
+				? authService.ObtenerConnectionStringGestionAlmacen()
+				: configConnectionString;
+			
+			optionsBuilder.UseSqlServer(connectionString ?? configConnectionString);
+			return new ABGAlmacenContext(optionsBuilder.Options);
+		});
 
+		// Register authentication service (VB6-faithful)
+		builder.Services.AddScoped<AuthService>();
+		
+		// Register database connection manager (VB6-faithful)
+		builder.Services.AddScoped<DatabaseConnectionManager>();
+		
 		// Register repositories
 		builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 		

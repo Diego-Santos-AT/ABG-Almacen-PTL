@@ -94,7 +94,7 @@ namespace ABGAlmacenPTL.Pages
             // Mostrar confirmación de salida
             MainThread.BeginInvokeOnMainThread(async () =>
             {
-                await OnSalirClicked(this, EventArgs.Empty);
+                OnSalirClicked(this, EventArgs.Empty);
             });
             
             return true; // Indica que manejamos el evento

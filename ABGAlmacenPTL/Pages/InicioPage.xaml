@@ -55,7 +55,8 @@
                         FontAttributes="Bold"
                         BackgroundColor="White"
                         TextColor="Black"
-                        HeightRequest="50"/>
+                        HeightRequest="50"
+                        Completed="txtUsuario_Completed"/>
 
                     <!-- Contraseña -->
                     <Label 

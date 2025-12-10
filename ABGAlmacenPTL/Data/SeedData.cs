@@ -45,16 +45,16 @@ namespace ABGAlmacenPTL.Data
             // Seed Artículos
             var articulos = new[]
             {
-                new Articulo { CodigoArticulo = "ART001", NombreArticulo = "Tornillo M6x20", EAN13 = "8412345678906", CodigoSTD = "STD001", Peso = 0.010m, Volumen = 0.001m, Activo = true },
-                new Articulo { CodigoArticulo = "ART002", NombreArticulo = "Tuerca M6", EAN13 = "8412345678913", CodigoSTD = "STD002", Peso = 0.005m, Volumen = 0.0005m, Activo = true },
-                new Articulo { CodigoArticulo = "ART003", NombreArticulo = "Arandela plana 6mm", EAN13 = "8412345678920", CodigoSTD = "STD003", Peso = 0.003m, Volumen = 0.0003m, Activo = true },
-                new Articulo { CodigoArticulo = "ART004", NombreArticulo = "Cable eléctrico 2.5mm", EAN13 = "8412345678937", CodigoSTD = "STD004", Peso = 0.150m, Volumen = 0.010m, Activo = true },
-                new Articulo { CodigoArticulo = "ART005", NombreArticulo = "Interruptor simple", EAN13 = "8412345678944", CodigoSTD = "STD005", Peso = 0.080m, Volumen = 0.005m, Activo = true },
-                new Articulo { CodigoArticulo = "ART006", NombreArticulo = "Enchufe schuko", EAN13 = "8412345678951", CodigoSTD = "STD006", Peso = 0.120m, Volumen = 0.008m, Activo = true },
-                new Articulo { CodigoArticulo = "ART007", NombreArticulo = "Bombilla LED 10W", EAN13 = "8412345678968", CodigoSTD = "STD007", Peso = 0.050m, Volumen = 0.002m, Activo = true },
-                new Articulo { CodigoArticulo = "ART008", NombreArticulo = "Cinta aislante negra", EAN13 = "8412345678975", CodigoSTD = "STD008", Peso = 0.100m, Volumen = 0.004m, Activo = true },
-                new Articulo { CodigoArticulo = "ART009", NombreArticulo = "Caja derivación IP65", EAN13 = "8412345678982", CodigoSTD = "STD009", Peso = 0.200m, Volumen = 0.015m, Activo = true },
-                new Articulo { CodigoArticulo = "ART010", NombreArticulo = "Tubo corrugado 20mm", EAN13 = "8412345678999", CodigoSTD = "STD010", Peso = 0.250m, Volumen = 0.020m, Activo = true }
+                new Articulo { CodigoArticulo = "ART001", Nombre = "Tornillo M6x20", EAN13 = "8412345678906", CodigoSTD = "STD001", Peso = 0.010m, Volumen = 0.001m, Activo = true },
+                new Articulo { CodigoArticulo = "ART002", Nombre = "Tuerca M6", EAN13 = "8412345678913", CodigoSTD = "STD002", Peso = 0.005m, Volumen = 0.0005m, Activo = true },
+                new Articulo { CodigoArticulo = "ART003", Nombre = "Arandela plana 6mm", EAN13 = "8412345678920", CodigoSTD = "STD003", Peso = 0.003m, Volumen = 0.0003m, Activo = true },
+                new Articulo { CodigoArticulo = "ART004", Nombre = "Cable eléctrico 2.5mm", EAN13 = "8412345678937", CodigoSTD = "STD004", Peso = 0.150m, Volumen = 0.010m, Activo = true },
+                new Articulo { CodigoArticulo = "ART005", Nombre = "Interruptor simple", EAN13 = "8412345678944", CodigoSTD = "STD005", Peso = 0.080m, Volumen = 0.005m, Activo = true },
+                new Articulo { CodigoArticulo = "ART006", Nombre = "Enchufe schuko", EAN13 = "8412345678951", CodigoSTD = "STD006", Peso = 0.120m, Volumen = 0.008m, Activo = true },
+                new Articulo { CodigoArticulo = "ART007", Nombre = "Bombilla LED 10W", EAN13 = "8412345678968", CodigoSTD = "STD007", Peso = 0.050m, Volumen = 0.002m, Activo = true },
+                new Articulo { CodigoArticulo = "ART008", Nombre = "Cinta aislante negra", EAN13 = "8412345678975", CodigoSTD = "STD008", Peso = 0.100m, Volumen = 0.004m, Activo = true },
+                new Articulo { CodigoArticulo = "ART009", Nombre = "Caja derivación IP65", EAN13 = "8412345678982", CodigoSTD = "STD009", Peso = 0.200m, Volumen = 0.015m, Activo = true },
+                new Articulo { CodigoArticulo = "ART010", Nombre = "Tubo corrugado 20mm", EAN13 = "8412345678999", CodigoSTD = "STD010", Peso = 0.250m, Volumen = 0.020m, Activo = true }
             };
             context.Articulos.AddRange(articulos);
 
@@ -103,11 +103,11 @@ namespace ABGAlmacenPTL.Data
             // Seed Cajas con SSCC
             var cajas = new[]
             {
-                new Caja { SSCC = "384123450000000011", TipoCajaId = 2, Estado = EstadoCaja.Abierta, Unidades = 50, Peso = 3.5m, Volumen = 0.08m, FechaCreacion = DateTime.Now.AddDays(-5) },
-                new Caja { SSCC = "384123450000000028", TipoCajaId = 2, Estado = EstadoCaja.Cerrada, Unidades = 75, Peso = 5.2m, Volumen = 0.12m, FechaCreacion = DateTime.Now.AddDays(-4), FechaCierre = DateTime.Now.AddDays(-3) },
-                new Caja { SSCC = "384123450000000035", TipoCajaId = 3, Estado = EstadoCaja.Abierta, Unidades = 100, Peso = 8.1m, Volumen = 0.18m, FechaCreacion = DateTime.Now.AddDays(-3) },
-                new Caja { SSCC = "384123450000000042", TipoCajaId = 1, Estado = EstadoCaja.Cerrada, Unidades = 30, Peso = 2.3m, Volumen = 0.04m, FechaCreacion = DateTime.Now.AddDays(-2), FechaCierre = DateTime.Now.AddDays(-1) },
-                new Caja { SSCC = "384123450000000059", TipoCajaId = 2, Estado = EstadoCaja.Abierta, Unidades = 60, Peso = 4.0m, Volumen = 0.10m, FechaCreacion = DateTime.Now.AddDays(-1) }
+                new Caja { SSCC = "384123450000000011", TipoId = 2, Estado = EstadoCaja.Abierta, Unidades = 50, Peso = 3.5m, Volumen = 0.08m, FechaCreacion = DateTime.Now.AddDays(-5) },
+                new Caja { SSCC = "384123450000000028", TipoId = 2, Estado = EstadoCaja.Cerrada, Unidades = 75, Peso = 5.2m, Volumen = 0.12m, FechaCreacion = DateTime.Now.AddDays(-4), FechaCierre = DateTime.Now.AddDays(-3) },
+                new Caja { SSCC = "384123450000000035", TipoId = 3, Estado = EstadoCaja.Abierta, Unidades = 100, Peso = 8.1m, Volumen = 0.18m, FechaCreacion = DateTime.Now.AddDays(-3) },
+                new Caja { SSCC = "384123450000000042", TipoId = 1, Estado = EstadoCaja.Cerrada, Unidades = 30, Peso = 2.3m, Volumen = 0.04m, FechaCreacion = DateTime.Now.AddDays(-2), FechaCierre = DateTime.Now.AddDays(-1) },
+                new Caja { SSCC = "384123450000000059", TipoId = 2, Estado = EstadoCaja.Abierta, Unidades = 60, Peso = 4.0m, Volumen = 0.10m, FechaCreacion = DateTime.Now.AddDays(-1) }
             };
             context.Cajas.AddRange(cajas);
             context.SaveChanges(); // Guardar cajas para tener SSCCs

@@ -177,9 +177,9 @@ namespace ABGAlmacenPTL.Pages.PTL
                     // Mostrar datos del artículo
                     RefrescarDatos(
                         codigoArticulo: articulo.CodigoArticulo,
-                        nombreArticulo: articulo.NombreArticulo,
+                        nombreArticulo: articulo.Nombre,
                         ean13: articulo.EAN13 ?? "-",
-                        std: articulo.STD ?? "-",
+                        std: articulo.CodigoSTD ?? "-",
                         peso: articulo.Peso?.ToString("F2") ?? "-",
                         volumen: articulo.Volumen?.ToString("F3") ?? "-");
 
@@ -219,9 +219,9 @@ namespace ABGAlmacenPTL.Pages.PTL
                     // Mostrar datos del artículo
                     RefrescarDatos(
                         codigoArticulo: articulo.CodigoArticulo,
-                        nombreArticulo: articulo.NombreArticulo,
+                        nombreArticulo: articulo.Nombre,
                         ean13: articulo.EAN13 ?? "-",
-                        std: articulo.STD ?? "-",
+                        std: articulo.CodigoSTD ?? "-",
                         peso: articulo.Peso?.ToString("F2") ?? "-",
                         volumen: articulo.Volumen?.ToString("F3") ?? "-");
 
