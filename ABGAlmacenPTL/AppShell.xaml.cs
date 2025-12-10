@@ -16,7 +16,7 @@ public partial class AppShell : Shell
 		// Registrar rutas PTL
 		// Routing.RegisterRoute("ConsultaPTLPage", typeof(ConsultaPTLPage));
 		Routing.RegisterRoute("UbicarBACPage", typeof(UbicarBACPage));
-		// Routing.RegisterRoute("ExtraerBACPage", typeof(ExtraerBACPage));
+		Routing.RegisterRoute("ExtraerBACPage", typeof(ExtraerBACPage));
 		Routing.RegisterRoute("RepartirArticuloPage", typeof(RepartirArticuloPage));
 		// Routing.RegisterRoute("EmpaquetarBACPage", typeof(EmpaquetarBACPage));
 	}
