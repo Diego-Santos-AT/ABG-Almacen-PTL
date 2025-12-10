@@ -103,152 +103,231 @@ namespace ABGAlmacenPTL.Pages.PTL
 
         private async Task ConsultarUbicacion(string ubicacionCodigo)
         {
-            // TODO: Implementar consulta real cuando tengamos DAL
-            
-            // Validar longitud antes de parsear
-            if (ubicacionCodigo.Length != 12)
+            try
             {
-                await DisplayAlert("Error", "Código de ubicación debe ser de 12 dígitos", "OK");
-                return;
+                // Validar longitud antes de parsear
+                if (ubicacionCodigo.Length != 12)
+                {
+                    await DisplayAlert("Error", "Código de ubicación debe ser de 12 dígitos", "OK");
+                    return;
+                }
+
+                // Consultar ubicación en BD
+                var ubicacion = await _ptlService.GetUbicacionByCodigoAsync(ubicacionCodigo);
+                
+                if (ubicacion == null)
+                {
+                    await DisplayAlert("Error", "No existe la Ubicación", "OK");
+                    LimpiarDatos();
+                    return;
+                }
+
+                // Buscar BAC en la ubicación
+                var bac = await _ptlService.GetBACEnUbicacionAsync(ubicacionCodigo);
+                
+                if (bac != null)
+                {
+                    // Mostrar datos de la ubicación y BAC
+                    RefrescarDatos(
+                        ubicacionId: int.Parse(ubicacion.CodigoUbicacion),
+                        alm: ubicacion.Almacen, 
+                        blo: ubicacion.Bloque, 
+                        fil: ubicacion.Fila, 
+                        alt: ubicacion.Altura,
+                        bac: bac.CodigoBAC,
+                        estadoBAC: (int)bac.Estado,
+                        grupo: bac.Grupo,
+                        tablilla: bac.Tablilla,
+                        numCaja: "N/A", // TODO: Relación BAC->Caja cuando esté disponible
+                        peso: bac.Peso,
+                        volumen: bac.Volumen,
+                        tipoCaja: "-",
+                        nombreCaja: "-");
+
+                    // Cargar artículos del BAC
+                    await CargarArticulosBAC(bac.CodigoBAC);
+                }
+                else
+                {
+                    // Ubicación existe pero sin BAC
+                    RefrescarDatos(
+                        ubicacionId: int.Parse(ubicacion.CodigoUbicacion),
+                        alm: ubicacion.Almacen,
+                        blo: ubicacion.Bloque,
+                        fil: ubicacion.Fila,
+                        alt: ubicacion.Altura,
+                        bac: "SIN BAC",
+                        estadoBAC: 1,
+                        grupo: 0,
+                        tablilla: 0,
+                        numCaja: "-",
+                        peso: 0,
+                        volumen: 0,
+                        tipoCaja: "-",
+                        nombreCaja: "-");
+                    
+                    _articulos.Clear();
+                    lblUds.Text = "0";
+                }
             }
-
-            // Parsear código
-            int alm = int.Parse(ubicacionCodigo.Substring(0, 3));
-            int blo = int.Parse(ubicacionCodigo.Substring(3, 3));
-            int fil = int.Parse(ubicacionCodigo.Substring(6, 3));
-            int alt = int.Parse(ubicacionCodigo.Substring(9, 3));
-
-            bool ubicacionExiste = TESTING_MODE;
-
-            if (ubicacionExiste)
+            catch (Exception ex)
             {
-                // Mostrar datos de la ubicación
-                RefrescarDatos(
-                    ubicacionId: 12345,
-                    alm: alm, blo: blo, fil: fil, alt: alt,
-                    bac: "BAC12345",
-                    estadoBAC: 0,
-                    grupo: 1,
-                    tablilla: 1,
-                    numCaja: "C001",
-                    peso: 25.5,
-                    volumen: 1.250,
-                    tipoCaja: "STD",
-                    nombreCaja: "CAJA ESTANDAR");
-
-                // Cargar artículos del BAC
-                await CargarArticulosBAC(1, "BAC12345");
-            }
-            else
-            {
-                await DisplayAlert("Error", "No existe la Ubicación", "OK");
+                await DisplayAlert("Error", $"Error al consultar ubicación: {ex.Message}", "OK");
                 LimpiarDatos();
             }
         }
 
         private async Task ConsultarBAC(string bacCodigo)
         {
-            // TODO: Implementar consulta real cuando tengamos DAL
-            
-            bool bacExiste = TESTING_MODE;
-
-            if (bacExiste)
+            try
             {
+                // Consultar BAC en BD
+                var bac = await _ptlService.GetBACByCodigoAsync(bacCodigo);
+                
+                if (bac == null)
+                {
+                    await DisplayAlert("Error", "No existe el BAC", "OK");
+                    LimpiarDatos();
+                    return;
+                }
+
+                // Si el BAC tiene ubicación asignada, mostrarla
+                int ubicacionId = 0;
+                int alm = 0, blo = 0, fil = 0, alt = 0;
+                
+                if (!string.IsNullOrEmpty(bac.CodigoUbicacion))
+                {
+                    var ubicacion = await _ptlService.GetUbicacionByCodigoAsync(bac.CodigoUbicacion);
+                    if (ubicacion != null)
+                    {
+                        ubicacionId = int.Parse(ubicacion.CodigoUbicacion);
+                        alm = ubicacion.Almacen;
+                        blo = ubicacion.Bloque;
+                        fil = ubicacion.Fila;
+                        alt = ubicacion.Altura;
+                    }
+                }
+
                 // Mostrar datos del BAC
                 RefrescarDatos(
-                    ubicacionId: 12345,
-                    alm: 1, blo: 2, fil: 3, alt: 4,
-                    bac: bacCodigo,
-                    estadoBAC: 0,
-                    grupo: 1,
-                    tablilla: 1,
-                    numCaja: "C001",
-                    peso: 25.5,
-                    volumen: 1.250,
-                    tipoCaja: "STD",
-                    nombreCaja: "CAJA ESTANDAR");
+                    ubicacionId: ubicacionId,
+                    alm: alm, blo: blo, fil: fil, alt: alt,
+                    bac: bac.CodigoBAC,
+                    estadoBAC: (int)bac.Estado,
+                    grupo: bac.Grupo,
+                    tablilla: bac.Tablilla,
+                    numCaja: "N/A", // TODO: Relación BAC->Caja cuando esté disponible
+                    peso: bac.Peso,
+                    volumen: bac.Volumen,
+                    tipoCaja: "-",
+                    nombreCaja: "-");
 
                 // Cargar artículos del BAC
-                await CargarArticulosBAC(1, bacCodigo);
+                await CargarArticulosBAC(bac.CodigoBAC);
             }
-            else
+            catch (Exception ex)
             {
-                await DisplayAlert("Error", "No existe el BAC", "OK");
+                await DisplayAlert("Error", $"Error al consultar BAC: {ex.Message}", "OK");
                 LimpiarDatos();
             }
         }
 
         private async Task ConsultarCaja(string cajaCodigo)
         {
-            // TODO: Implementar consulta real cuando tengamos DAL
-            
-            bool cajaExiste = TESTING_MODE;
-
-            if (cajaExiste)
+            try
             {
+                // Consultar Caja en BD (por SSCC)
+                var caja = await _ptlService.GetCajaBySSCCAsync(cajaCodigo);
+                
+                if (caja == null)
+                {
+                    await DisplayAlert("Error", "No existe la CAJA", "OK");
+                    LimpiarDatos();
+                    return;
+                }
+
                 // Mostrar datos de la caja
                 RefrescarDatos(
                     ubicacionId: 0, // Sin ubicación específica
                     alm: 0, blo: 0, fil: 0, alt: 0,
                     bac: "N/A",
                     estadoBAC: 1,
-                    grupo: 1,
-                    tablilla: 1,
-                    numCaja: cajaCodigo,
-                    peso: 10.5,
-                    volumen: 0.500,
-                    tipoCaja: "STD",
-                    nombreCaja: "CAJA ESTANDAR");
+                    grupo: 0,
+                    tablilla: 0,
+                    numCaja: caja.SSCC,
+                    peso: caja.Peso,
+                    volumen: caja.Volumen,
+                    tipoCaja: caja.TipoId.ToString(), // TODO: Cargar nombre del tipo de caja
+                    nombreCaja: "-"); // TODO: Cargar nombre del tipo de caja desde relación
 
                 // Cargar artículos de la caja
-                await CargarArticulosCaja(1, 1, cajaCodigo);
+                await CargarArticulosCaja(caja.SSCC);
             }
-            else
+            catch (Exception ex)
             {
-                await DisplayAlert("Error", "No existe la CAJA", "OK");
+                await DisplayAlert("Error", $"Error al consultar caja: {ex.Message}", "OK");
                 LimpiarDatos();
             }
         }
 
-        private async Task CargarArticulosBAC(int grupo, string bac)
+        private async Task CargarArticulosBAC(string bacCodigo)
         {
-            // TODO: Consultar BD real cuando tengamos DAL
-            
-            _articulos.Clear();
-
-            if (TESTING_MODE)
+            try
             {
-                // Datos de prueba
-                _articulos.Add(new ArticuloItem { Codigo = "ART001", Nombre = "ARTÍCULO DE PRUEBA 1", Cantidad = 10 });
-                _articulos.Add(new ArticuloItem { Codigo = "ART002", Nombre = "ARTÍCULO DE PRUEBA 2", Cantidad = 25 });
-                _articulos.Add(new ArticuloItem { Codigo = "ART003", Nombre = "ARTÍCULO DE PRUEBA 3", Cantidad = 15 });
+                _articulos.Clear();
+
+                // Consultar artículos del BAC desde BD
+                var articulos = await _ptlService.GetArticulosEnBACAsync(bacCodigo);
+                
+                // TODO: Obtener cantidades desde tabla de unión BACArticulo
+                foreach (var articulo in articulos)
+                {
+                    _articulos.Add(new ArticuloItem 
+                    { 
+                        Codigo = articulo.CodigoArticulo, 
+                        Nombre = articulo.NombreArticulo, 
+                        Cantidad = 1 // TODO: Obtener cantidad real desde BACArticulo
+                    });
+                }
+
+                // Actualizar contador de unidades
+                int totalUds = _articulos.Sum(a => a.Cantidad);
+                lblUds.Text = totalUds.ToString();
             }
-
-            // Actualizar contador de unidades
-            int totalUds = _articulos.Sum(a => a.Cantidad);
-            lblUds.Text = totalUds.ToString();
-
-            await Task.CompletedTask;
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"Error al cargar artículos del BAC: {ex.Message}", "OK");
+            }
         }
 
-        private async Task CargarArticulosCaja(int grupo, int tablilla, string caja)
+        private async Task CargarArticulosCaja(string sscc)
         {
-            // TODO: Consultar BD real cuando tengamos DAL
-            
-            _articulos.Clear();
-
-            if (TESTING_MODE)
+            try
             {
-                // Datos de prueba
-                _articulos.Add(new ArticuloItem { Codigo = "ART010", Nombre = "ARTÍCULO CAJA 1", Cantidad = 5 });
-                _articulos.Add(new ArticuloItem { Codigo = "ART011", Nombre = "ARTÍCULO CAJA 2", Cantidad = 8 });
+                _articulos.Clear();
+
+                // Consultar artículos de la caja desde BD
+                var articulos = await _ptlService.GetArticulosEnCajaAsync(sscc);
+                
+                // TODO: Obtener cantidades desde tabla de unión CajaArticulo
+                foreach (var articulo in articulos)
+                {
+                    _articulos.Add(new ArticuloItem 
+                    { 
+                        Codigo = articulo.CodigoArticulo, 
+                        Nombre = articulo.NombreArticulo, 
+                        Cantidad = 1 // TODO: Obtener cantidad real desde CajaArticulo
+                    });
+                }
+
+                // Actualizar contador de unidades
+                int totalUds = _articulos.Sum(a => a.Cantidad);
+                lblUds.Text = totalUds.ToString();
             }
-
-            // Actualizar contador de unidades
-            int totalUds = _articulos.Sum(a => a.Cantidad);
-            lblUds.Text = totalUds.ToString();
-
-            await Task.CompletedTask;
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"Error al cargar artículos de la caja: {ex.Message}", "OK");
+            }
         }
 
         private void RefrescarDatos(

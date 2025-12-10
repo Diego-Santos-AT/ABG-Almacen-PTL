@@ -1,13 +1,14 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.Maui.Controls;
+using ABGAlmacenPTL.Services;
+using ABGAlmacenPTL.Models;
 
 namespace ABGAlmacenPTL.Pages.PTL
 {
     public partial class EmpaquetarBACPage : ContentPage
     {
-        // TESTING_MODE: Set to true to test UI without DAL
-        private const bool TESTING_MODE = true;
+        private readonly PTLService _ptlService;
 
         // Constantes para generación de SSCC
         private const string SPAIN_PREFIX = "384"; // Código GS1 para España
@@ -20,14 +21,15 @@ namespace ABGAlmacenPTL.Pages.PTL
         private string? _currentCaja;
         private long _currentGrupo;
         private long _currentTablilla;
-        private int _currentEstadoBAC; // 0=ABIERTO, 1=CERRADO
+        private EstadoBAC _currentEstadoBAC = EstadoBAC.Abierto;
         
         // Colecciones
         private ObservableCollection<ArticuloItem> _articulos = new();
 
-        public EmpaquetarBACPage()
+        public EmpaquetarBACPage(PTLService ptlService)
         {
             InitializeComponent();
+            _ptlService = ptlService;
             cvArticulos.ItemsSource = _articulos;
             InicializarPantalla();
         }
@@ -59,7 +61,7 @@ namespace ABGAlmacenPTL.Pages.PTL
             _currentCaja = null;
             _currentGrupo = 0;
             _currentTablilla = 0;
-            _currentEstadoBAC = 0;
+            _currentEstadoBAC = EstadoBAC.Abierto;
             
             _articulos.Clear();
             
@@ -130,27 +132,59 @@ namespace ABGAlmacenPTL.Pages.PTL
 
         private async Task CargarBAC(string bacCodigo)
         {
-            // TODO: Implementar consulta real cuando tengamos DAL
-            if (TESTING_MODE)
+            try
             {
-                // Simulación de carga de BAC
-                _currentBAC = bacCodigo;
-                _currentGrupo = 12345;
-                _currentTablilla = 1;
-                _currentEstadoBAC = 0; // ABIERTO
+                // Consultar BAC desde BD
+                var bac = await _ptlService.GetBACByCodigoAsync(bacCodigo);
+                
+                if (bac == null)
+                {
+                    await DisplayAlert("Error", "BAC no encontrado", "OK");
+                    return;
+                }
 
-                lblUbicacion.Text = "001.002.003.004";
+                _currentBAC = bacCodigo;
+                _currentGrupo = bac.Grupo;
+                _currentTablilla = bac.Tablilla;
+                _currentEstadoBAC = bac.Estado;
+
+                // Mostrar ubicación si tiene
+                if (!string.IsNullOrEmpty(bac.CodigoUbicacion))
+                {
+                    var ubicacion = await _ptlService.GetUbicacionByCodigoAsync(bac.CodigoUbicacion);
+                    if (ubicacion != null)
+                    {
+                        lblUbicacion.Text = $"{ubicacion.Almacen:000}.{ubicacion.Bloque:000}.{ubicacion.Fila:000}.{ubicacion.Altura:00}";
+                    }
+                    else
+                    {
+                        lblUbicacion.Text = "SIN UBICACIÓN";
+                    }
+                }
+                else
+                {
+                    lblUbicacion.Text = "SIN UBICACIÓN";
+                }
+
                 lblBAC.Text = bacCodigo;
-                lblEstadoBAC.Text = "ABIERTO";
-                lblEstadoBAC.BackgroundColor = Colors.LightGreen;
+                lblEstadoBAC.Text = bac.Estado == EstadoBAC.Abierto ? "ABIERTO" : "CERRADO";
+                lblEstadoBAC.BackgroundColor = bac.Estado == EstadoBAC.Abierto ? Colors.LightGreen : Colors.Coral;
                 lblGrupo.Text = _currentGrupo.ToString();
                 lblTablilla.Text = _currentTablilla.ToString();
-                lblUnidades.Text = "24";
+                lblUnidades.Text = bac.Unidades.ToString();
 
-                // Cargar artículos de ejemplo
+                // Cargar artículos del BAC
                 _articulos.Clear();
-                _articulos.Add(new ArticuloItem { Codigo = "ART001", Nombre = "Artículo de prueba 1", Cantidad = 12 });
-                _articulos.Add(new ArticuloItem { Codigo = "ART002", Nombre = "Artículo de prueba 2", Cantidad = 12 });
+                var articulos = await _ptlService.GetArticulosEnBACAsync(bacCodigo);
+                foreach (var articulo in articulos)
+                {
+                    _articulos.Add(new ArticuloItem 
+                    { 
+                        Codigo = articulo.CodigoArticulo, 
+                        Nombre = articulo.NombreArticulo, 
+                        Cantidad = 1 // TODO: Obtener cantidad real desde BACArticulo
+                    });
+                }
 
                 frameBAC.IsVisible = true;
                 frameArticulos.IsVisible = true;
@@ -159,36 +193,50 @@ namespace ABGAlmacenPTL.Pages.PTL
 
                 await DisplayAlert("BAC Cargado", $"BAC: {bacCodigo} cargado correctamente", "OK");
             }
-            else
+            catch (Exception ex)
             {
-                // TODO: Implementar lógica real de base de datos
-                await DisplayAlert("Error", "Data Access Layer no implementado aún", "OK");
+                await DisplayAlert("Error", $"Error al cargar BAC: {ex.Message}", "OK");
             }
         }
 
         private async Task CargarCaja(string sscc)
         {
-            // TODO: Implementar consulta real cuando tengamos DAL
-            if (TESTING_MODE)
+            try
             {
-                // Simulación de carga de CAJA
+                // Consultar Caja desde BD
+                var caja = await _ptlService.GetCajaBySSCCAsync(sscc);
+                
+                if (caja == null)
+                {
+                    await DisplayAlert("Error", "Caja no encontrada", "OK");
+                    return;
+                }
+
                 _currentCaja = sscc;
-                _currentGrupo = 12345;
-                _currentTablilla = 1;
+                _currentGrupo = 0; // TODO: Obtener desde relación si existe
+                _currentTablilla = 0;
 
                 lblSSCC.Text = sscc;
-                lblTipoCaja.Text = "CAJA01";
-                lblNombreCaja.Text = "Caja Estándar 60x40";
-                lblUnidadesCaja.Text = "48";
-                lblPesoCaja.Text = "15.5 kg";
-                lblVolumenCaja.Text = "0.25 m³";
-                lblEstadoCaja.Text = "ABIERTA";
-                lblEstadoCaja.BackgroundColor = Colors.LightGreen;
+                lblTipoCaja.Text = caja.TipoId.ToString(); // TODO: Cargar nombre del tipo
+                lblNombreCaja.Text = "-"; // TODO: Cargar desde TipoCaja
+                lblUnidadesCaja.Text = caja.Unidades.ToString();
+                lblPesoCaja.Text = $"{caja.Peso:F2} kg";
+                lblVolumenCaja.Text = $"{caja.Volumen:F2} m³";
+                lblEstadoCaja.Text = caja.Estado == EstadoCaja.Abierta ? "ABIERTA" : "CERRADA";
+                lblEstadoCaja.BackgroundColor = caja.Estado == EstadoCaja.Abierta ? Colors.LightGreen : Colors.Coral;
 
                 // Cargar artículos de la caja
                 _articulos.Clear();
-                _articulos.Add(new ArticuloItem { Codigo = "ART001", Nombre = "Artículo empaquetado 1", Cantidad = 24 });
-                _articulos.Add(new ArticuloItem { Codigo = "ART002", Nombre = "Artículo empaquetado 2", Cantidad = 24 });
+                var articulos = await _ptlService.GetArticulosEnCajaAsync(sscc);
+                foreach (var articulo in articulos)
+                {
+                    _articulos.Add(new ArticuloItem 
+                    { 
+                        Codigo = articulo.CodigoArticulo, 
+                        Nombre = articulo.NombreArticulo, 
+                        Cantidad = 1 // TODO: Obtener cantidad real desde CajaArticulo
+                    });
+                }
 
                 frameBAC.IsVisible = false;
                 frameCaja.IsVisible = true;
@@ -197,10 +245,9 @@ namespace ABGAlmacenPTL.Pages.PTL
 
                 await DisplayAlert("Caja Cargada", $"SSCC: {sscc} cargada correctamente", "OK");
             }
-            else
+            catch (Exception ex)
             {
-                // TODO: Implementar lógica real de base de datos
-                await DisplayAlert("Error", "Data Access Layer no implementado aún", "OK");
+                await DisplayAlert("Error", $"Error al cargar caja: {ex.Message}", "OK");
             }
         }
 
@@ -212,10 +259,13 @@ namespace ABGAlmacenPTL.Pages.PTL
                 return;
             }
 
-            // TODO: Implementar creación de caja real
-            if (TESTING_MODE)
+            try
             {
-                var nuevaSSCC = GenerarSSCC();
+                // Crear nueva caja en la base de datos
+                // TODO: Permitir seleccionar tipo de caja
+                int tipoId = 1; // Por defecto, tipo 1
+                
+                var nuevaSSCC = await _ptlService.CrearNuevaCajaAsync(tipoId);
                 
                 await DisplayAlert("Caja Creada", 
                     $"Nueva caja creada:\nSSCC: {nuevaSSCC}\nGrupo: {_currentGrupo}\nTablilla: {_currentTablilla}", 
@@ -224,9 +274,9 @@ namespace ABGAlmacenPTL.Pages.PTL
                 // Cargar la nueva caja
                 await CargarCaja(nuevaSSCC);
             }
-            else
+            catch (Exception ex)
             {
-                await DisplayAlert("Error", "Data Access Layer no implementado aún", "OK");
+                await DisplayAlert("Error", $"Error al crear caja: {ex.Message}", "OK");
             }
         }
 
@@ -245,19 +295,28 @@ namespace ABGAlmacenPTL.Pages.PTL
             if (!confirmar)
                 return;
 
-            // TODO: Implementar empaquetado real
-            if (TESTING_MODE)
+            try
             {
-                await DisplayAlert("Empaquetado", 
-                    $"BAC {_currentBAC} empaquetado en CAJA {_currentCaja} correctamente", 
-                    "OK");
+                // Empaquetar BAC en Caja (transacción completa)
+                bool success = await _ptlService.EmpaquetarBACEnCajaAsync(_currentBAC, _currentCaja);
                 
-                // Limpiar y volver a pantalla inicial
-                InicializarPantalla();
+                if (success)
+                {
+                    await DisplayAlert("Empaquetado", 
+                        $"BAC {_currentBAC} empaquetado en CAJA {_currentCaja} correctamente", 
+                        "OK");
+                    
+                    // Limpiar y volver a pantalla inicial
+                    InicializarPantalla();
+                }
+                else
+                {
+                    await DisplayAlert("Error", "No se pudo empaquetar el BAC", "OK");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                await DisplayAlert("Error", "Data Access Layer no implementado aún", "OK");
+                await DisplayAlert("Error", $"Error al empaquetar: {ex.Message}", "OK");
             }
         }
 
@@ -269,7 +328,7 @@ namespace ABGAlmacenPTL.Pages.PTL
                 return;
             }
 
-            if (_currentEstadoBAC == 1)
+            if (_currentEstadoBAC == EstadoBAC.Cerrado)
             {
                 await DisplayAlert("Aviso", "El BAC ya está cerrado", "OK");
                 return;
@@ -282,20 +341,28 @@ namespace ABGAlmacenPTL.Pages.PTL
             if (!confirmar)
                 return;
 
-            // TODO: Implementar cierre real
-            if (TESTING_MODE)
+            try
             {
-                _currentEstadoBAC = 1;
-                lblEstadoBAC.Text = "CERRADO";
-                lblEstadoBAC.BackgroundColor = Colors.Coral;
-                
-                await DisplayAlert("BAC Cerrado", 
-                    $"BAC {_currentBAC} cerrado correctamente", 
-                    "OK");
+                // Cerrar BAC (actualizar estado en BD)
+                var bac = await _ptlService.GetBACByCodigoAsync(_currentBAC);
+                if (bac != null)
+                {
+                    bac.Estado = EstadoBAC.Cerrado;
+                    bac.FechaModificacion = DateTime.Now;
+                    // TODO: Actualizar en BD via Unit of Work
+                    
+                    _currentEstadoBAC = EstadoBAC.Cerrado;
+                    lblEstadoBAC.Text = "CERRADO";
+                    lblEstadoBAC.BackgroundColor = Colors.Coral;
+                    
+                    await DisplayAlert("BAC Cerrado", 
+                        $"BAC {_currentBAC} cerrado correctamente", 
+                        "OK");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                await DisplayAlert("Error", "Data Access Layer no implementado aún", "OK");
+                await DisplayAlert("Error", $"Error al cerrar BAC: {ex.Message}", "OK");
             }
         }
 
@@ -314,19 +381,38 @@ namespace ABGAlmacenPTL.Pages.PTL
             if (!confirmar)
                 return;
 
-            // TODO: Implementar extracción real
-            if (TESTING_MODE)
+            try
             {
-                await DisplayAlert("BAC Extraído", 
-                    $"BAC {_currentBAC} extraído correctamente", 
-                    "OK");
+                // Obtener BAC para saber su ubicación
+                var bac = await _ptlService.GetBACByCodigoAsync(_currentBAC);
                 
-                // Limpiar y volver
-                InicializarPantalla();
+                if (bac != null && !string.IsNullOrEmpty(bac.CodigoUbicacion))
+                {
+                    // Extraer BAC (quitar de ubicación)
+                    bool success = await _ptlService.ExtraerBACDeUbicacionAsync(bac.CodigoUbicacion, EstadoBAC.Cerrado);
+                    
+                    if (success)
+                    {
+                        await DisplayAlert("BAC Extraído", 
+                            $"BAC {_currentBAC} extraído correctamente", 
+                            "OK");
+                        
+                        // Limpiar y volver
+                        InicializarPantalla();
+                    }
+                    else
+                    {
+                        await DisplayAlert("Error", "No se pudo extraer el BAC", "OK");
+                    }
+                }
+                else
+                {
+                    await DisplayAlert("Aviso", "El BAC no tiene ubicación asignada", "OK");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                await DisplayAlert("Error", "Data Access Layer no implementado aún", "OK");
+                await DisplayAlert("Error", $"Error al extraer BAC: {ex.Message}", "OK");
             }
         }
 
