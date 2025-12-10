@@ -94,7 +94,7 @@ namespace ABGAlmacenPTL.Modules
 
             // Leemos el servidor local
             BDDServLocal = ProfileManager.LeerIni(ficINI, "Conexion", "BDDServLocal", "");
-            BDDTime = ProfileManager.LeerIni(ficINI, "Conexion", "BDDTime", "30");
+            BDDTime = int.Parse(ProfileManager.LeerIni(ficINI, "Conexion", "BDDTime", "30"));
             BDDConfig = ProfileManager.LeerIni(ficINI, "Conexion", "BDDConfig", "Config");
             UsrBDDConfig = "ABG";  // El usuario es fijo
             UsrKeyConfig = "A_34ggyx4";    // Su contraseña tb
@@ -139,24 +139,14 @@ namespace ABGAlmacenPTL.Modules
             // Inicializar arrays y variables globales
             ClaveMaestra = "GARIBALDI";
 
-            // Inicializar conversión de moneda
-            vEuro = 166.386M;
-            vPeseta = 1.0M / 166.386M;
-            vPesetaE = 1.0M;
+            // Nota: vEuro, vPeseta, vPesetaE ya están definidos como constantes
+            // No necesitan re-asignación
 
-            // Inicializar comandos de menú
-            CMD_Almacen = 1;
-            CMD_Compras = 2;
-            CMD_Ventas = 3;
-            CMD_Estadisticas = 4;
-            CMD_Presupuestos = 5;
-            CMD_RutasComerciales = 6;
-            CMD_Produccion = 7;
-            CMD_Tablas = 8;
+            // Nota: CMD_* ya están definidos como constantes
+            // No necesitan re-asignación
 
-            // Valores de estado
-            RecordsetEOF = true;
-            RecordsetBOF = true;
+            // Nota: RecordsetEOF y RecordsetBOF no son necesarios en .NET
+            // EF Core maneja el estado del recordset automáticamente
 
             // Inicializar puesto de trabajo por defecto
             wPuestoTrabajo = new PuestoTrabajo

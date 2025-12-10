@@ -1,10 +1,10 @@
-<api type="debug" assembly-name="ABGAlmacenPTL" mvid="ae7af4dbd02c4f21ad071b6fd58d6bc0">
+<api type="debug" assembly-name="ABGAlmacenPTL" mvid="21331b473a8249b397b0788c3326597c">
   <java-to-managed>
-    <entry java-name="crc640301e046e7c5726d/MainActivity" managed-name="ABGAlmacenPTL.MainActivity, ABGAlmacenPTL" managed-type-token-id="33554441" />
-    <entry java-name="crc640301e046e7c5726d/MainApplication" managed-name="ABGAlmacenPTL.MainApplication, ABGAlmacenPTL" managed-type-token-id="33554442" />
+    <entry java-name="crc640301e046e7c5726d/MainActivity" managed-name="ABGAlmacenPTL.MainActivity, ABGAlmacenPTL" managed-type-token-id="33554444" />
+    <entry java-name="crc640301e046e7c5726d/MainApplication" managed-name="ABGAlmacenPTL.MainApplication, ABGAlmacenPTL" managed-type-token-id="33554445" />
   </java-to-managed>
   <managed-to-java>
-    <entry java-name="crc640301e046e7c5726d/MainActivity" managed-name="ABGAlmacenPTL.MainActivity, ABGAlmacenPTL" managed-type-token-id="33554441" />
-    <entry java-name="crc640301e046e7c5726d/MainApplication" managed-name="ABGAlmacenPTL.MainApplication, ABGAlmacenPTL" managed-type-token-id="33554442" />
+    <entry java-name="crc640301e046e7c5726d/MainActivity" managed-name="ABGAlmacenPTL.MainActivity, ABGAlmacenPTL" managed-type-token-id="33554444" />
+    <entry java-name="crc640301e046e7c5726d/MainApplication" managed-name="ABGAlmacenPTL.MainApplication, ABGAlmacenPTL" managed-type-token-id="33554445" />
   </managed-to-java>
 </api>

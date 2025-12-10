@@ -158,11 +158,11 @@ namespace ABGAlmacenPTL.Pages.PTL
                         alt: ubicacion.Altura,
                         bac: "SIN BAC",
                         estadoBAC: 1,
-                        grupo: 0,
-                        tablilla: 0,
+                        grupo: null,
+                        tablilla: null,
                         numCaja: "-",
-                        peso: 0,
-                        volumen: 0,
+                        peso: null,
+                        volumen: null,
                         tipoCaja: "-",
                         nombreCaja: "-");
                     
@@ -252,8 +252,8 @@ namespace ABGAlmacenPTL.Pages.PTL
                     alm: 0, blo: 0, fil: 0, alt: 0,
                     bac: "N/A",
                     estadoBAC: 1,
-                    grupo: 0,
-                    tablilla: 0,
+                    grupo: null,
+                    tablilla: null,
                     numCaja: caja.SSCC,
                     peso: caja.Peso,
                     volumen: caja.Volumen,
@@ -285,7 +285,7 @@ namespace ABGAlmacenPTL.Pages.PTL
                     _articulos.Add(new ArticuloItem 
                     { 
                         Codigo = articulo.CodigoArticulo, 
-                        Nombre = articulo.NombreArticulo, 
+                        Nombre = articulo.Nombre, 
                         Cantidad = 1 // TODO: Obtener cantidad real desde BACArticulo
                     });
                 }
@@ -315,7 +315,7 @@ namespace ABGAlmacenPTL.Pages.PTL
                     _articulos.Add(new ArticuloItem 
                     { 
                         Codigo = articulo.CodigoArticulo, 
-                        Nombre = articulo.NombreArticulo, 
+                        Nombre = articulo.Nombre, 
                         Cantidad = 1 // TODO: Obtener cantidad real desde CajaArticulo
                     });
                 }
@@ -335,11 +335,11 @@ namespace ABGAlmacenPTL.Pages.PTL
             int alm, int blo, int fil, int alt,
             string bac,
             int estadoBAC,
-            int grupo,
-            int tablilla,
+            string? grupo,
+            string? tablilla,
             string numCaja,
-            double peso,
-            double volumen,
+            decimal? peso,
+            decimal? volumen,
             string tipoCaja,
             string nombreCaja)
         {
@@ -355,13 +355,13 @@ namespace ABGAlmacenPTL.Pages.PTL
             lblBAC.Text = bac;
             lblBAC.BackgroundColor = estadoBAC == 0 ? Colors.White : Colors.LightGreen;
 
-            lblGrupo.Text = grupo.ToString();
-            lblTablilla.Text = tablilla.ToString();
+            lblGrupo.Text = grupo ?? "-";
+            lblTablilla.Text = tablilla ?? "-";
             lblNumCaja.Text = numCaja;
             lblUds.Text = "0"; // Se actualizará al cargar artículos
 
-            lblPeso.Text = $"{peso:F3}";
-            lblVolumen.Text = $"{volumen:F3}";
+            lblPeso.Text = peso.HasValue ? $"{peso.Value:F3}" : "0.000";
+            lblVolumen.Text = volumen.HasValue ? $"{volumen.Value:F3}" : "0.000";
 
             lblTipoCaja.Text = tipoCaja;
             lblNombreCaja.Text = nombreCaja;
@@ -405,16 +405,5 @@ namespace ABGAlmacenPTL.Pages.PTL
             });
             return true;
         }
-    }
-
-    /// <summary>
-    /// Item de artículo para el CollectionView
-    /// TODO: Mover a Models/ cuando se organice el proyecto
-    /// </summary>
-    public class ArticuloItem
-    {
-        public string Codigo { get; set; } = string.Empty;
-        public string Nombre { get; set; } = string.Empty;
-        public int Cantidad { get; set; }
     }
 }

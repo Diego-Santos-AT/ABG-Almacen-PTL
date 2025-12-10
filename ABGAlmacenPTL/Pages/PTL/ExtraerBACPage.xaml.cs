@@ -171,8 +171,8 @@ namespace ABGAlmacenPTL.Pages.PTL
         private void RefrescarDatosBAC(
             string bac,
             string estadoBAC,
-            int grupo,
-            int tablilla,
+            string? grupo,
+            string? tablilla,
             int uds,
             string peso,
             string volumen,
@@ -183,8 +183,8 @@ namespace ABGAlmacenPTL.Pages.PTL
             lblEstadoBAC.Text = estadoBAC;
             lblEstadoBAC.BackgroundColor = estadoBAC == "ABIERTO" ? Colors.LightGreen : Colors.LightCoral;
             
-            lblGrupo.Text = grupo.ToString();
-            lblTablilla.Text = tablilla.ToString();
+            lblGrupo.Text = grupo ?? "-";
+            lblTablilla.Text = tablilla ?? "-";
             lblUds.Text = uds.ToString();
             
             lblPeso.Text = peso;

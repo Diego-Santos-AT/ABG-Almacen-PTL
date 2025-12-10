@@ -15,12 +15,15 @@ namespace ABGAlmacenPTL.Pages.PTL
         private const string COMPANY_CODE = "12345"; // Código de empresa (ejemplo)
         private const int SERIAL_MIN = 100000000;
         private const int SERIAL_MAX = 999999999;
+        
+        // Modo de prueba para simulación de impresoras
+        private const bool TESTING_MODE = true; // TODO: Cambiar a false cuando se integren impresoras reales
 
         // Estado actual
         private string? _currentBAC;
         private string? _currentCaja;
-        private long _currentGrupo;
-        private long _currentTablilla;
+        private string? _currentGrupo;
+        private string? _currentTablilla;
         private EstadoBAC _currentEstadoBAC = EstadoBAC.Abierto;
         
         // Colecciones
@@ -59,8 +62,8 @@ namespace ABGAlmacenPTL.Pages.PTL
         {
             _currentBAC = null;
             _currentCaja = null;
-            _currentGrupo = 0;
-            _currentTablilla = 0;
+            _currentGrupo = null;
+            _currentTablilla = null;
             _currentEstadoBAC = EstadoBAC.Abierto;
             
             _articulos.Clear();
@@ -169,8 +172,8 @@ namespace ABGAlmacenPTL.Pages.PTL
                 lblBAC.Text = bacCodigo;
                 lblEstadoBAC.Text = bac.Estado == EstadoBAC.Abierto ? "ABIERTO" : "CERRADO";
                 lblEstadoBAC.BackgroundColor = bac.Estado == EstadoBAC.Abierto ? Colors.LightGreen : Colors.Coral;
-                lblGrupo.Text = _currentGrupo.ToString();
-                lblTablilla.Text = _currentTablilla.ToString();
+                lblGrupo.Text = _currentGrupo ?? string.Empty;
+                lblTablilla.Text = _currentTablilla ?? string.Empty;
                 lblUnidades.Text = bac.Unidades.ToString();
 
                 // Cargar artículos del BAC
@@ -181,7 +184,7 @@ namespace ABGAlmacenPTL.Pages.PTL
                     _articulos.Add(new ArticuloItem 
                     { 
                         Codigo = articulo.CodigoArticulo, 
-                        Nombre = articulo.NombreArticulo, 
+                        Nombre = articulo.Nombre, 
                         Cantidad = 1 // TODO: Obtener cantidad real desde BACArticulo
                     });
                 }
@@ -213,8 +216,8 @@ namespace ABGAlmacenPTL.Pages.PTL
                 }
 
                 _currentCaja = sscc;
-                _currentGrupo = 0; // TODO: Obtener desde relación si existe
-                _currentTablilla = 0;
+                _currentGrupo = null; // TODO: Obtener desde relación si existe
+                _currentTablilla = null;
 
                 lblSSCC.Text = sscc;
                 lblTipoCaja.Text = caja.TipoId.ToString(); // TODO: Cargar nombre del tipo
@@ -233,7 +236,7 @@ namespace ABGAlmacenPTL.Pages.PTL
                     _articulos.Add(new ArticuloItem 
                     { 
                         Codigo = articulo.CodigoArticulo, 
-                        Nombre = articulo.NombreArticulo, 
+                        Nombre = articulo.Nombre, 
                         Cantidad = 1 // TODO: Obtener cantidad real desde CajaArticulo
                     });
                 }
@@ -547,16 +550,5 @@ namespace ABGAlmacenPTL.Pages.PTL
             var remainder = sum % 10;
             return remainder == 0 ? 0 : 10 - remainder;
         }
-    }
-
-    /// <summary>
-    /// Item de artículo para el CollectionView
-    /// TODO: Mover a Models/ cuando se organice el proyecto
-    /// </summary>
-    public class ArticuloItem
-    {
-        public string Codigo { get; set; } = string.Empty;
-        public string Nombre { get; set; } = string.Empty;
-        public int Cantidad { get; set; }
     }
 }
