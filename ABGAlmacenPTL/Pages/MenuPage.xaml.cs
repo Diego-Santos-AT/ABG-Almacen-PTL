@@ -27,9 +27,7 @@ namespace ABGAlmacenPTL.Pages
         /// </summary>
         private async void OnConsultasPTLClicked(object sender, EventArgs e)
         {
-            // TODO: Implementar navegación cuando la página esté creada
-            // await Shell.Current.GoToAsync("//ConsultaPTLPage");
-            await DisplayAlert("Información", "Consultas PTL - En desarrollo", "OK");
+            await Shell.Current.GoToAsync("ConsultaPTLPage");
         }
 
         /// <summary>
