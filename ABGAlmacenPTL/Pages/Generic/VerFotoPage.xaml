@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ABGAlmacenPTL.Pages.Generic.VerFotoPage"
+             Title="Código"
+             BackgroundColor="Black">
+
+    <Grid>
+        <!-- Imagen con zoom y gestos táctiles -->
+        <ScrollView 
+            HorizontalScrollBarVisibility="Always"
+            VerticalScrollBarVisibility="Always">
+            
+            <Image 
+                x:Name="imgFoto"
+                Aspect="AspectFit"
+                BackgroundColor="Black"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+                
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnImageTapped"/>
+                </Image.GestureRecognizers>
+            </Image>
+            
+        </ScrollView>
+
+        <!-- Mensaje cuando no hay foto -->
+        <Label 
+            x:Name="lblNoFoto"
+            Text="Foto no disponible"
+            FontSize="20"
+            TextColor="White"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            IsVisible="False"/>
+            
+    </Grid>
+
+</ContentPage>
