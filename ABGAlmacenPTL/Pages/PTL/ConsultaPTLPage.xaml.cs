@@ -1,4 +1,7 @@
 using System.Collections.ObjectModel;
+using ABGAlmacenPTL.Services;
+using ABGAlmacenPTL.Models;
+using System.Linq;
 
 namespace ABGAlmacenPTL.Pages.PTL
 {
@@ -8,14 +11,14 @@ namespace ABGAlmacenPTL.Pages.PTL
     /// </summary>
     public partial class ConsultaPTLPage : ContentPage
     {
-        // TESTING_MODE: Set to true to test UI without DAL
-        private const bool TESTING_MODE = true;
+        private readonly PTLService _ptlService;
 
         private ObservableCollection<ArticuloItem> _articulos = new();
 
-        public ConsultaPTLPage()
+        public ConsultaPTLPage(PTLService ptlService)
         {
             InitializeComponent();
+            _ptlService = ptlService;
             collectionViewArticulos.ItemsSource = _articulos;
         }
 

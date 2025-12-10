@@ -66,8 +66,6 @@ namespace ABGAlmacenPTL.Pages.PTL
         {
             try
             {
-                // TODO: Implementar validación real cuando tengamos DAL
-                
                 // Parsear código de ubicación (12 dígitos)
                 if (ubicacionCodigo.Length != 12 || !long.TryParse(ubicacionCodigo, out _))
                 {
@@ -80,30 +78,35 @@ namespace ABGAlmacenPTL.Pages.PTL
                 int fil = int.Parse(ubicacionCodigo.Substring(6, 3));
                 int alt = int.Parse(ubicacionCodigo.Substring(9, 3));
 
-                // TODO: Consultar BD para obtener BAC de la ubicación
-                bool ubicacionExiste = TESTING_MODE; // Change to DB query when DAL available
-                bool ubicacionTieneBAC = TESTING_MODE; // Verificar si tiene BAC
+                // Buscar ubicación en BD
+                var ubicacion = await _ptlService.GetUbicacionByCodigoAsync(ubicacionCodigo);
 
-                if (ubicacionExiste)
+                if (ubicacion != null)
                 {
-                    if (ubicacionTieneBAC)
+                    // Buscar BAC en la ubicación
+                    var bac = await _ptlService.GetBACEnUbicacionAsync(ubicacionCodigo);
+                    
+                    if (bac != null)
                     {
                         // Mostrar datos del BAC en la ubicación
-                        _ubicacionId = 12345; // TODO: ID real de BD
-                        _bacCodigo = "BAC12345"; // TODO: Código real de BD
+                        _ubicacionCodigo = ubicacionCodigo;
+                        _bacCodigo = bac.CodigoBAC;
 
-                        lblUbicacion.Text = $"({_ubicacionId}) {alm:000}.{blo:000}.{fil:000}.{alt:000}";
+                        lblUbicacion.Text = $"{alm:000}.{blo:000}.{fil:000}.{alt:000}";
                         
+                        var articulos = await _ptlService.GetArticulosEnBACAsync(bac.CodigoBAC);
+                        int totalUds = articulos.Count(); // TODO: Sum actual quantities from junction table
+
                         RefrescarDatosBAC(
-                            bac: _bacCodigo,
-                            estadoBAC: "ABIERTO", // TODO: Estado real
-                            grupo: 1,
-                            tablilla: 1,
-                            uds: 100,
-                            peso: "25.5",
-                            volumen: "1.250",
-                            tipoCaja: "STD",
-                            nombreCaja: "CAJA ESTANDAR");
+                            bac: bac.CodigoBAC,
+                            estadoBAC: bac.Estado == EstadoBAC.Abierto ? "ABIERTO" : "CERRADO",
+                            grupo: bac.Grupo,
+                            tablilla: bac.Tablilla,
+                            uds: totalUds,
+                            peso: bac.Peso?.ToString("F2") ?? "0",
+                            volumen: bac.Volumen?.ToString("F3") ?? "0",
+                            tipoCaja: "STD", // TODO: Get from BAC type
+                            nombreCaja: "CAJA");
 
                         // Confirmar extracción
                         bool confirmar = await DisplayAlert(
@@ -114,11 +117,11 @@ namespace ABGAlmacenPTL.Pages.PTL
 
                         if (confirmar)
                         {
-                            bool extraido = await ExtraerBAC(_bacCodigo, _ubicacionId);
+                            bool extraido = await ExtraerBAC(_bacCodigo, _ubicacionCodigo);
                             if (extraido)
                             {
                                 await MensajePage.ShowAsync(
-                                    $"Se ha extraído el BAC: {_bacCodigo} de la ubicación PTL {_ubicacionId}",
+                                    $"Se ha extraído el BAC: {_bacCodigo} de la ubicación PTL {_ubicacionCodigo}",
                                     "Éxito");
                                 
                                 LimpiarDatos();
@@ -128,13 +131,13 @@ namespace ABGAlmacenPTL.Pages.PTL
                     else
                     {
                         await DisplayAlert("Error", "La Ubicación no tiene ningún BAC asociado", "OK");
-                        _ubicacionId = 0;
+                        _ubicacionCodigo = string.Empty;
                     }
                 }
                 else
                 {
                     await DisplayAlert("Error", "No existe la Ubicación", "OK");
-                    _ubicacionId = 0;
+                    _ubicacionCodigo = string.Empty;
                 }
             }
             catch (Exception ex)
@@ -143,23 +146,26 @@ namespace ABGAlmacenPTL.Pages.PTL
             }
         }
 
-        private async Task<bool> ExtraerBAC(string bacCodigo, int ubicacionId)
+        private async Task<bool> ExtraerBAC(string bacCodigo, string ubicacionCodigo)
         {
-            // TODO: Implementar lógica de extracción cuando tengamos DAL
-            // Esta función debe:
-            // 1. Verificar que el BAC existe en la ubicación
-            // 2. Eliminar asociación BAC-Ubicación
-            // 3. Actualizar estado del BAC según opción seleccionada
-            // 4. Apagar luz del puesto PTL
-            // 5. Registrar operación en BD
+            try
+            {
+                // Obtener estado del BAC según selección
+                bool cerrarBAC = rbCerrar.IsChecked;
+                EstadoBAC nuevoEstado = cerrarBAC ? EstadoBAC.Cerrado : EstadoBAC.Abierto;
 
-            bool cerrarBAC = rbCerrar.IsChecked;
-            
-            // Simulación
-            await Task.Delay(100);
-            
-            // TODO: Replace with real DAL implementation
-            return TESTING_MODE; // Returns success in testing mode
+                // Extraer BAC de ubicación
+                bool resultado = await _ptlService.ExtraerBACDeUbicacionAsync(
+                    bacCodigo,
+                    nuevoEstado);
+
+                return resultado;
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"Error al extraer BAC: {ex.Message}", "OK");
+                return false;
+            }
         }
 
         private void RefrescarDatosBAC(
@@ -192,7 +198,7 @@ namespace ABGAlmacenPTL.Pages.PTL
         {
             txtLecturaCodigo.Text = string.Empty;
             
-            _ubicacionId = 0;
+            _ubicacionCodigo = string.Empty;
             _bacCodigo = string.Empty;
             
             lblUbicacion.Text = "-";
