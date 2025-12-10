@@ -77,6 +77,90 @@
             Migrado desde VB6 GDConstantes.bas
             </summary>
         </member>
+        <member name="T:ABGAlmacenPTL.Modules.GDFunc01">
+            <summary>
+            Módulo de funciones generales
+            Migrado desde VB6 GDFunc01.bas
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Modules.GDFunc01.TipoMensaje">
+            <summary>
+            Tipos de mensajes
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.GDFunc01.CargaMenu(System.Int32)">
+            <summary>
+            Función para cargar los menús de la aplicación según la opción elegida
+            Migrado desde VB6: CargaMenu
+            </summary>
+            <param name="index">Índice del menú</param>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.GDFunc01.CambiaModo(System.Int32)">
+            <summary>
+            Función para activar/desactivar los botones de la barra de herramientas según el modo de trabajo
+            Migrado desde VB6: CambiaModo
+            </summary>
+            <param name="modo">Modo de trabajo: MOD_Edicion | MOD_Seleccion</param>
+            <remarks>
+            En MAUI, esto se manejará a través del ViewModel y binding de comandos
+            Esta función está preservada para referencia de la lógica original
+            </remarks>
+        </member>
+        <member name="T:ABGAlmacenPTL.Modules.GDFunc02">
+            <summary>
+            Módulo de funciones de relación de datos
+            Migrado desde VB6 GDFunc02.bas
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.GDFunc02.wfBuscarEnArray(System.Object[][],System.Object)">
+            <summary>
+            Buscar en un array de dos dimensiones por la primera para devolver el valor de la segunda
+            Migrado desde VB6: wfBuscarEnArray
+            Creación: 16/10/03
+            Se usa desde wfImprimir_Informe para dar el valor de la propiedad de Crystal
+            </summary>
+            <param name="vArray">Array en el que buscar</param>
+            <param name="vValorBuscar">Valor a buscar en la primera dimensión</param>
+            <returns>Valor encontrado o string vacío</returns>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.GDFunc02.Dame_FechaHora_Sistema">
+            <summary>
+            Obtiene la fecha y hora del sistema
+            Migrado desde VB6: Dame_FechaHora_Sistema
+            </summary>
+            <returns>Fecha y hora actual</returns>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.GDFunc02.wfQuitarCorchetes(System.String)">
+            <summary>
+            Quita los corchetes de una cadena (usado para nombres de servidor SQL)
+            Migrado desde VB6: wfQuitarCorchetes
+            </summary>
+            <param name="texto">Texto con posibles corchetes</param>
+            <returns>Texto sin corchetes</returns>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.GDFunc02.ConvertirACadena(System.Object)">
+            <summary>
+            Convierte un valor a cadena manejando nulos
+            </summary>
+            <param name="valor">Valor a convertir</param>
+            <returns>Cadena o vacío si es nulo</returns>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.GDFunc02.ConvertirAEntero(System.Object,System.Int32)">
+            <summary>
+            Convierte un valor a entero manejando nulos
+            </summary>
+            <param name="valor">Valor a convertir</param>
+            <param name="valorDefecto">Valor por defecto si es nulo</param>
+            <returns>Entero o valor por defecto</returns>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.GDFunc02.ConvertirABooleano(System.Object)">
+            <summary>
+            Convierte un valor a booleano manejando nulos y valores numéricos VB6
+            En VB6: 0 = False, cualquier otro número = True
+            </summary>
+            <param name="valor">Valor a convertir</param>
+            <returns>Booleano</returns>
+        </member>
         <member name="T:ABGAlmacenPTL.Modules.Gestion">
             <summary>
             Módulo principal de gestión - Variables y constantes globales
