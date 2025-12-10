@@ -60,9 +60,7 @@ namespace ABGAlmacenPTL.Pages
         /// </summary>
         private async void OnRepartoClicked(object sender, EventArgs e)
         {
-            // TODO: Implementar navegación cuando la página esté creada
-            // await Shell.Current.GoToAsync("//RepartirArticuloPage");
-            await DisplayAlert("Información", "Reparto - En desarrollo", "OK");
+            await Shell.Current.GoToAsync("RepartirArticuloPage");
         }
 
         /// <summary>
