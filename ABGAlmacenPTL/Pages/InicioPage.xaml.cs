@@ -381,5 +381,20 @@ namespace ABGAlmacenPTL.Pages
         {
             await ValidarUsuarioAsync();
         }
+
+        /// <summary>
+        /// Cuando el campo de usuario pierde el foco, validar contra Config DB
+        /// Migrado desde VB6: txtUsuarios_LostFocus → ValidaUsuario
+        /// Este evento es crucial para replicar el comportamiento de VB6 donde
+        /// ValidaUsuario se llama cuando el campo pierde el foco (no solo al presionar Enter)
+        /// </summary>
+        private async void txtUsuario_Unfocused(object sender, FocusEventArgs e)
+        {
+            // Solo validar si hay un usuario ingresado y no está vacío
+            if (!string.IsNullOrWhiteSpace(txtUsuario.Text) && _empresasDisponibles.Count == 0)
+            {
+                await ValidarUsuarioAsync();
+            }
+        }
     }
 }
