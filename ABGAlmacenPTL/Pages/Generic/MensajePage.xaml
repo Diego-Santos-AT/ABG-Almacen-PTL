@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ABGAlmacenPTL.Pages.Generic.MensajePage"
+             Title="Mensaje"
+             BackgroundColor="#B06000">
+
+    <Grid Padding="20" RowDefinitions="*,Auto">
+        
+        <!-- Área de mensaje -->
+        <Frame Grid.Row="0"
+               BackgroundColor="White"
+               CornerRadius="10"
+               Padding="20"
+               HasShadow="True"
+               VerticalOptions="Center">
+            
+            <ScrollView>
+                <Label 
+                    x:Name="lblMensaje"
+                    FontSize="18"
+                    TextColor="Black"
+                    HorizontalTextAlignment="Center"
+                    VerticalTextAlignment="Center"/>
+            </ScrollView>
+            
+        </Frame>
+
+        <!-- Botón Aceptar -->
+        <Button 
+            x:Name="btnAceptar"
+            Grid.Row="1"
+            Text="ACEPTAR"
+            BackgroundColor="#4CAF50"
+            TextColor="White"
+            FontSize="18"
+            FontAttributes="Bold"
+            HeightRequest="60"
+            CornerRadius="8"
+            Margin="0,20,0,0"
+            Clicked="OnAceptarClicked"/>
+            
+    </Grid>
+
+</ContentPage>

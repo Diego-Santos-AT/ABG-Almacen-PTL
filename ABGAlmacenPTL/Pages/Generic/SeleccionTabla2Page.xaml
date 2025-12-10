@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ABGAlmacenPTL.Pages.Generic.SeleccionTabla2Page"
+             Title="Selección"
+             BackgroundColor="#F0F0F0">
+
+    <Grid RowDefinitions="Auto,*">
+        
+        <!-- Búsqueda rápida -->
+        <SearchBar 
+            x:Name="searchBar"
+            Grid.Row="0"
+            Placeholder="Buscar..."
+            TextChanged="OnSearchBarTextChanged"
+            Margin="10"/>
+
+        <!-- Lista de selección -->
+        <CollectionView 
+            x:Name="collectionView"
+            Grid.Row="1"
+            SelectionMode="Single"
+            SelectionChanged="OnSelectionChanged">
+            
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="15,10" ColumnDefinitions="*,Auto">
+                        
+                        <!-- Contenido del item (personalizable) -->
+                        <Label 
+                            Grid.Column="0"
+                            Text="{Binding DisplayText}"
+                            FontSize="16"
+                            VerticalOptions="Center"/>
+                            
+                        <Label 
+                            Grid.Column="1"
+                            Text="›"
+                            FontSize="24"
+                            TextColor="Gray"
+                            VerticalOptions="Center"/>
+                            
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            
+            <CollectionView.EmptyView>
+                <Label 
+                    Text="No hay datos disponibles"
+                    FontSize="16"
+                    TextColor="Gray"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    Margin="20"/>
+            </CollectionView.EmptyView>
+            
+        </CollectionView>
+        
+    </Grid>
+
+</ContentPage>

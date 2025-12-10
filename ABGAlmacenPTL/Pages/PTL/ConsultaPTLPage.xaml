@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ABGAlmacenPTL.Pages.PTL.ConsultaPTLPage"
+             Title="Consultas PTL"
+             BackgroundColor="#B06000">
+
+    <Grid Padding="20" RowDefinitions="Auto,Auto,Auto,*,Auto" RowSpacing="15">
+        
+        <!-- Título y campo de búsqueda -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+            <Frame Grid.Column="0" BackgroundColor="White" CornerRadius="5" Padding="0" HasShadow="True">
+                <Entry 
+                    x:Name="txtLecturaCodigo"
+                    Placeholder="Código BAC / Ubicación / Caja"
+                    FontSize="16"
+                    MaxLength="36"
+                    Completed="OnCodigoCompleted"
+                    TextChanged="OnCodigoTextChanged"/>
+            </Frame>
+            
+            <Button 
+                Grid.Column="1"
+                x:Name="btnSalir"
+                Text="SALIR"
+                BackgroundColor="#808080"
+                TextColor="White"
+                FontSize="14"
+                FontAttributes="Bold"
+                WidthRequest="100"
+                HeightRequest="50"
+                CornerRadius="5"
+                Clicked="OnSalirClicked"/>
+        </Grid>
+
+        <!-- Información del BAC/Ubicación/Caja -->
+        <Frame Grid.Row="1" BackgroundColor="#C0C0C0" CornerRadius="8" Padding="15" HasShadow="True">
+            <VerticalStackLayout Spacing="10">
+                
+                <!-- Ubicación y BAC -->
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                    <Label Grid.Column="0" Text="Ubicación:" FontSize="14" FontAttributes="Bold"/>
+                    <Label Grid.Column="1" x:Name="lblUbicacion" Text="-" FontSize="14" BackgroundColor="White" Padding="5"/>
+                </Grid>
+
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                    <Label Grid.Column="0" Text="BAC:" FontSize="14" FontAttributes="Bold"/>
+                    <Label Grid.Column="1" x:Name="lblBAC" Text="-" FontSize="14" BackgroundColor="White" Padding="5"/>
+                </Grid>
+
+                <!-- Grupo, Tablilla, Caja, Uds -->
+                <Grid ColumnDefinitions="Auto,*,Auto,*,Auto,*,Auto,*" ColumnSpacing="5">
+                    <Label Grid.Column="0" Text="Grupo:" FontSize="12" FontAttributes="Bold"/>
+                    <Label Grid.Column="1" x:Name="lblGrupo" Text="-" FontSize="12" BackgroundColor="White" Padding="3" HorizontalTextAlignment="Center"/>
+                    
+                    <Label Grid.Column="2" Text="Tab:" FontSize="12" FontAttributes="Bold"/>
+                    <Label Grid.Column="3" x:Name="lblTablilla" Text="-" FontSize="12" BackgroundColor="White" Padding="3" HorizontalTextAlignment="Center"/>
+                    
+                    <Label Grid.Column="4" Text="Caja:" FontSize="12" FontAttributes="Bold"/>
+                    <Label Grid.Column="5" x:Name="lblNumCaja" Text="-" FontSize="12" BackgroundColor="White" Padding="3" HorizontalTextAlignment="Center"/>
+                    
+                    <Label Grid.Column="6" Text="Uds:" FontSize="12" FontAttributes="Bold"/>
+                    <Label Grid.Column="7" x:Name="lblUds" Text="-" FontSize="12" BackgroundColor="White" Padding="3" HorizontalTextAlignment="Center"/>
+                </Grid>
+
+                <!-- Peso y Volumen -->
+                <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="10">
+                    <Label Grid.Column="0" Text="Peso:" FontSize="14" FontAttributes="Bold"/>
+                    <Label Grid.Column="1" x:Name="lblPeso" Text="-" FontSize="14" BackgroundColor="White" Padding="5" HorizontalTextAlignment="Center"/>
+                    
+                    <Label Grid.Column="2" Text="Volumen:" FontSize="14" FontAttributes="Bold"/>
+                    <Label Grid.Column="3" x:Name="lblVolumen" Text="-" FontSize="14" BackgroundColor="White" Padding="5" HorizontalTextAlignment="Center"/>
+                </Grid>
+
+                <!-- Tipo Caja y Nombre -->
+                <Grid ColumnDefinitions="Auto,Auto,*" ColumnSpacing="10">
+                    <Label Grid.Column="0" Text="Tipo:" FontSize="14" FontAttributes="Bold"/>
+                    <Label Grid.Column="1" x:Name="lblTipoCaja" Text="-" FontSize="14" BackgroundColor="White" Padding="5" HorizontalTextAlignment="Center" MinimumWidthRequest="50"/>
+                    <Label Grid.Column="2" x:Name="lblNombreCaja" Text="-" FontSize="14" BackgroundColor="White" Padding="5"/>
+                </Grid>
+
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- Título de artículos -->
+        <Label 
+            Grid.Row="2"
+            Text="Contenido de Artículos"
+            FontSize="14"
+            FontAttributes="Bold"
+            TextColor="White"
+            Padding="5"
+            BackgroundColor="#808080"/>
+
+        <!-- Lista de artículos (Grid reemplaza SSUltraGrid) -->
+        <Frame Grid.Row="3" BackgroundColor="#E0E0E0" CornerRadius="8" Padding="10" HasShadow="True">
+            <CollectionView 
+                x:Name="collectionViewArticulos"
+                SelectionMode="Single">
+                
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BackgroundColor="White" Padding="10" Margin="0,5" CornerRadius="5" HasShadow="False">
+                            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
+                                <Label Grid.Column="0" Text="{Binding Codigo}" FontSize="14" FontAttributes="Bold" VerticalOptions="Center"/>
+                                <Label Grid.Column="1" Text="{Binding Nombre}" FontSize="12" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                                <Label Grid.Column="2" Text="{Binding Cantidad}" FontSize="14" HorizontalTextAlignment="End" VerticalOptions="Center" MinimumWidthRequest="50"/>
+                                <Label Grid.Column="3" Text="uds" FontSize="12" TextColor="Gray" VerticalOptions="Center"/>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                
+                <CollectionView.EmptyView>
+                    <Label 
+                        Text="Sin artículos"
+                        FontSize="14"
+                        TextColor="Gray"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"/>
+                </CollectionView.EmptyView>
+                
+            </CollectionView>
+        </Frame>
+
+    </Grid>
+
+</ContentPage>
