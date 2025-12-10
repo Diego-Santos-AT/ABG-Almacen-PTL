@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.Reflection;
 using ABGAlmacenPTL.Data;
 using ABGAlmacenPTL.Data.Repositories;
 using ABGAlmacenPTL.Services;
@@ -22,13 +24,21 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
 
+		// Load configuration from appsettings.json
+		var assembly = Assembly.GetExecutingAssembly();
+		using var stream = assembly.GetManifestResourceStream("ABGAlmacenPTL.appsettings.json");
+		
+		var config = new ConfigurationBuilder()
+			.AddJsonStream(stream!)
+			.Build();
+
 #if DEBUG
 		builder.Logging.AddDebug();
 #endif
 
-		// Database configuration
-		// TODO: Move connection string to secure configuration
-		var connectionString = "Server=localhost;Database=ABGAlmacen;User Id=sa;Password=YourPassword;TrustServerCertificate=True";
+		// Database configuration from appsettings.json
+		var connectionString = config.GetConnectionString("ABGAlmacenDB") 
+			?? "Server=(localdb)\\mssqllocaldb;Database=ABGAlmacenPTL;Trusted_Connection=true;MultipleActiveResultSets=true";
 		
 		builder.Services.AddDbContext<ABGAlmacenContext>(options =>
 			options.UseSqlServer(connectionString));
