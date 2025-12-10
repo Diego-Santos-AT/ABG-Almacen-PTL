@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ABGAlmacenPTL.Pages.PTL.EmpaquetarBACPage"
+             Title="Empaquetado BAC"
+             BackgroundColor="#B06000">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="10" Spacing="10">
+
+            <!-- Encabezado -->
+            <Frame BackgroundColor="#808080" Padding="10" CornerRadius="5">
+                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto">
+                    <Label Grid.Column="0" Text="EMPAQUETADO BAC" FontSize="20" FontAttributes="Bold" 
+                           TextColor="White" VerticalOptions="Center"/>
+                    <Button Grid.Column="1" Text="SALIR" BackgroundColor="#FF6B6B" TextColor="White"
+                            FontSize="16" WidthRequest="120" HeightRequest="50"
+                            Clicked="OnSalirClicked"/>
+                </Grid>
+            </Frame>
+
+            <!-- Entrada de Código -->
+            <Frame BackgroundColor="#C0C0C0" Padding="10" CornerRadius="5">
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Lectura Código (BAC / CAJA):" FontSize="14" FontAttributes="Bold"/>
+                    <Entry x:Name="txtLecturaCodigo" FontSize="18" MaxLength="36" 
+                           Placeholder="Escanear o introducir código"
+                           TextChanged="OnCodigoTextChanged"
+                           Completed="OnCodigoCompleted"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Información BAC -->
+            <Frame x:Name="frameBAC" BackgroundColor="#C0C0C0" Padding="10" CornerRadius="5" IsVisible="False">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="INFORMACIÓN BAC" FontSize="16" FontAttributes="Bold" TextColor="#333"/>
+                    
+                    <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="5">
+                        <Label Grid.Row="0" Grid.Column="0" Text="Ubicación:" FontSize="14" FontAttributes="Bold"/>
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="lblUbicacion" FontSize="14" BackgroundColor="White" Padding="5"/>
+                        
+                        <Label Grid.Row="1" Grid.Column="0" Text="BAC:" FontSize="14" FontAttributes="Bold"/>
+                        <Label Grid.Row="1" Grid.Column="1" x:Name="lblBAC" FontSize="14" BackgroundColor="White" Padding="5"/>
+                        
+                        <Label Grid.Row="2" Grid.Column="0" Text="Estado:" FontSize="14" FontAttributes="Bold"/>
+                        <Label Grid.Row="2" Grid.Column="1" x:Name="lblEstadoBAC" FontSize="14" Padding="5"/>
+                        
+                        <Label Grid.Row="3" Grid.Column="0" Text="Grupo:" FontSize="14" FontAttributes="Bold"/>
+                        <Label Grid.Row="3" Grid.Column="1" x:Name="lblGrupo" FontSize="14" BackgroundColor="White" Padding="5"/>
+                        
+                        <Label Grid.Row="4" Grid.Column="0" Text="Tablilla:" FontSize="14" FontAttributes="Bold"/>
+                        <Label Grid.Row="4" Grid.Column="1" x:Name="lblTablilla" FontSize="14" BackgroundColor="White" Padding="5"/>
+                        
+                        <Label Grid.Row="5" Grid.Column="0" Text="Unidades:" FontSize="14" FontAttributes="Bold"/>
+                        <Label Grid.Row="5" Grid.Column="1" x:Name="lblUnidades" FontSize="14" BackgroundColor="White" Padding="5"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Información CAJA -->
+            <Frame x:Name="frameCaja" BackgroundColor="#C0C0C0" Padding="10" CornerRadius="5" IsVisible="False">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="INFORMACIÓN CAJA" FontSize="16" FontAttributes="Bold" TextColor="#333"/>
+                    
+                    <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="5">
+                        <Label Grid.Row="0" Grid.Column="0" Text="SSCC:" FontSize="14" FontAttributes="Bold"/>
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="lblSSCC" FontSize="14" BackgroundColor="White" Padding="5"/>
+                        
+                        <Label Grid.Row="1" Grid.Column="0" Text="Tipo Caja:" FontSize="14" FontAttributes="Bold"/>
+                        <Label Grid.Row="1" Grid.Column="1" x:Name="lblTipoCaja" FontSize="14" BackgroundColor="White" Padding="5"/>
+                        
+                        <Label Grid.Row="2" Grid.Column="0" Text="Nombre Caja:" FontSize="14" FontAttributes="Bold"/>
+                        <Label Grid.Row="2" Grid.Column="1" x:Name="lblNombreCaja" FontSize="14" BackgroundColor="White" Padding="5"/>
+                        
+                        <Label Grid.Row="3" Grid.Column="0" Text="Unidades:" FontSize="14" FontAttributes="Bold"/>
+                        <Label Grid.Row="3" Grid.Column="1" x:Name="lblUnidadesCaja" FontSize="14" BackgroundColor="White" Padding="5"/>
+                        
+                        <Label Grid.Row="4" Grid.Column="0" Text="Peso Total:" FontSize="14" FontAttributes="Bold"/>
+                        <Label Grid.Row="4" Grid.Column="1" x:Name="lblPesoCaja" FontSize="14" BackgroundColor="White" Padding="5"/>
+                        
+                        <Label Grid.Row="5" Grid.Column="0" Text="Volumen Total:" FontSize="14" FontAttributes="Bold"/>
+                        <Label Grid.Row="5" Grid.Column="1" x:Name="lblVolumenCaja" FontSize="14" BackgroundColor="White" Padding="5"/>
+                        
+                        <Label Grid.Row="6" Grid.Column="0" Text="Estado:" FontSize="14" FontAttributes="Bold"/>
+                        <Label Grid.Row="6" Grid.Column="1" x:Name="lblEstadoCaja" FontSize="14" Padding="5"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Artículos del BAC/Caja -->
+            <Frame x:Name="frameArticulos" BackgroundColor="#C0C0C0" Padding="10" CornerRadius="5" IsVisible="False">
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="ARTÍCULOS" FontSize="16" FontAttributes="Bold" TextColor="#333"/>
+                    <CollectionView x:Name="cvArticulos" HeightRequest="200" BackgroundColor="#E0E0E0">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="10,5" ColumnDefinitions="100,*,80" BackgroundColor="White" Margin="0,1">
+                                    <Label Grid.Column="0" Text="{Binding Codigo}" FontSize="12" VerticalOptions="Center"/>
+                                    <Label Grid.Column="1" Text="{Binding Nombre}" FontSize="12" VerticalOptions="Center"/>
+                                    <Label Grid.Column="2" Text="{Binding Cantidad}" FontSize="12" HorizontalOptions="End" VerticalOptions="Center"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                        <CollectionView.EmptyView>
+                            <Label Text="No hay artículos" FontSize="14" TextColor="#666" 
+                                   HorizontalOptions="Center" VerticalOptions="Center" Margin="20"/>
+                        </CollectionView.EmptyView>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Acciones Principales -->
+            <Frame x:Name="frameAcciones" BackgroundColor="#C0C0C0" Padding="10" CornerRadius="5" IsVisible="False">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="ACCIONES" FontSize="16" FontAttributes="Bold" TextColor="#333"/>
+                    
+                    <Button x:Name="btnCrearCaja" Text="CREAR CAJA NUEVA" BackgroundColor="#4CAF50" TextColor="White"
+                            FontSize="16" HeightRequest="60" Clicked="OnCrearCajaClicked"/>
+                    
+                    <Button x:Name="btnEmpaquetar" Text="EMPAQUETAR BAC → CAJA" BackgroundColor="#2196F3" TextColor="White"
+                            FontSize="16" HeightRequest="60" Clicked="OnEmpaquetarClicked"/>
+                    
+                    <Button x:Name="btnCerrarBAC" Text="CERRAR BAC" BackgroundColor="#FF9800" TextColor="White"
+                            FontSize="16" HeightRequest="60" Clicked="OnCerrarBACClicked"/>
+                    
+                    <Button x:Name="btnExtraerBAC" Text="EXTRAER BAC" BackgroundColor="#F44336" TextColor="White"
+                            FontSize="16" HeightRequest="60" Clicked="OnExtraerBACClicked"/>
+                    
+                    <Button x:Name="btnImprimirEtiqueta" Text="IMPRIMIR ETIQUETA" BackgroundColor="#9C27B0" TextColor="White"
+                            FontSize="16" HeightRequest="60" Clicked="OnImprimirEtiquetaClicked"/>
+                    
+                    <Button x:Name="btnCambiarTipoCaja" Text="CAMBIAR TIPO CAJA" BackgroundColor="#607D8B" TextColor="White"
+                            FontSize="16" HeightRequest="60" Clicked="OnCambiarTipoCajaClicked"/>
+                    
+                    <Button x:Name="btnCombinarCajas" Text="COMBINAR CAJAS" BackgroundColor="#795548" TextColor="White"
+                            FontSize="16" HeightRequest="60" Clicked="OnCombinarCajasClicked"/>
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

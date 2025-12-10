@@ -63,9 +63,7 @@ namespace ABGAlmacenPTL.Pages
         /// </summary>
         private async void OnEmpaquetadoClicked(object sender, EventArgs e)
         {
-            // TODO: Implementar navegación cuando la página esté creada
-            // await Shell.Current.GoToAsync("//EmpaquetarBACPage");
-            await DisplayAlert("Información", "Empaquetado - En desarrollo", "OK");
+            await Shell.Current.GoToAsync("EmpaquetarBACPage");
         }
 
         /// <summary>

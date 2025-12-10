@@ -18,6 +18,6 @@ public partial class AppShell : Shell
 		Routing.RegisterRoute("UbicarBACPage", typeof(UbicarBACPage));
 		Routing.RegisterRoute("ExtraerBACPage", typeof(ExtraerBACPage));
 		Routing.RegisterRoute("RepartirArticuloPage", typeof(RepartirArticuloPage));
-		// Routing.RegisterRoute("EmpaquetarBACPage", typeof(EmpaquetarBACPage));
+		Routing.RegisterRoute("EmpaquetarBACPage", typeof(EmpaquetarBACPage));
 	}
 }
