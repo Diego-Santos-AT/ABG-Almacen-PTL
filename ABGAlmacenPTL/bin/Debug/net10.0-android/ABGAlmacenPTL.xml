@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ABGAlmacenPTL</name>
+    </assembly>
+    <members>
+        <member name="T:ABGAlmacenPTL.Classes.Memory">
+            <summary>
+            Class for manipulating API memory blocks
+            Migrado desde VB6 cMemory.cls
+            Author: Steve McMahon
+            Date: 24 May 1998
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Configuration.ProfileManager">
+            <summary>
+            Módulo genérico para las llamadas al API usando xxxProfileString
+            Migrado desde VB6 Profile.bas
+            Fecha inicio: 03/10/2001
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Configuration.ProfileManager.LeerIni(System.String,System.String,System.String,System.String)">
+            <summary>
+            Lee un valor del fichero INI
+            Migrado desde VB6: LeerIni
+            </summary>
+            <param name="lpFileName">La Aplicación (fichero INI)</param>
+            <param name="lpAppName">La sección que suele estar entre corchetes</param>
+            <param name="lpKeyName">Clave</param>
+            <param name="vDefault">Valor opcional que devolverá si no se encuentra la clave</param>
+            <returns>Valor leído o valor por defecto</returns>
+        </member>
+        <member name="M:ABGAlmacenPTL.Configuration.ProfileManager.GuardarIni(System.String,System.String,System.String,System.String)">
+            <summary>
+            Guarda los datos de configuración en el fichero INI
+            Migrado desde VB6: GuardarIni
+            </summary>
+            <param name="lpFileName">La Aplicación (fichero INI)</param>
+            <param name="lpAppName">La sección que suele estar entre corchetes</param>
+            <param name="lpKeyName">Clave</param>
+            <param name="lpString">Valor a guardar</param>
+        </member>
+        <member name="M:ABGAlmacenPTL.Configuration.ProfileManager.LeerSeccionINI(System.String,System.String)">
+            <summary>
+            Lee una sección entera de un fichero INI
+            Migrado desde VB6: LeerSeccionINI
+            </summary>
+            <param name="lpFileName">Nombre del fichero INI</param>
+            <param name="lpAppName">Nombre de la sección a leer</param>
+            <returns>Diccionario con las claves y valores de la sección</returns>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.TipoEmpresa">
+            <summary>
+            Tipo de datos para Empresa
+            Migrado desde VB6 Type TipoEmpresa
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.TipoOpcion">
+            <summary>
+            Tipo de datos para Opción
+            Migrado desde VB6 Type TipoOpcion
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.TipoMenu">
+            <summary>
+            Tipo de datos para menu
+            Migrado desde VB6 Type TipoMenu
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.TipoUsuario">
+            <summary>
+            Tipo de Datos para Usuario
+            Migrado desde VB6 Type TipoUsuario
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Models.PuestoTrabajo">
+            <summary>
+            Tipo de Datos para Puesto de trabajo
+            Migrado desde VB6 Type PuestoTrabajo
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Modules.GDConstantes">
+            <summary>
+            Módulo para la definición de constantes generales de la aplicación
+            Migrado desde VB6 GDConstantes.bas
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Modules.GDFunc01">
+            <summary>
+            Módulo de funciones generales
+            Migrado desde VB6 GDFunc01.bas
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Modules.GDFunc01.TipoMensaje">
+            <summary>
+            Tipos de mensajes
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.GDFunc01.CargaMenu(System.Int32)">
+            <summary>
+            Función para cargar los menús de la aplicación según la opción elegida
+            Migrado desde VB6: CargaMenu
+            </summary>
+            <param name="index">Índice del menú</param>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.GDFunc01.CambiaModo(System.Int32)">
+            <summary>
+            Función para activar/desactivar los botones de la barra de herramientas según el modo de trabajo
+            Migrado desde VB6: CambiaModo
+            </summary>
+            <param name="modo">Modo de trabajo: MOD_Edicion | MOD_Seleccion</param>
+            <remarks>
+            En MAUI, esto se manejará a través del ViewModel y binding de comandos
+            Esta función está preservada para referencia de la lógica original
+            </remarks>
+        </member>
+        <member name="T:ABGAlmacenPTL.Modules.GDFunc02">
+            <summary>
+            Módulo de funciones de relación de datos
+            Migrado desde VB6 GDFunc02.bas
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.GDFunc02.wfBuscarEnArray(System.Object[][],System.Object)">
+            <summary>
+            Buscar en un array de dos dimensiones por la primera para devolver el valor de la segunda
+            Migrado desde VB6: wfBuscarEnArray
+            Creación: 16/10/03
+            Se usa desde wfImprimir_Informe para dar el valor de la propiedad de Crystal
+            </summary>
+            <param name="vArray">Array en el que buscar</param>
+            <param name="vValorBuscar">Valor a buscar en la primera dimensión</param>
+            <returns>Valor encontrado o string vacío</returns>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.GDFunc02.Dame_FechaHora_Sistema">
+            <summary>
+            Obtiene la fecha y hora del sistema
+            Migrado desde VB6: Dame_FechaHora_Sistema
+            </summary>
+            <returns>Fecha y hora actual</returns>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.GDFunc02.wfQuitarCorchetes(System.String)">
+            <summary>
+            Quita los corchetes de una cadena (usado para nombres de servidor SQL)
+            Migrado desde VB6: wfQuitarCorchetes
+            </summary>
+            <param name="texto">Texto con posibles corchetes</param>
+            <returns>Texto sin corchetes</returns>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.GDFunc02.ConvertirACadena(System.Object)">
+            <summary>
+            Convierte un valor a cadena manejando nulos
+            </summary>
+            <param name="valor">Valor a convertir</param>
+            <returns>Cadena o vacío si es nulo</returns>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.GDFunc02.ConvertirAEntero(System.Object,System.Int32)">
+            <summary>
+            Convierte un valor a entero manejando nulos
+            </summary>
+            <param name="valor">Valor a convertir</param>
+            <param name="valorDefecto">Valor por defecto si es nulo</param>
+            <returns>Entero o valor por defecto</returns>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.GDFunc02.ConvertirABooleano(System.Object)">
+            <summary>
+            Convierte un valor a booleano manejando nulos y valores numéricos VB6
+            En VB6: 0 = False, cualquier otro número = True
+            </summary>
+            <param name="valor">Valor a convertir</param>
+            <returns>Booleano</returns>
+        </member>
+        <member name="T:ABGAlmacenPTL.Modules.GDFunc04">
+            <summary>
+            Módulo de funciones de utilidad para navegación y selección
+            Migrado desde VB6 GDFunc04.bas
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Modules.GDFunc04.RegistroSeleccionado">
+            <summary>
+            Tipo de Datos para Registro Seleccionado
+            Migrado desde VB6 Type Registro_Seleccionado
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Modules.GDFunc04.DesgloseUbicacion">
+            <summary>
+            Tipo de Datos para contener las ubicaciones por defecto de empresa desglosada
+            Migrado desde VB6 Type Desglose_Ubicacion
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.GDFunc04.DesplazaRegistro2(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Función para simular la navegación sobre un recordset con los Movimientos
+            tradicionales de Primero, Anterior, Siguiente y Ultimo
+            Migrado desde VB6: DesplazaRegistro2
+            Creado: 10/05/02
+            </summary>
+            <param name="tabla">Nombre de la tabla</param>
+            <param name="campo">Campo por el que navegar</param>
+            <param name="codigoActual">Código actual</param>
+            <param name="tipoDesplazamiento">Tipo: P=Primero, A=Anterior, S=Siguiente, U=Ultimo</param>
+            <param name="condicion">Condición WHERE opcional</param>
+            <returns>Nuevo código después del desplazamiento</returns>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.GDFunc04.EjecutaConsulta(System.String,System.String)">
+            <summary>
+            Ejecuta una consulta SQL y devuelve el resultado
+            Migrado desde VB6: EjecutaConsulta
+            </summary>
+            <param name="sql">Consulta SQL a ejecutar</param>
+            <param name="valorDefecto">Valor por defecto si no hay resultado</param>
+            <returns>Resultado de la consulta o valor por defecto</returns>
+        </member>
+        <member name="M:ABGAlmacenPTL.Modules.GDFunc04.DesglosaUbicacion(System.String)">
+            <summary>
+            Desglosar un código de ubicación completo en sus componentes
+            </summary>
+            <param name="ubicacionCompleta">Código de ubicación completo</param>
+            <returns>Objeto con los componentes desglosados</returns>
+        </member>
+        <member name="T:ABGAlmacenPTL.Modules.Gestion">
+            <summary>
+            Módulo principal de gestión - Variables y constantes globales
+            Migrado desde VB6 Gestion.bas
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Pages.InicioPage">
+            <summary>
+            Form de pantalla de Inicio de la aplicación
+            Muestra el nombre de programa, versión, etc
+            Control de la conexión con BD
+            Validación de Usuario
+            Migrado desde VB6 frmInicio.frm
+            Creado: 04/04/01
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Resource">
+            <summary>
+            Android Resource Designer class.
+            Exposes the Android Resource designer assembly into the project Namespace.
+            </summary>
+        </member>
+    </members>
+</doc>
