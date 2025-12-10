@@ -1,11 +1,11 @@
 # Estado Actual de la Migración ABG Almacén PTL
 ## Resumen de Progreso al 2025-12-10
 
-### 📊 Progreso Global: ~32% Completado
+### 📊 Progreso Global: ~38% Completado
 
 **Total VB6 Original**: 12,400 líneas en 24 archivos  
-**Total C# Migrado**: ~4,500 líneas en 30 archivos  
-**Porcentaje**: 32% completado
+**Total C# Migrado**: ~5,400 líneas en 34 archivos  
+**Porcentaje**: 38% completado
 
 ---
 
@@ -75,7 +75,7 @@
 
 **Total Migrado**: ~610 líneas de ~700 (87%)
 
-### 7. Interfaces de Usuario (62% - 8 de 13 completas)
+### 7. Interfaces de Usuario (85% - 11 de 13 completas)
 
 #### ✅ Completos:
 | Archivo VB6 | Archivo C#/XAML | Líneas | Estado |
@@ -88,6 +88,8 @@
 | frmSeleccionTabla2.frm | Pages/Generic/SeleccionTabla2Page.xaml + .cs | 270 | ✅ Completo |
 | frmVerFoto.frm | Pages/Generic/VerFotoPage.xaml + .cs | 150 | ✅ Completo |
 | frmRepartirArticulo.frm | Pages/PTL/RepartirArticuloPage.xaml + .cs | 420 | ✅ Completo |
+| frmUbicarBAC.frm | Pages/PTL/UbicarBACPage.xaml + .cs | 560 | ✅ Completo (Sesión 3) |
+| frmExtraerBAC.frm | Pages/PTL/ExtraerBACPage.xaml + .cs | 480 | ✅ Completo (Sesión 3) |
 
 **Características**:
 - Diseño XAML optimizado para pantallas 4"
@@ -99,16 +101,15 @@
 - Temporizadores y progress bars
 - Visor de imágenes multi-formato
 - Selector de datos con búsqueda
+- Gestión completa de BAC (ubicar, extraer, repartir)
 
 #### ⏳ Pendientes:
 
-**Formularios PTL (4)**:
+**Formularios PTL (2)**:
 - frmConsultaPTL.frm → ConsultaPTLPage - 768 líneas
-- frmExtraerBAC.frm → ExtraerBACPage - 634 líneas
-- frmUbicarBAC.frm → UbicarBACPage - 681 líneas
 - frmEmpaquetarBAC.frm → EmpaquetarBACPage - 2,713 líneas (EL MÁS GRANDE)
 
-**Total Migrado**: ~1,850 líneas de ~7,500 (25%)
+**Total Migrado**: ~2,890 líneas de ~7,500 (39%)
 
 ---
 
@@ -121,8 +122,8 @@
 | Configuración | ~278 | 240 | 100% | ✅ Completo |
 | Módulos Core | ~4,000 | 930 | 23% | ⚠️ Parcial |
 | Clases | ~700 | 610 | 87% | ✅ Casi Completo |
-| Formularios | ~7,500 | 1,850 | 25% | ⚠️ En Progreso |
-| **TOTAL** | **~12,400** | **~4,500** | **32%** | **⚠️ En Progreso** |
+| Formularios | ~7,500 | 2,890 | 39% | ⚠️ En Progreso |
+| **TOTAL** | **~12,400** | **~5,400** | **38%** | **⚠️ En Progreso** |
 
 ---
 
