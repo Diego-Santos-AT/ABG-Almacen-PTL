@@ -277,11 +277,19 @@ namespace ABGAlmacenPTL.Pages
                     }
                     
                     // Guardar en abg.ini (VB6: GuardarIni ficINI, "Varios", "PueDefault")
-                    ProfileManager.GuardarIni(
-                        Path.Combine(FileSystem.AppDataDirectory, "abg.ini"),
-                        "Varios",
-                        "PueDefault",
-                        puestoSeleccionado.CodigoPuesto.ToString());
+                    try
+                    {
+                        ProfileManager.GuardarIni(
+                            Path.Combine(FileSystem.AppDataDirectory, "abg.ini"),
+                            "Varios",
+                            "PueDefault",
+                            puestoSeleccionado.CodigoPuesto.ToString());
+                    }
+                    catch (Exception exIni)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"No se pudo guardar puesto en abg.ini: {exIni.Message}");
+                        // No es crítico, continuar con el login
+                    }
                 }
                 else
                 {
