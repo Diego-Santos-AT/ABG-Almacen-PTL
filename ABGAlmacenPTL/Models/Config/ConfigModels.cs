@@ -85,6 +85,10 @@ public class Empresa
     [MaxLength(20)]
     public string? CIF { get; set; }
     
+    [Column("emplog")]
+    [MaxLength(255)]
+    public string? Logo { get; set; }
+    
     [Column("empact")]
     public bool? Activa { get; set; }
 }

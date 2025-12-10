@@ -154,14 +154,9 @@ namespace ABGAlmacenPTL.Pages
                 // Verificar si tiene contraseña (VB6: HayPassword)
                 if (string.IsNullOrEmpty(usuario.Contraseña))
                 {
-                    // Sin contraseña - login directo
+                    // Sin contraseña - ocultar campo de contraseña pero no validar todavía
                     txtPassword.IsVisible = false;
-                    var (exito, mensaje) = await _authService.ValidarCredencialesAsync(txtUsuario.Text, null);
-                    if (exito)
-                    {
-                        // Continuar sin pedir contraseña
-                        lblEstado.Text = "Usuario validado";
-                    }
+                    lblEstado.Text = "Usuario validado (sin contraseña)";
                 }
                 else
                 {
