@@ -8,6 +8,9 @@ namespace ABGAlmacenPTL.Pages.PTL
     /// </summary>
     public partial class ExtraerBACPage : ContentPage
     {
+        // TESTING MODE: Set to true to test UI without DAL
+        private const bool TESTING_MODE = true;
+        
         private int _ubicacionId = 0;
         private string _bacCodigo = string.Empty;
 
@@ -76,8 +79,8 @@ namespace ABGAlmacenPTL.Pages.PTL
                 int alt = int.Parse(ubicacionCodigo.Substring(9, 3));
 
                 // TODO: Consultar BD para obtener BAC de la ubicación
-                bool ubicacionExiste = false; // Cambiar cuando tengamos DAL
-                bool ubicacionTieneBAC = false; // Verificar si tiene BAC
+                bool ubicacionExiste = TESTING_MODE; // Change to DB query when DAL available
+                bool ubicacionTieneBAC = TESTING_MODE; // Verificar si tiene BAC
 
                 if (ubicacionExiste)
                 {
@@ -152,7 +155,9 @@ namespace ABGAlmacenPTL.Pages.PTL
             
             // Simulación
             await Task.Delay(100);
-            return false; // Cambiar cuando esté implementado
+            
+            // TODO: Replace with real DAL implementation
+            return TESTING_MODE; // Returns success in testing mode
         }
 
         private void RefrescarDatosBAC(
