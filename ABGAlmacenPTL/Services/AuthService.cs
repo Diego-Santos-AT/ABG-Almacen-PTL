@@ -24,6 +24,22 @@ public class AuthService
     }
     
     /// <summary>
+    /// Prueba la conexión con el servidor Config
+    /// Migrado desde VB6: ProbarConexion(serv As String)
+    /// </summary>
+    public async Task<bool> ProbarConexionAsync()
+    {
+        try
+        {
+            return await _configContext.Database.CanConnectAsync();
+        }
+        catch
+        {
+            return false;
+        }
+    }
+    
+    /// <summary>
     /// Busca y valida un usuario en la base de datos Config
     /// Migrado desde VB6: edC.BuscaUsuario txtUsuarios.Text
     /// </summary>

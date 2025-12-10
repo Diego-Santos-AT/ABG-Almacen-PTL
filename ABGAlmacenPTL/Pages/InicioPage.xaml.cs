@@ -41,10 +41,34 @@ namespace ABGAlmacenPTL.Pages
             
             lblEstado.Text = $"Conectando con el Servidor {_abgConfig.BDDServLocal}...";
             
+            // Probar conexión con el servidor Config (VB6: ProbarConexion)
+            try
+            {
+                var canConnect = await _authService.ProbarConexionAsync();
+                if (!canConnect)
+                {
+                    await DisplayAlert("Error de Conexión", 
+                        $"No se pudo conectar al servidor {_abgConfig.BDDServLocal}\n" +
+                        $"Base de datos: {_abgConfig.BDDConfig}\n\n" +
+                        "Verifique la configuración de red y el servidor.", 
+                        "OK");
+                    Application.Current?.Quit();
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error de Conexión", 
+                    $"Error al conectar con el servidor Config: {ex.Message}", 
+                    "OK");
+                Application.Current?.Quit();
+                return;
+            }
+            
             // Cargar usuario por defecto desde abg.ini
             txtUsuario.Text = _abgConfig.UsrDefault;
             
-            // Cargar puestos de trabajo (desde tabla o hardcoded como VB6)
+            // Cargar puestos de trabajo (VB6: DamePuestos desde Config DB)
             await CargarPuestosAsync();
             
             lblEstado.Text = "Listo para iniciar sesión";
