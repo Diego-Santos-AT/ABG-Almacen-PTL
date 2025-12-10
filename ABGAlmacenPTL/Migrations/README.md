@@ -4,7 +4,27 @@
 
 EF Core command-line tools have a known issue with multi-targeted MAUI projects. The migrations must be created using one of these workarounds:
 
-### Option 1: Temporary Single-Target (Recommended for Development)
+### ✅ Option 1: Manual SQL Script (Current Approach)
+
+A SQL migration script has been created manually at `InitialCreate.sql`. This script:
+- Creates all tables with proper schema
+- Adds indexes and foreign keys
+- Includes seed data for TiposCaja and Puestos
+
+**To apply the migration:**
+```bash
+# Using sqlcmd (Windows/Linux)
+sqlcmd -S (localdb)\mssqllocaldb -d ABGAlmacenPTL -i Migrations/InitialCreate.sql
+
+# Or using SQL Server Management Studio (SSMS)
+# Open InitialCreate.sql and execute against your database
+```
+
+**To load additional seed data:**
+- Use the `Data/SeedData.cs` class in your application startup
+- Or run the INSERT statements from SeedData.cs manually
+
+### Option 2: Temporary Single-Target (For EF Core CLI)
 
 1. **Temporarily edit ABGAlmacenPTL.csproj** to single-target:
 ```xml
@@ -20,7 +40,7 @@ dotnet ef migrations add InitialCreate
 
 3. **Restore multi-targeting** in .csproj after migration is created
 
-### Option 2: Use Package Manager Console in Visual Studio
+### Option 3: Use Package Manager Console in Visual Studio
 
 If using Visual Studio, you can use Package Manager Console which handles multi-targeting better:
 ```powershell
@@ -28,11 +48,11 @@ Add-Migration InitialCreate
 Update-Database
 ```
 
-### Option 3: SQL Script Generation (Production)
+### Option 4: SQL Script Generation (Production)
 
 For production deployments, generate SQL scripts:
 ```bash
-# After migration is created
+# After migration is created via Option 2 or 3
 dotnet ef migrations script --output migration.sql
 ```
 

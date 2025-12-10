@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ABGAlmacenPTL")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("23.4.2.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("23.4.2+de319c04ccdc4fab614c0bc5ae1e63d88d1348fc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("23.4.2+e079a7ab6073b99c210468efa5bddbfb0050945a")]
 [assembly: System.Reflection.AssemblyProductAttribute("ABGAlmacenPTL")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ABGAlmacenPTL")]
 [assembly: System.Reflection.AssemblyVersionAttribute("23.4.2.0")]

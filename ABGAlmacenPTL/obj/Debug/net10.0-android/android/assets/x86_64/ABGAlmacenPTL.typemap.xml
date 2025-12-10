@@ -1,4 +1,4 @@
-<api type="debug" assembly-name="ABGAlmacenPTL" mvid="21331b473a8249b397b0788c3326597c">
+<api type="debug" assembly-name="ABGAlmacenPTL" mvid="c6d4109b38db49f988284369d2d9dc01">
   <java-to-managed>
     <entry java-name="crc640301e046e7c5726d/MainActivity" managed-name="ABGAlmacenPTL.MainActivity, ABGAlmacenPTL" managed-type-token-id="33554444" />
     <entry java-name="crc640301e046e7c5726d/MainApplication" managed-name="ABGAlmacenPTL.MainApplication, ABGAlmacenPTL" managed-type-token-id="33554445" />
