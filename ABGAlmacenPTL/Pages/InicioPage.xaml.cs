@@ -209,10 +209,22 @@ namespace ABGAlmacenPTL.Pages
                 return;
             }
 
+            // Si no hay empresas cargadas, validar usuario primero para cargarlas
+            // Esto replica el comportamiento de VB6 donde ValidaUsuario → CargaEmpresas
+            if (pickerEmpresa.Items.Count == 0 || _empresasDisponibles.Count == 0)
+            {
+                await ValidarUsuarioAsync();
+                
+                // Si después de validar no hay empresas, no continuar
+                if (_empresasDisponibles.Count == 0)
+                {
+                    return;
+                }
+            }
+
             if (pickerEmpresa.SelectedIndex < 0)
             {
-                // Si no hay empresas cargadas, validar usuario primero
-                await ValidarUsuarioAsync();
+                await DisplayAlert("Error", "Debe seleccionar una empresa", "OK");
                 return;
             }
 
