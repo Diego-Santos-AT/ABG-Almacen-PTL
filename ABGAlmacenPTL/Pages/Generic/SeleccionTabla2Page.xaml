@@ -12,8 +12,7 @@
             x:Name="searchBar"
             Grid.Row="0"
             Placeholder="Buscar..."
-            SearchCommand="{Binding SearchCommand}"
-            SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}"
+            TextChanged="OnSearchBarTextChanged"
             Margin="10"/>
 
         <!-- Lista de selección -->

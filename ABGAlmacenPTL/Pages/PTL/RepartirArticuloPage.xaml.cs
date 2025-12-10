@@ -95,7 +95,8 @@ namespace ABGAlmacenPTL.Pages.PTL
                 // Por ahora, simulamos validación
 
                 // Determinar tipo de código (Artículo o EAN13)
-                bool esEAN13 = codigo.Length == 13 && long.TryParse(codigo, out _);
+                // EAN13: 13 dígitos numéricos con dígito de control válido
+                bool esEAN13 = codigo.Length == 13 && long.TryParse(codigo, out _) && ValidarDigitoControlEAN13(codigo);
 
                 if (esEAN13)
                 {
@@ -110,6 +111,30 @@ namespace ABGAlmacenPTL.Pages.PTL
             {
                 await DisplayAlert("Error", $"Error al validar código: {ex.Message}", "OK");
             }
+        }
+
+        /// <summary>
+        /// Valida el dígito de control de un código EAN13
+        /// </summary>
+        private bool ValidarDigitoControlEAN13(string ean13)
+        {
+            if (ean13.Length != 13 || !long.TryParse(ean13, out _))
+            {
+                return false;
+            }
+
+            // Algoritmo de validación EAN13
+            int suma = 0;
+            for (int i = 0; i < 12; i++)
+            {
+                int digito = int.Parse(ean13[i].ToString());
+                suma += (i % 2 == 0) ? digito : digito * 3;
+            }
+
+            int digitoControl = (10 - (suma % 10)) % 10;
+            int digitoEAN = int.Parse(ean13[12].ToString());
+
+            return digitoControl == digitoEAN;
         }
 
         private async Task ValidarArticulo(string codigoArticulo)

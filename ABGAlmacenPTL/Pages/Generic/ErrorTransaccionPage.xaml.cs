@@ -119,7 +119,12 @@ namespace ABGAlmacenPTL.Pages.Generic
             _resultado = false;
             _timer?.Stop();
             _tcs?.SetResult(_resultado);
-            Navigation.PopModalAsync();
+            
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await Navigation.PopModalAsync();
+            });
+            
             return true;
         }
     }
