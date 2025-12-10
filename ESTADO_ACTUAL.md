@@ -122,11 +122,6 @@
 | Clases | ~700 | 610 | 87% | ✅ Casi Completo |
 | Formularios | ~7,500 | 830 | 11% | ⚠️ Iniciado |
 | **TOTAL** | **~12,400** | **~3,500** | **25%** | **⚠️ En Progreso** |
-| Configuración | ~278 | 240 | 100% | ✅ Completo |
-| Módulos Core | ~4,000 | 490 | 12% | ⚠️ Parcial |
-| Clases | ~700 | 175 | 25% | ⚠️ Parcial |
-| Formularios | ~7,500 | 240 | 3% | ⚠️ Iniciado |
-| **TOTAL** | **~12,400** | **2,005** | **12%** | **⚠️ En Progreso** |
 
 ---
 

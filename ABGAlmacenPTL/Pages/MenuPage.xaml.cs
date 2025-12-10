@@ -102,7 +102,7 @@ namespace ABGAlmacenPTL.Pages
         {
             // Prevenir que el botón de retroceso cierre la aplicación
             // Mostrar confirmación de salida
-            Device.BeginInvokeOnMainThread(async () =>
+            MainThread.BeginInvokeOnMainThread(async () =>
             {
                 await OnSalirClicked(this, EventArgs.Empty);
             });
