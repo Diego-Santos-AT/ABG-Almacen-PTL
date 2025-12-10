@@ -1,11 +1,11 @@
 # Estado Actual de la Migración ABG Almacén PTL
 ## Resumen de Progreso al 2025-12-10
 
-### 📊 Progreso Global: ~25% Completado
+### 📊 Progreso Global: ~32% Completado
 
 **Total VB6 Original**: 12,400 líneas en 24 archivos  
-**Total C# Migrado**: ~3,500 líneas en 22 archivos  
-**Porcentaje**: 25% completado
+**Total C# Migrado**: ~4,500 líneas en 30 archivos  
+**Porcentaje**: 32% completado
 
 ---
 
@@ -75,7 +75,7 @@
 
 **Total Migrado**: ~610 líneas de ~700 (87%)
 
-### 7. Interfaces de Usuario (40% - 4 de 13 completas)
+### 7. Interfaces de Usuario (62% - 8 de 13 completas)
 
 #### ✅ Completos:
 | Archivo VB6 | Archivo C#/XAML | Líneas | Estado |
@@ -84,6 +84,10 @@
 | frmMenu.frm | Pages/MenuPage.xaml + .cs | 220 | ✅ Completo |
 | frmMensaje.frm | Pages/Generic/MensajePage.xaml + .cs | 90 | ✅ Completo |
 | frmMsgBox.frm | Pages/Generic/MsgBoxPage.xaml + .cs | 280 | ✅ Completo |
+| frmErrorTransaccion.frm | Pages/Generic/ErrorTransaccionPage.xaml + .cs | 180 | ✅ Completo |
+| frmSeleccionTabla2.frm | Pages/Generic/SeleccionTabla2Page.xaml + .cs | 270 | ✅ Completo |
+| frmVerFoto.frm | Pages/Generic/VerFotoPage.xaml + .cs | 150 | ✅ Completo |
+| frmRepartirArticulo.frm | Pages/PTL/RepartirArticuloPage.xaml + .cs | 420 | ✅ Completo |
 
 **Características**:
 - Diseño XAML optimizado para pantallas 4"
@@ -92,22 +96,19 @@
 - ScrollView para pantallas pequeñas
 - API compatible con VB6 para MsgBox
 - Navegación con Shell routing
+- Temporizadores y progress bars
+- Visor de imágenes multi-formato
+- Selector de datos con búsqueda
 
 #### ⏳ Pendientes:
 
-**Formularios Genéricos (3)**:
-- frmErrorTransaccion.frm → ErrorTransaccionPage - 117 líneas
-- frmSeleccionTabla2.frm → SeleccionTabla2Page - 158 líneas
-- frmVerFoto.frm → VerFotoPage - 86 líneas
-
-**Formularios PTL (5)**:
+**Formularios PTL (4)**:
 - frmConsultaPTL.frm → ConsultaPTLPage - 768 líneas
 - frmExtraerBAC.frm → ExtraerBACPage - 634 líneas
 - frmUbicarBAC.frm → UbicarBACPage - 681 líneas
-- frmRepartirArticulo.frm → RepartirArticuloPage - 536 líneas
 - frmEmpaquetarBAC.frm → EmpaquetarBACPage - 2,713 líneas (EL MÁS GRANDE)
 
-**Total Migrado**: ~830 líneas de ~7,500 (11%)
+**Total Migrado**: ~1,850 líneas de ~7,500 (25%)
 
 ---
 
@@ -120,8 +121,8 @@
 | Configuración | ~278 | 240 | 100% | ✅ Completo |
 | Módulos Core | ~4,000 | 930 | 23% | ⚠️ Parcial |
 | Clases | ~700 | 610 | 87% | ✅ Casi Completo |
-| Formularios | ~7,500 | 830 | 11% | ⚠️ Iniciado |
-| **TOTAL** | **~12,400** | **~3,500** | **25%** | **⚠️ En Progreso** |
+| Formularios | ~7,500 | 1,850 | 25% | ⚠️ En Progreso |
+| **TOTAL** | **~12,400** | **~4,500** | **32%** | **⚠️ En Progreso** |
 
 ---
 
