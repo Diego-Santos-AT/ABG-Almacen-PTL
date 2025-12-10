@@ -18,6 +18,7 @@ namespace ABGAlmacenPTL.Pages
         private int reintentos = 0;
         private List<Empresa> _empresasDisponibles = new List<Empresa>();
         private List<Models.Config.PuestoTrabajo> _puestosDisponibles = new List<Models.Config.PuestoTrabajo>();
+        private string _ultimoUsuarioValidado = string.Empty; // Track last validated username to avoid redundant DB calls
 
         public InicioPage(AuthService authService, ABGConfigService abgConfig)
         {
@@ -136,8 +137,12 @@ namespace ABGAlmacenPTL.Pages
                     txtUsuario.Text = string.Empty;
                     txtUsuario.Focus();
                     lblEstado.Text = "Usuario inválido";
+                    _ultimoUsuarioValidado = string.Empty; // Reset on failure
                     return;
                 }
+                
+                // Marcar este usuario como validado
+                _ultimoUsuarioValidado = txtUsuario.Text;
                 
                 // Cargar empresas del usuario (VB6: edC.DameEmpresasAccesoUsuario)
                 _empresasDisponibles = await _authService.ObtenerEmpresasUsuarioAsync(usuario.UsuarioId);
@@ -390,10 +395,28 @@ namespace ABGAlmacenPTL.Pages
         /// </summary>
         private async void txtUsuario_Unfocused(object sender, FocusEventArgs e)
         {
-            // Solo validar si hay un usuario ingresado y no está vacío
-            if (!string.IsNullOrWhiteSpace(txtUsuario.Text) && _empresasDisponibles.Count == 0)
+            // Solo validar si:
+            // 1. Hay un usuario ingresado y no está vacío
+            // 2. El usuario no fue validado anteriormente O el usuario cambió
+            if (!string.IsNullOrWhiteSpace(txtUsuario.Text) && 
+                txtUsuario.Text != _ultimoUsuarioValidado)
             {
                 await ValidarUsuarioAsync();
+            }
+        }
+
+        /// <summary>
+        /// Cuando el texto del usuario cambia, limpiar el estado de validación
+        /// para forzar una nueva validación cuando pierda el foco
+        /// </summary>
+        private void txtUsuario_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // Si el usuario cambia el texto, limpiar empresas y estado de validación
+            if (e.NewTextValue != _ultimoUsuarioValidado)
+            {
+                _empresasDisponibles.Clear();
+                pickerEmpresa.Items.Clear();
+                _ultimoUsuarioValidado = string.Empty;
             }
         }
     }
