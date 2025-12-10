@@ -55,7 +55,7 @@ public static class MauiProgram
 		}
 		
 		// Crear servicio de configuración que lee abg.ini (como VB6)
-		var abgConfig = new ABGConfigService(iniPath);
+		var abgConfig = new ABGConfigService();
 		builder.Services.AddSingleton(abgConfig);
 		
 		// ========================================================================
