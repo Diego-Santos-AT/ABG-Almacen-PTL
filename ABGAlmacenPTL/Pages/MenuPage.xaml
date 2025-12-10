@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ABGAlmacenPTL.Pages.MenuPage"
+             Title="Menú Principal"
+             BackgroundColor="#B06000">
+
+    <ScrollView>
+        <VerticalStackLayout 
+            Padding="20"
+            Spacing="15"
+            VerticalOptions="Center">
+
+            <!-- Title -->
+            <Label 
+                Text="ABG Almacén PTL"
+                FontSize="24"
+                FontAttributes="Bold"
+                TextColor="White"
+                HorizontalOptions="Center"
+                Margin="0,20,0,30"/>
+
+            <!-- Botón 1: CONSULTAS PTL -->
+            <Button 
+                x:Name="btnConsultasPTL"
+                Text="CONSULTAS PTL"
+                BackgroundColor="#8080FF"
+                TextColor="White"
+                FontSize="18"
+                FontAttributes="Bold"
+                HeightRequest="60"
+                CornerRadius="8"
+                Clicked="OnConsultasPTLClicked"/>
+
+            <!-- Botón 2: UBICAR BAC -->
+            <Button 
+                x:Name="btnUbicarBAC"
+                Text="UBICAR BAC"
+                BackgroundColor="#80C0FF"
+                TextColor="White"
+                FontSize="18"
+                FontAttributes="Bold"
+                HeightRequest="60"
+                CornerRadius="8"
+                Clicked="OnUbicarBACClicked"/>
+
+            <!-- Botón 3: EXTRAER BAC -->
+            <Button 
+                x:Name="btnExtraerBAC"
+                Text="EXTRAER BAC"
+                BackgroundColor="#80FFFF"
+                TextColor="White"
+                FontSize="18"
+                FontAttributes="Bold"
+                HeightRequest="60"
+                CornerRadius="8"
+                Clicked="OnExtraerBACClicked"/>
+
+            <!-- Botón 4: REPARTO -->
+            <Button 
+                x:Name="btnReparto"
+                Text="REPARTO"
+                BackgroundColor="#FFFF00"
+                TextColor="Black"
+                FontSize="18"
+                FontAttributes="Bold"
+                HeightRequest="60"
+                CornerRadius="8"
+                Clicked="OnRepartoClicked"/>
+
+            <!-- Botón 5: EMPAQUETADO -->
+            <Button 
+                x:Name="btnEmpaquetado"
+                Text="EMPAQUETADO"
+                BackgroundColor="#80FF80"
+                TextColor="White"
+                FontSize="18"
+                FontAttributes="Bold"
+                HeightRequest="60"
+                CornerRadius="8"
+                Clicked="OnEmpaquetadoClicked"/>
+
+            <!-- Botón 6: SALIR -->
+            <Button 
+                x:Name="btnSalir"
+                Text="SALIR"
+                BackgroundColor="#808080"
+                TextColor="White"
+                FontSize="18"
+                FontAttributes="Bold"
+                HeightRequest="60"
+                CornerRadius="8"
+                Margin="0,30,0,0"
+                Clicked="OnSalirClicked"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

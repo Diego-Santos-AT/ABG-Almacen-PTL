@@ -171,7 +171,7 @@ namespace ABGAlmacenPTL.Pages
                     lblEstado.Text = "Conexión exitosa";
                     
                     // Navegar al menú principal
-                    await Shell.Current.GoToAsync("//MainMenu");
+                    await Shell.Current.GoToAsync("//MenuPage");
                 }
                 else
                 {
