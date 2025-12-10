@@ -38,9 +38,7 @@ namespace ABGAlmacenPTL.Pages
         /// </summary>
         private async void OnUbicarBACClicked(object sender, EventArgs e)
         {
-            // TODO: Implementar navegación cuando la página esté creada
-            // await Shell.Current.GoToAsync("//UbicarBACPage");
-            await DisplayAlert("Información", "Ubicar BAC - En desarrollo", "OK");
+            await Shell.Current.GoToAsync("UbicarBACPage");
         }
 
         /// <summary>
