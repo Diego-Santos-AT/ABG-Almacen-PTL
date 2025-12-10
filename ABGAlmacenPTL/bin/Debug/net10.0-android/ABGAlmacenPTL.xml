@@ -4,6 +4,43 @@
         <name>ABGAlmacenPTL</name>
     </assembly>
     <members>
+        <member name="T:ABGAlmacenPTL.Configuration.ProfileManager">
+            <summary>
+            Módulo genérico para las llamadas al API usando xxxProfileString
+            Migrado desde VB6 Profile.bas
+            Fecha inicio: 03/10/2001
+            </summary>
+        </member>
+        <member name="M:ABGAlmacenPTL.Configuration.ProfileManager.LeerIni(System.String,System.String,System.String,System.String)">
+            <summary>
+            Lee un valor del fichero INI
+            Migrado desde VB6: LeerIni
+            </summary>
+            <param name="lpFileName">La Aplicación (fichero INI)</param>
+            <param name="lpAppName">La sección que suele estar entre corchetes</param>
+            <param name="lpKeyName">Clave</param>
+            <param name="vDefault">Valor opcional que devolverá si no se encuentra la clave</param>
+            <returns>Valor leído o valor por defecto</returns>
+        </member>
+        <member name="M:ABGAlmacenPTL.Configuration.ProfileManager.GuardarIni(System.String,System.String,System.String,System.String)">
+            <summary>
+            Guarda los datos de configuración en el fichero INI
+            Migrado desde VB6: GuardarIni
+            </summary>
+            <param name="lpFileName">La Aplicación (fichero INI)</param>
+            <param name="lpAppName">La sección que suele estar entre corchetes</param>
+            <param name="lpKeyName">Clave</param>
+            <param name="lpString">Valor a guardar</param>
+        </member>
+        <member name="M:ABGAlmacenPTL.Configuration.ProfileManager.LeerSeccionINI(System.String,System.String)">
+            <summary>
+            Lee una sección entera de un fichero INI
+            Migrado desde VB6: LeerSeccionINI
+            </summary>
+            <param name="lpFileName">Nombre del fichero INI</param>
+            <param name="lpAppName">Nombre de la sección a leer</param>
+            <returns>Diccionario con las claves y valores de la sección</returns>
+        </member>
         <member name="T:ABGAlmacenPTL.Models.TipoEmpresa">
             <summary>
             Tipo de datos para Empresa
@@ -32,6 +69,12 @@
             <summary>
             Tipo de Datos para Puesto de trabajo
             Migrado desde VB6 Type PuestoTrabajo
+            </summary>
+        </member>
+        <member name="T:ABGAlmacenPTL.Modules.GDConstantes">
+            <summary>
+            Módulo para la definición de constantes generales de la aplicación
+            Migrado desde VB6 GDConstantes.bas
             </summary>
         </member>
         <member name="T:ABGAlmacenPTL.Modules.Gestion">
