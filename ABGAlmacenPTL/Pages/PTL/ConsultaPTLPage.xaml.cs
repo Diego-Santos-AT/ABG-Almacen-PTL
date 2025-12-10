@@ -92,8 +92,9 @@ namespace ABGAlmacenPTL.Pages.PTL
 
         private bool EsCaja(string codigo)
         {
-            // Caja: código específico (depende del formato real)
-            // Por ahora, asumimos que empieza con "C" o similar
+            // TODO: Reemplazar con lógica real de detección de cajas cuando esté definido el formato
+            // Por ahora, asumimos que empieza con "C" o patrón específico
+            // Esta lógica debe actualizarse según el formato real de códigos de caja en producción
             return codigo.StartsWith("C", StringComparison.OrdinalIgnoreCase);
         }
 
@@ -101,6 +102,13 @@ namespace ABGAlmacenPTL.Pages.PTL
         {
             // TODO: Implementar consulta real cuando tengamos DAL
             
+            // Validar longitud antes de parsear
+            if (ubicacionCodigo.Length != 12)
+            {
+                await DisplayAlert("Error", "Código de ubicación debe ser de 12 dígitos", "OK");
+                return;
+            }
+
             // Parsear código
             int alm = int.Parse(ubicacionCodigo.Substring(0, 3));
             int blo = int.Parse(ubicacionCodigo.Substring(3, 3));
@@ -309,13 +317,17 @@ namespace ABGAlmacenPTL.Pages.PTL
 
         protected override bool OnBackButtonPressed()
         {
-            Shell.Current.GoToAsync("..");
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await Shell.Current.GoToAsync("..");
+            });
             return true;
         }
     }
 
     /// <summary>
     /// Item de artículo para el CollectionView
+    /// TODO: Mover a Models/ cuando se organice el proyecto
     /// </summary>
     public class ArticuloItem
     {
