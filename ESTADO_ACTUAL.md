@@ -1,11 +1,11 @@
 # Estado Actual de la Migración ABG Almacén PTL
 ## Resumen de Progreso al 2025-12-10
 
-### 📊 Progreso Global: ~38% Completado
+### 📊 Progreso Global: ~42% Completado
 
 **Total VB6 Original**: 12,400 líneas en 24 archivos  
-**Total C# Migrado**: ~5,400 líneas en 34 archivos  
-**Porcentaje**: 38% completado
+**Total C# Migrado**: ~6,000 líneas en 36 archivos  
+**Porcentaje**: 42% completado
 
 ---
 
@@ -75,7 +75,7 @@
 
 **Total Migrado**: ~610 líneas de ~700 (87%)
 
-### 7. Interfaces de Usuario (85% - 11 de 13 completas)
+### 7. Interfaces de Usuario (92% - 12 de 13 completas)
 
 #### ✅ Completos:
 | Archivo VB6 | Archivo C#/XAML | Líneas | Estado |
@@ -87,9 +87,10 @@
 | frmErrorTransaccion.frm | Pages/Generic/ErrorTransaccionPage.xaml + .cs | 180 | ✅ Completo |
 | frmSeleccionTabla2.frm | Pages/Generic/SeleccionTabla2Page.xaml + .cs | 270 | ✅ Completo |
 | frmVerFoto.frm | Pages/Generic/VerFotoPage.xaml + .cs | 150 | ✅ Completo |
-| frmRepartirArticulo.frm | Pages/PTL/RepartirArticuloPage.xaml + .cs | 420 | ✅ Completo |
+| frmRepartirArticulo.frm | Pages/PTL/RepartirArticuloPage.xaml + .cs | 420 | ✅ Completo (Sesión 2) |
 | frmUbicarBAC.frm | Pages/PTL/UbicarBACPage.xaml + .cs | 560 | ✅ Completo (Sesión 3) |
 | frmExtraerBAC.frm | Pages/PTL/ExtraerBACPage.xaml + .cs | 480 | ✅ Completo (Sesión 3) |
+| frmConsultaPTL.frm | Pages/PTL/ConsultaPTLPage.xaml + .cs | 620 | ✅ Completo (Sesión 4) |
 
 **Características**:
 - Diseño XAML optimizado para pantallas 4"
@@ -102,14 +103,15 @@
 - Visor de imágenes multi-formato
 - Selector de datos con búsqueda
 - Gestión completa de BAC (ubicar, extraer, repartir)
+- Sistema de consultas multi-propósito (BAC/Ubicación/Caja)
+- CollectionView para listas de artículos
 
 #### ⏳ Pendientes:
 
-**Formularios PTL (2)**:
-- frmConsultaPTL.frm → ConsultaPTLPage - 768 líneas
-- frmEmpaquetarBAC.frm → EmpaquetarBACPage - 2,713 líneas (EL MÁS GRANDE)
+**Formularios PTL (1)**:
+- frmEmpaquetarBAC.frm → EmpaquetarBACPage - 2,713 líneas (EL MÁS GRANDE Y COMPLEJO)
 
-**Total Migrado**: ~2,890 líneas de ~7,500 (39%)
+**Total Migrado**: ~3,510 líneas de ~7,500 (47%)
 
 ---
 
@@ -122,8 +124,8 @@
 | Configuración | ~278 | 240 | 100% | ✅ Completo |
 | Módulos Core | ~4,000 | 930 | 23% | ⚠️ Parcial |
 | Clases | ~700 | 610 | 87% | ✅ Casi Completo |
-| Formularios | ~7,500 | 2,890 | 39% | ⚠️ En Progreso |
-| **TOTAL** | **~12,400** | **~5,400** | **38%** | **⚠️ En Progreso** |
+| Formularios | ~7,500 | 3,510 | 47% | ⚠️ En Progreso |
+| **TOTAL** | **~12,400** | **~6,000** | **42%** | **⚠️ En Progreso** |
 
 ---
 
