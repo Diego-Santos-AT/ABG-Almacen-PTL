@@ -19,6 +19,8 @@ public class ConfigContext : DbContext
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<Empresa> Empresas { get; set; }
     public DbSet<UsuarioEmpresa> UsuariosEmpresas { get; set; }
+    public DbSet<PuestoTrabajo> PuestosTrabajo { get; set; }
+    public DbSet<Impresora> Impresoras { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -53,6 +55,25 @@ public class ConfigContext : DbContext
                 .WithMany()
                 .HasForeignKey(e => e.EmpresaId)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // Configuración de PuestoTrabajo
+        modelBuilder.Entity<PuestoTrabajo>(entity =>
+        {
+            entity.ToTable("gdepue");
+            entity.HasKey(e => e.CodigoPuesto);
+            
+            entity.HasOne(e => e.Impresora)
+                .WithMany()
+                .HasForeignKey(e => e.CodigoImpresora)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // Configuración de Impresora
+        modelBuilder.Entity<Impresora>(entity =>
+        {
+            entity.ToTable("gdeimp");
+            entity.HasKey(e => e.CodigoImpresora);
         });
     }
 }

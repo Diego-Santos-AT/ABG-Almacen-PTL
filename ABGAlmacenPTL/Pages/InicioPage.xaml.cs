@@ -17,6 +17,7 @@ namespace ABGAlmacenPTL.Pages
         private readonly ABGConfigService _abgConfig;
         private int reintentos = 0;
         private List<Empresa> _empresasDisponibles = new List<Empresa>();
+        private List<Models.Config.PuestoTrabajo> _puestosDisponibles = new List<Models.Config.PuestoTrabajo>();
 
         public InicioPage(AuthService authService, ABGConfigService abgConfig)
         {
@@ -51,18 +52,41 @@ namespace ABGAlmacenPTL.Pages
 
         private async Task CargarPuestosAsync()
         {
-            // Puestos de trabajo (como VB6)
-            pickerPuesto.Items.Clear();
-            pickerPuesto.Items.Add("Puesto 1");
-            pickerPuesto.Items.Add("Puesto 2");
-            pickerPuesto.Items.Add("Puesto 3");
-            pickerPuesto.Items.Add("Puesto 4");
-            pickerPuesto.Items.Add("Puesto 5");
-            
-            // Seleccionar puesto por defecto desde abg.ini
-            if (_abgConfig.PueDefault > 0 && _abgConfig.PueDefault <= pickerPuesto.Items.Count)
+            try
             {
-                pickerPuesto.SelectedIndex = _abgConfig.PueDefault - 1;
+                // Cargar puestos desde la base de datos (como VB6: edC.DamePuestos)
+                _puestosDisponibles = await _authService.ObtenerPuestosAsync();
+                
+                pickerPuesto.Items.Clear();
+                
+                foreach (var puesto in _puestosDisponibles)
+                {
+                    pickerPuesto.Items.Add(puesto.DescripcionCorta ?? "");
+                }
+                
+                // Seleccionar puesto por defecto desde abg.ini (como VB6: CargaPuestos)
+                int puestoIndex = -1;
+                if (_abgConfig.PueDefault > 0)
+                {
+                    puestoIndex = _puestosDisponibles.FindIndex(p => p.CodigoPuesto == _abgConfig.PueDefault);
+                }
+                
+                if (puestoIndex >= 0)
+                {
+                    pickerPuesto.SelectedIndex = puestoIndex;
+                }
+                else if (_puestosDisponibles.Count > 0)
+                {
+                    pickerPuesto.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Si falla la carga desde BD, usar valores por defecto
+                System.Diagnostics.Debug.WriteLine($"Error cargando puestos: {ex.Message}");
+                pickerPuesto.Items.Clear();
+                pickerPuesto.Items.Add("Puesto 1");
+                pickerPuesto.SelectedIndex = 0;
             }
         }
 
@@ -103,21 +127,28 @@ namespace ABGAlmacenPTL.Pages
                     return;
                 }
                 
-                // Mostrar empresas en el picker
+                // Mostrar empresas en el picker (VB6: CargaEmpresas)
                 pickerEmpresa.Items.Clear();
                 foreach (var empresa in _empresasDisponibles)
                 {
-                    pickerEmpresa.Items.Add($"{empresa.CodigoEmpresa} - {empresa.NombreEmpresa}");
+                    // Solo mostrar el nombre, como en VB6: ComboEmpresa.AddItem edC.rsDameParametrosEmpresa!empnom
+                    pickerEmpresa.Items.Add(empresa.NombreEmpresa);
                 }
                 
                 // Seleccionar empresa por defecto si existe en abg.ini
+                int empresaIndex = -1;
                 if (!string.IsNullOrEmpty(_abgConfig.CodEmpresa))
                 {
-                    var empDefault = _empresasDisponibles.FindIndex(e => e.CodigoEmpresa.ToString() == _abgConfig.CodEmpresa);
-                    if (empDefault >= 0)
-                    {
-                        pickerEmpresa.SelectedIndex = empDefault;
-                    }
+                    empresaIndex = _empresasDisponibles.FindIndex(e => e.CodigoEmpresa.ToString() == _abgConfig.CodEmpresa);
+                }
+                
+                if (empresaIndex >= 0)
+                {
+                    pickerEmpresa.SelectedIndex = empresaIndex;
+                }
+                else if (_empresasDisponibles.Count > 0)
+                {
+                    pickerEmpresa.SelectedIndex = 0;
                 }
                 
                 // Verificar si tiene contraseña (VB6: HayPassword)
@@ -209,8 +240,43 @@ namespace ABGAlmacenPTL.Pages
                 var empresaSeleccionada = _empresasDisponibles[pickerEmpresa.SelectedIndex];
                 _authService.SeleccionarEmpresa(empresaSeleccionada);
                 
-                // Guardar puesto de trabajo
-                Gestion.wPuestoTrabajo.Id = pickerPuesto.SelectedIndex + 1;
+                // Guardar puesto de trabajo (VB6: ComboPuesto.Text y DameCodigoPuesto)
+                if (_puestosDisponibles.Count > 0 && pickerPuesto.SelectedIndex >= 0)
+                {
+                    var puestoSeleccionado = _puestosDisponibles[pickerPuesto.SelectedIndex];
+                    
+                    // Cargar datos del puesto (VB6: DamePuestoTrabajo)
+                    Gestion.wPuestoTrabajo.Id = puestoSeleccionado.CodigoPuesto;
+                    Gestion.wPuestoTrabajo.Nombre = puestoSeleccionado.Descripcion;
+                    Gestion.wPuestoTrabajo.NombreCorto = puestoSeleccionado.DescripcionCorta ?? "";
+                    Gestion.wPuestoTrabajo.Impresora = puestoSeleccionado.CodigoImpresora ?? 0;
+                    
+                    if (puestoSeleccionado.Impresora != null)
+                    {
+                        Gestion.wPuestoTrabajo.NombreImpresora = puestoSeleccionado.Impresora.Nombre;
+                        Gestion.wPuestoTrabajo.TipoImpresora = puestoSeleccionado.Impresora.Lenguaje ?? "";
+                    }
+                    
+                    // Guardar en abg.ini (VB6: GuardarIni ficINI, "Varios", "PueDefault")
+                    ProfileManager.GuardarIni(
+                        Path.Combine(FileSystem.AppDataDirectory, "abg.ini"),
+                        "Varios",
+                        "PueDefault",
+                        puestoSeleccionado.CodigoPuesto.ToString());
+                }
+                else
+                {
+                    // Valores por defecto si no hay puesto seleccionado
+                    Gestion.wPuestoTrabajo.Id = 1;
+                    Gestion.wPuestoTrabajo.Nombre = "";
+                    Gestion.wPuestoTrabajo.NombreCorto = "";
+                    Gestion.wPuestoTrabajo.Impresora = 0;
+                    Gestion.wPuestoTrabajo.NombreImpresora = "";
+                    Gestion.wPuestoTrabajo.TipoImpresora = "";
+                }
+                
+                // Impresora asociada al puesto de trabajo (VB6: wImpresora = wPuestoTrabajo.NombreImpresora)
+                Gestion.wImpresora = Gestion.wPuestoTrabajo.NombreImpresora;
                 
                 lblEstado.Text = "Verificando conexión a base de datos...";
                 

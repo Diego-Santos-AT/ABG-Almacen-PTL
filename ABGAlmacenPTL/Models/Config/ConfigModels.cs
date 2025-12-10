@@ -15,7 +15,7 @@ public class Usuario
     public int UsuarioId { get; set; }
     
     [Required]
-    [Column("usrnom")]
+    [Column("usunom")]
     [MaxLength(50)]
     public string NombreUsuario { get; set; } = string.Empty;
     
@@ -112,4 +112,53 @@ public class UsuarioEmpresa
     
     [ForeignKey(nameof(EmpresaId))]
     public Empresa? Empresa { get; set; }
+}
+
+/// <summary>
+/// Modelo para tabla gdepue (Puestos de Trabajo)
+/// Migrado desde VB6 - tabla en base de datos Config
+/// </summary>
+[Table("gdepue")]
+public class PuestoTrabajo
+{
+    [Key]
+    [Column("puecod")]
+    public int CodigoPuesto { get; set; }
+    
+    [Required]
+    [Column("puedes")]
+    [MaxLength(30)]
+    public string Descripcion { get; set; } = string.Empty;
+    
+    [Column("puecor")]
+    [MaxLength(10)]
+    public string? DescripcionCorta { get; set; }
+    
+    [Column("impcod")]
+    public int? CodigoImpresora { get; set; }
+    
+    // Navigation property
+    [ForeignKey(nameof(CodigoImpresora))]
+    public Impresora? Impresora { get; set; }
+}
+
+/// <summary>
+/// Modelo para tabla gdeimp (Impresoras)
+/// Migrado desde VB6 - tabla en base de datos Config
+/// </summary>
+[Table("gdeimp")]
+public class Impresora
+{
+    [Key]
+    [Column("impcod")]
+    public int CodigoImpresora { get; set; }
+    
+    [Required]
+    [Column("impnom")]
+    [MaxLength(50)]
+    public string Nombre { get; set; } = string.Empty;
+    
+    [Column("implen")]
+    [MaxLength(10)]
+    public string? Lenguaje { get; set; }
 }

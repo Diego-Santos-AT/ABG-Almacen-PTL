@@ -95,6 +95,50 @@ public class AuthService
     }
     
     /// <summary>
+    /// Obtiene todos los puestos de trabajo
+    /// Migrado desde VB6: edC.DamePuestos
+    /// </summary>
+    public async Task<List<Models.Config.PuestoTrabajo>> ObtenerPuestosAsync()
+    {
+        return await _configContext.PuestosTrabajo
+            .Include(p => p.Impresora)
+            .OrderBy(p => p.CodigoPuesto)
+            .ToListAsync();
+    }
+    
+    /// <summary>
+    /// Obtiene un puesto de trabajo por su descripción corta
+    /// Migrado desde VB6: edC.DameCodigoPuesto
+    /// </summary>
+    public async Task<Models.Config.PuestoTrabajo?> ObtenerPuestoPorNombreAsync(string nombreCorto)
+    {
+        return await _configContext.PuestosTrabajo
+            .Include(p => p.Impresora)
+            .FirstOrDefaultAsync(p => p.DescripcionCorta == nombreCorto);
+    }
+    
+    /// <summary>
+    /// Obtiene un puesto de trabajo por su código
+    /// Migrado desde VB6: edC.DamePuestoTrabajo
+    /// </summary>
+    public async Task<Models.Config.PuestoTrabajo?> ObtenerPuestoPorCodigoAsync(int codigoPuesto)
+    {
+        return await _configContext.PuestosTrabajo
+            .Include(p => p.Impresora)
+            .FirstOrDefaultAsync(p => p.CodigoPuesto == codigoPuesto);
+    }
+    
+    /// <summary>
+    /// Obtiene una empresa por su nombre
+    /// Migrado desde VB6: edC.DameCodigoEmpresa
+    /// </summary>
+    public async Task<Empresa?> ObtenerEmpresaPorNombreAsync(string nombreEmpresa)
+    {
+        return await _configContext.Empresas
+            .FirstOrDefaultAsync(e => e.NombreEmpresa == nombreEmpresa);
+    }
+    
+    /// <summary>
     /// Selecciona una empresa para trabajar
     /// Migrado desde VB6: ConfiguracionEmpresa
     /// </summary>
