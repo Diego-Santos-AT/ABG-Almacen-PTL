@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Linq;
 using Microsoft.Maui.Controls;
 
 namespace ABGAlmacenPTL.Pages.PTL
@@ -7,6 +8,12 @@ namespace ABGAlmacenPTL.Pages.PTL
     {
         // TESTING_MODE: Set to true to test UI without DAL
         private const bool TESTING_MODE = true;
+
+        // Constantes para generación de SSCC
+        private const string SPAIN_PREFIX = "384"; // Código GS1 para España
+        private const string COMPANY_CODE = "12345"; // Código de empresa (ejemplo)
+        private const int SERIAL_MIN = 100000000;
+        private const int SERIAL_MAX = 999999999;
 
         // Estado actual
         private string? _currentBAC;
@@ -431,10 +438,8 @@ namespace ABGAlmacenPTL.Pages.PTL
             // Generar SSCC de prueba (18 dígitos)
             // Formato: Extension digit (1) + GS1 Company Prefix (7-10) + Serial Reference (5-8) + Check digit (1)
             var random = new Random();
-            var prefix = "384"; // Código de España
-            var company = "12345";
-            var serial = random.Next(100000000, 999999999).ToString();
-            var sscc = prefix + company + serial;
+            var serial = random.Next(SERIAL_MIN, SERIAL_MAX).ToString();
+            var sscc = SPAIN_PREFIX + COMPANY_CODE + serial;
             
             // Calcular dígito de control (simplificado)
             var checkDigit = CalcularDigitoControl(sscc);
