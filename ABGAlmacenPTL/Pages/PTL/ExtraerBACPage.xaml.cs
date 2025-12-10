@@ -1,4 +1,6 @@
 using ABGAlmacenPTL.Pages.Generic;
+using ABGAlmacenPTL.Services;
+using ABGAlmacenPTL.Models;
 
 namespace ABGAlmacenPTL.Pages.PTL
 {
@@ -8,15 +10,15 @@ namespace ABGAlmacenPTL.Pages.PTL
     /// </summary>
     public partial class ExtraerBACPage : ContentPage
     {
-        // TESTING MODE: Set to true to test UI without DAL
-        private const bool TESTING_MODE = true;
+        private readonly PTLService _ptlService;
         
-        private int _ubicacionId = 0;
+        private string _ubicacionCodigo = string.Empty;
         private string _bacCodigo = string.Empty;
 
-        public ExtraerBACPage()
+        public ExtraerBACPage(PTLService ptlService)
         {
             InitializeComponent();
+            _ptlService = ptlService;
         }
 
         protected override void OnAppearing()

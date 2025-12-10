@@ -1,4 +1,6 @@
 using ABGAlmacenPTL.Pages.Generic;
+using ABGAlmacenPTL.Services;
+using ABGAlmacenPTL.Models;
 
 namespace ABGAlmacenPTL.Pages.PTL
 {
@@ -8,16 +10,16 @@ namespace ABGAlmacenPTL.Pages.PTL
     /// </summary>
     public partial class UbicarBACPage : ContentPage
     {
-        // TESTING MODE: Set to true to test UI without DAL
-        private const bool TESTING_MODE = true;
+        private readonly PTLService _ptlService;
         
-        private int _ubicacionId = 0;
+        private string _ubicacionCodigo = string.Empty;
         private string _bacCodigo = string.Empty;
-        private int _estadoBAC = 0; // 0 = ABIERTO, 1 = CERRADO
+        private EstadoBAC _estadoBAC = EstadoBAC.Abierto;
 
-        public UbicarBACPage()
+        public UbicarBACPage(PTLService ptlService)
         {
             InitializeComponent();
+            _ptlService = ptlService;
         }
 
         protected override void OnAppearing()
@@ -79,8 +81,6 @@ namespace ABGAlmacenPTL.Pages.PTL
         {
             try
             {
-                // TODO: Implementar validación real cuando tengamos DAL
-                
                 // Parsear código de ubicación
                 if (ubicacionCodigo.Length != 12)
                 {
@@ -93,26 +93,28 @@ namespace ABGAlmacenPTL.Pages.PTL
                 int fil = int.Parse(ubicacionCodigo.Substring(6, 3));
                 int alt = int.Parse(ubicacionCodigo.Substring(9, 3));
 
-                // TODO: Consultar BD para validar ubicación
-                bool ubicacionExiste = TESTING_MODE; // Change to DB query when DAL available
-                bool ubicacionOcupada = false; // Verificar si ya tiene BAC
+                // Buscar ubicación en BD
+                var ubicacion = await _ptlService.GetUbicacionByCodigoAsync(ubicacionCodigo);
 
-                if (ubicacionExiste)
+                if (ubicacion != null)
                 {
-                    if (!ubicacionOcupada)
+                    // Verificar si ya tiene BAC asignado
+                    var bacEnUbicacion = await _ptlService.GetBACEnUbicacionAsync(ubicacionCodigo);
+                    
+                    if (bacEnUbicacion == null)
                     {
                         // Ubicación válida y libre
-                        _ubicacionId = 12345; // TODO: Obtener ID real de BD
-                        lblUbicacion.Text = $"({_ubicacionId}) {alm:000}.{blo:000}.{fil:000}.{alt:000}";
+                        _ubicacionCodigo = ubicacionCodigo;
+                        lblUbicacion.Text = $"{alm:000}.{blo:000}.{fil:000}.{alt:000}";
 
                         // Si ya tenemos un BAC escaneado, proceder a ubicar
                         if (!string.IsNullOrEmpty(_bacCodigo))
                         {
-                            bool ubicado = await UbicarBAC(_bacCodigo, _ubicacionId);
+                            bool ubicado = await UbicarBAC(_bacCodigo, ubicacionCodigo);
                             if (ubicado)
                             {
                                 await MensajePage.ShowAsync(
-                                    $"Se ha ubicado el BAC: {_bacCodigo} en la ubicación PTL {_ubicacionId}",
+                                    $"Se ha ubicado el BAC: {_bacCodigo} en la ubicación PTL {ubicacionCodigo}",
                                     "Éxito");
                                 
                                 LimpiarDatos();
@@ -122,14 +124,14 @@ namespace ABGAlmacenPTL.Pages.PTL
                     else
                     {
                         await DisplayAlert("Error", "La Ubicación ya tiene asociado un BAC", "OK");
-                        _ubicacionId = 0;
+                        _ubicacionCodigo = string.Empty;
                         lblUbicacion.Text = "-";
                     }
                 }
                 else
                 {
-                    await DisplayAlert("Error", "No existe la Unidad de Transporte", "OK");
-                    _ubicacionId = 0;
+                    await DisplayAlert("Error", "No existe la Ubicación", "OK");
+                    _ubicacionCodigo = string.Empty;
                     lblUbicacion.Text = "-";
                 }
             }
@@ -143,36 +145,37 @@ namespace ABGAlmacenPTL.Pages.PTL
         {
             try
             {
-                // TODO: Implementar validación real cuando tengamos DAL
-                
-                // Simulación de datos
-                bool bacExiste = TESTING_MODE; // Change to DB query when DAL available
+                // Buscar BAC en BD
+                var bac = await _ptlService.GetBACByCodigoAsync(bacCodigo);
 
-                if (bacExiste)
+                if (bac != null)
                 {
                     // Mostrar datos del BAC
                     _bacCodigo = bacCodigo;
-                    _estadoBAC = 0; // TODO: Obtener estado real de BD
+                    _estadoBAC = bac.Estado;
+
+                    var articulos = await _ptlService.GetArticulosEnBACAsync(bacCodigo);
+                    int totalUds = articulos.Sum(a => 1); // TODO: Sum actual quantities from junction table
 
                     RefrescarDatosBAC(
-                        bac: bacCodigo,
-                        estadoBAC: _estadoBAC == 0 ? "ABIERTO" : "CERRADO",
-                        grupo: 1,
-                        tablilla: 1,
-                        uds: 100,
-                        peso: "25.5",
-                        volumen: "1.250",
-                        tipoCaja: "STD",
-                        nombreCaja: "CAJA ESTANDAR");
+                        bac: bac.CodigoBAC,
+                        estadoBAC: bac.Estado == EstadoBAC.Abierto ? "ABIERTO" : "CERRADO",
+                        grupo: bac.Grupo,
+                        tablilla: bac.Tablilla,
+                        uds: totalUds,
+                        peso: bac.Peso?.ToString("F2") ?? "0",
+                        volumen: bac.Volumen?.ToString("F3") ?? "0",
+                        tipoCaja: "STD", // TODO: Get from BAC type
+                        nombreCaja: "CAJA");
 
                     // Si ya tenemos una ubicación, proceder a ubicar
-                    if (_ubicacionId > 0)
+                    if (!string.IsNullOrEmpty(_ubicacionCodigo))
                     {
-                        bool ubicado = await UbicarBAC(_bacCodigo, _ubicacionId);
+                        bool ubicado = await UbicarBAC(_bacCodigo, _ubicacionCodigo);
                         if (ubicado)
                         {
                             await MensajePage.ShowAsync(
-                                $"Se ha ubicado el BAC: {_bacCodigo} en la ubicación PTL {_ubicacionId}",
+                                $"Se ha ubicado el BAC: {_bacCodigo} en la ubicación PTL {_ubicacionCodigo}",
                                 "Éxito");
                             
                             LimpiarDatos();
@@ -181,7 +184,7 @@ namespace ABGAlmacenPTL.Pages.PTL
                 }
                 else
                 {
-                    await DisplayAlert("Error", "No existe la Unidad de Transporte (BAC)", "OK");
+                    await DisplayAlert("Error", "No existe el BAC", "OK");
                     _bacCodigo = string.Empty;
                 }
             }
@@ -191,23 +194,27 @@ namespace ABGAlmacenPTL.Pages.PTL
             }
         }
 
-        private async Task<bool> UbicarBAC(string bacCodigo, int ubicacionId)
+        private async Task<bool> UbicarBAC(string bacCodigo, string ubicacionCodigo)
         {
-            // TODO: Implementar lógica de ubicación cuando tengamos DAL
-            // Esta función debe:
-            // 1. Verificar que el BAC existe
-            // 2. Verificar que la ubicación existe y está libre
-            // 3. Asignar el BAC a la ubicación
-            // 4. Actualizar estado del BAC según opción seleccionada
-            // 5. Registrar operación en BD
+            try
+            {
+                // Obtener estado del BAC según selección
+                bool abrirBAC = rbAbrir.IsChecked;
+                EstadoBAC nuevoEstado = abrirBAC ? EstadoBAC.Abierto : EstadoBAC.Cerrado;
 
-            bool cerrarBAC = rbCerrar.IsChecked;
-            
-            // Simulación
-            await Task.Delay(100);
-            
-            // TODO: Replace with real DAL implementation
-            return TESTING_MODE; // Returns success in testing mode
+                // Asignar BAC a ubicación
+                bool resultado = await _ptlService.AsignarBACaUbicacionAsync(
+                    bacCodigo, 
+                    ubicacionCodigo, 
+                    nuevoEstado);
+
+                return resultado;
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"Error al ubicar BAC: {ex.Message}", "OK");
+                return false;
+            }
         }
 
         private void RefrescarDatosBAC(
@@ -240,7 +247,7 @@ namespace ABGAlmacenPTL.Pages.PTL
         {
             txtLecturaCodigo.Text = string.Empty;
             
-            _ubicacionId = 0;
+            _ubicacionCodigo = string.Empty;
             _bacCodigo = string.Empty;
             
             lblUbicacion.Text = "-";
