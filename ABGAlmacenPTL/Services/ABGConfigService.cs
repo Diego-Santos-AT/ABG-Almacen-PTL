@@ -1,4 +1,5 @@
 using ABGAlmacenPTL.Configuration;
+using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 
@@ -11,12 +12,36 @@ namespace ABGAlmacenPTL.Services;
 public class ABGConfigService
 {
     private readonly string _configFilePath;
+    private const string ServidorPorDefecto = "SELENE";
     
     // Propiedades leídas desde [Conexion] en abg.ini
     public string BDDServ { get; private set; } = string.Empty;
     public string BDDServLocal { get; private set; } = string.Empty;
     public int BDDTime { get; private set; } = 30;
     public string BDDConfig { get; private set; } = "Config";
+    
+    /// <summary>
+    /// Resuelve el servidor de Config priorizando el principal, luego el alternativo
+    /// y por último SELENE si ninguno está definido.
+    /// </summary>
+    private string ResolverServidorConfig(string? servidorPrincipal, string? servidorAlternativo = null)
+    {
+        if (!string.IsNullOrWhiteSpace(servidorPrincipal))
+        {
+            return servidorPrincipal;
+        }
+        
+        if (!string.IsNullOrWhiteSpace(servidorAlternativo))
+        {
+            return servidorAlternativo;
+        }
+        
+        return ServidorPorDefecto;
+    }
+    
+    private string ServidorConfig => ResolverServidorConfig(BDDServ, BDDServLocal);
+    
+    public string ServidorConfigActual => ServidorConfig;
     
     // Usuarios y contraseñas fijos (desde VB6)
     public const string UsrBDDConfig = "ABG";
@@ -67,8 +92,8 @@ public class ABGConfigService
                 // Cargar el archivo de configuración
                 // Tu código de carga aquí
                 // Leer sección [Conexion]
-                BDDServ = ProfileManager.LeerIni(_configFilePath, "Conexion", "BDDServ", "SELENE");
-                BDDServLocal = ProfileManager.LeerIni(_configFilePath, "Conexion", "BDDServLocal", "GROOT");
+                BDDServ = ProfileManager.LeerIni(_configFilePath, "Conexion", "BDDServ", ServidorPorDefecto);
+                BDDServLocal = ProfileManager.LeerIni(_configFilePath, "Conexion", "BDDServLocal", ServidorPorDefecto);
                 
                 var bddTimeStr = ProfileManager.LeerIni(_configFilePath, "Conexion", "BDDTime", "30");
                 BDDTime = int.TryParse(bddTimeStr, out var time) ? time : 30;
@@ -78,7 +103,7 @@ public class ABGConfigService
                 // Migración de servidores antiguos (desde VB6)
                 if (BDDServ == "RODABALLO")
                 {
-                    BDDServ = "GROOT";
+                    BDDServ = ServidorPorDefecto;
                     ProfileManager.GuardarIni(_configFilePath, "Conexion", "BDDServ", BDDServ);
                 }
                 if (BDDServ == "ARENQUE")
@@ -89,7 +114,7 @@ public class ABGConfigService
                 
                 if (BDDServLocal == "RODABALLO")
                 {
-                    BDDServLocal = "GROOT";
+                    BDDServLocal = ServidorPorDefecto;
                     ProfileManager.GuardarIni(_configFilePath, "Conexion", "BDDServLocal", BDDServLocal);
                 }
                 if (BDDServLocal == "ARENQUE")
@@ -149,7 +174,14 @@ public class ABGConfigService
     {
         // Cargar valores de configuración por defecto
         System.Diagnostics.Debug.WriteLine("Usando configuración por defecto");
-        // Implementa tus valores por defecto aquí
+        BDDServ = ServidorPorDefecto;
+        BDDServLocal = ServidorPorDefecto;
+        BDDTime = 30;
+        BDDConfig = "Config";
+        wDirExport = string.Empty;
+        UsrDefault = string.Empty;
+        CodEmpresa = string.Empty;
+        PueDefault = 1;
     }
     
     /// <summary>
@@ -158,7 +190,17 @@ public class ABGConfigService
     /// </summary>
     public string GetConfigConnectionString()
     {
-        return $"Server={BDDServLocal};Database={BDDConfig};User ID={UsrBDDConfig};Password={UsrKeyConfig};TrustServerCertificate=True;MultipleActiveResultSets=true;Connect Timeout={BDDTime}";
+        var builder = new SqlConnectionStringBuilder
+        {
+            DataSource = ServidorConfig,
+            InitialCatalog = BDDConfig,
+            UserID = UsrBDDConfig,
+            Password = UsrKeyConfig,
+            TrustServerCertificate = true,
+            MultipleActiveResultSets = true,
+            ConnectTimeout = BDDTime
+        };
+        return builder.ConnectionString;
     }
     
     /// <summary>

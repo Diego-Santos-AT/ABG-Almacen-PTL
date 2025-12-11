@@ -40,7 +40,7 @@ namespace ABGAlmacenPTL.Pages
         {
             base.OnAppearing();
             
-            lblEstado.Text = $"Conectando con el Servidor {_abgConfig.BDDServLocal}...";
+            lblEstado.Text = $"Conectando con el Servidor {_abgConfig.ServidorConfigActual}...";
             
             // Probar conexión con el servidor Config (VB6: ProbarConexion)
             try
@@ -49,7 +49,7 @@ namespace ABGAlmacenPTL.Pages
                 if (!canConnect)
                 {
                     await DisplayAlert("Error de Conexión", 
-                        $"No se pudo conectar al servidor {_abgConfig.BDDServLocal}\n" +
+                        $"No se pudo conectar al servidor {_abgConfig.ServidorConfigActual}\n" +
                         $"Base de datos: {_abgConfig.BDDConfig}\n\n" +
                         "Verifique la configuración de red y el servidor.", 
                         "OK");
