@@ -18,6 +18,7 @@ namespace ABGAlmacenPTL.Pages
         private int reintentos = 0;
         private List<Empresa> _empresasDisponibles = new List<Empresa>();
         private List<Models.Config.PuestoTrabajo> _puestosDisponibles = new List<Models.Config.PuestoTrabajo>();
+        private string _ultimoUsuarioValidado = string.Empty; // Track last validated username to avoid redundant DB calls
 
         public InicioPage(AuthService authService, ABGConfigService abgConfig)
         {
@@ -136,8 +137,12 @@ namespace ABGAlmacenPTL.Pages
                     txtUsuario.Text = string.Empty;
                     txtUsuario.Focus();
                     lblEstado.Text = "Usuario inválido";
+                    _ultimoUsuarioValidado = string.Empty; // Reset on failure
                     return;
                 }
+                
+                // Marcar este usuario como validado
+                _ultimoUsuarioValidado = txtUsuario.Text;
                 
                 // Cargar empresas del usuario (VB6: edC.DameEmpresasAccesoUsuario)
                 _empresasDisponibles = await _authService.ObtenerEmpresasUsuarioAsync(usuario.UsuarioId);
@@ -193,6 +198,7 @@ namespace ABGAlmacenPTL.Pages
             catch (Exception ex)
             {
                 lblEstado.Text = "Error de conexión";
+                _ultimoUsuarioValidado = string.Empty; // Reset on connection error
                 await DisplayAlert("Error", 
                     $"Error al conectar con el servidor Config: {ex.Message}", 
                     "OK");
@@ -209,10 +215,22 @@ namespace ABGAlmacenPTL.Pages
                 return;
             }
 
+            // Si no hay empresas cargadas, validar usuario primero para cargarlas
+            // Esto replica el comportamiento de VB6 donde ValidaUsuario → CargaEmpresas
+            if (pickerEmpresa.Items.Count == 0 || _empresasDisponibles.Count == 0)
+            {
+                await ValidarUsuarioAsync();
+                
+                // Si después de validar no hay empresas, no continuar
+                if (_empresasDisponibles.Count == 0)
+                {
+                    return;
+                }
+            }
+
             if (pickerEmpresa.SelectedIndex < 0)
             {
-                // Si no hay empresas cargadas, validar usuario primero
-                await ValidarUsuarioAsync();
+                await DisplayAlert("Error", "Debe seleccionar una empresa", "OK");
                 return;
             }
 
@@ -368,6 +386,39 @@ namespace ABGAlmacenPTL.Pages
         private async void txtUsuario_Completed(object sender, EventArgs e)
         {
             await ValidarUsuarioAsync();
+        }
+
+        /// <summary>
+        /// Cuando el campo de usuario pierde el foco, validar contra Config DB
+        /// Migrado desde VB6: txtUsuarios_LostFocus → ValidaUsuario
+        /// Este evento es crucial para replicar el comportamiento de VB6 donde
+        /// ValidaUsuario se llama cuando el campo pierde el foco (no solo al presionar Enter)
+        /// </summary>
+        private async void txtUsuario_Unfocused(object sender, FocusEventArgs e)
+        {
+            // Solo validar si:
+            // 1. Hay un usuario ingresado y no está vacío
+            // 2. El usuario no fue validado anteriormente O el usuario cambió
+            if (!string.IsNullOrWhiteSpace(txtUsuario.Text) && 
+                txtUsuario.Text != _ultimoUsuarioValidado)
+            {
+                await ValidarUsuarioAsync();
+            }
+        }
+
+        /// <summary>
+        /// Cuando el texto del usuario cambia, limpiar el estado de validación
+        /// para forzar una nueva validación cuando pierda el foco
+        /// </summary>
+        private void txtUsuario_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // Si el usuario cambia el texto, limpiar empresas y estado de validación
+            if (!string.IsNullOrEmpty(e.NewTextValue) && e.NewTextValue != _ultimoUsuarioValidado)
+            {
+                _empresasDisponibles.Clear();
+                pickerEmpresa.Items.Clear();
+                _ultimoUsuarioValidado = string.Empty;
+            }
         }
     }
 }

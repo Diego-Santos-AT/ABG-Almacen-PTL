@@ -56,7 +56,9 @@
                         BackgroundColor="White"
                         TextColor="Black"
                         HeightRequest="50"
-                        Completed="txtUsuario_Completed"/>
+                        TextChanged="txtUsuario_TextChanged"
+                        Completed="txtUsuario_Completed"
+                        Unfocused="txtUsuario_Unfocused"/>
 
                     <!-- Contraseña -->
                     <Label 
