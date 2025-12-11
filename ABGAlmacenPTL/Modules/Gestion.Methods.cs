@@ -17,7 +17,6 @@ namespace ABGAlmacenPTL.Modules
         public static async Task Main()
         {
             string sMsg = string.Empty;
-            string config;
 
             try
             {
@@ -50,7 +49,7 @@ namespace ABGAlmacenPTL.Modules
             catch (Exception ex)
             {
                 // Control de errores
-                await Application.Current.MainPage.DisplayAlert(
+                await Application.Current!.Windows[0].Page!.DisplayAlertAsync(
                     "Error de Inicio",
                     $"Error: {ex.Message}",
                     "OK");
@@ -185,7 +184,7 @@ namespace ABGAlmacenPTL.Modules
             }
             catch (Exception ex)
             {
-                await Application.Current.MainPage.DisplayAlert(
+                await Application.Current!.Windows[0].Page!.DisplayAlertAsync(
                     "Error de Configuración",
                     $"Error al configurar empresa: {ex.Message}",
                     "OK");
@@ -224,7 +223,7 @@ namespace ABGAlmacenPTL.Modules
             }
             catch (Exception ex)
             {
-                await Application.Current.MainPage.DisplayAlert(
+                await Application.Current!.Windows[0].Page!.DisplayAlertAsync(
                     "Error",
                     $"Error al cargar parámetros de empresa: {ex.Message}",
                     "OK");

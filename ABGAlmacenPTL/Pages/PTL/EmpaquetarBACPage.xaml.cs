@@ -142,7 +142,7 @@ namespace ABGAlmacenPTL.Pages.PTL
                 
                 if (bac == null)
                 {
-                    await DisplayAlert("Error", "BAC no encontrado", "OK");
+                    await DisplayAlertAsync("Error", "BAC no encontrado", "OK");
                     return;
                 }
 
@@ -194,11 +194,11 @@ namespace ABGAlmacenPTL.Pages.PTL
                 frameAcciones.IsVisible = true;
                 frameCaja.IsVisible = false;
 
-                await DisplayAlert("BAC Cargado", $"BAC: {bacCodigo} cargado correctamente", "OK");
+                await DisplayAlertAsync("BAC Cargado", $"BAC: {bacCodigo} cargado correctamente", "OK");
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al cargar BAC: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al cargar BAC: {ex.Message}", "OK");
             }
         }
 
@@ -211,7 +211,7 @@ namespace ABGAlmacenPTL.Pages.PTL
                 
                 if (caja == null)
                 {
-                    await DisplayAlert("Error", "Caja no encontrada", "OK");
+                    await DisplayAlertAsync("Error", "Caja no encontrada", "OK");
                     return;
                 }
 
@@ -246,11 +246,11 @@ namespace ABGAlmacenPTL.Pages.PTL
                 frameArticulos.IsVisible = true;
                 frameAcciones.IsVisible = true;
 
-                await DisplayAlert("Caja Cargada", $"SSCC: {sscc} cargada correctamente", "OK");
+                await DisplayAlertAsync("Caja Cargada", $"SSCC: {sscc} cargada correctamente", "OK");
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al cargar caja: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al cargar caja: {ex.Message}", "OK");
             }
         }
 
@@ -258,7 +258,7 @@ namespace ABGAlmacenPTL.Pages.PTL
         {
             if (string.IsNullOrEmpty(_currentBAC))
             {
-                await DisplayAlert("Error", "Debe escanear un BAC primero", "OK");
+                await DisplayAlertAsync("Error", "Debe escanear un BAC primero", "OK");
                 return;
             }
 
@@ -270,7 +270,7 @@ namespace ABGAlmacenPTL.Pages.PTL
                 
                 var nuevaSSCC = await _ptlService.CrearNuevaCajaAsync(tipoId);
                 
-                await DisplayAlert("Caja Creada", 
+                await DisplayAlertAsync("Caja Creada", 
                     $"Nueva caja creada:\nSSCC: {nuevaSSCC}\nGrupo: {_currentGrupo}\nTablilla: {_currentTablilla}", 
                     "OK");
                 
@@ -279,7 +279,7 @@ namespace ABGAlmacenPTL.Pages.PTL
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al crear caja: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al crear caja: {ex.Message}", "OK");
             }
         }
 
@@ -287,11 +287,11 @@ namespace ABGAlmacenPTL.Pages.PTL
         {
             if (string.IsNullOrEmpty(_currentBAC) || string.IsNullOrEmpty(_currentCaja))
             {
-                await DisplayAlert("Error", "Debe escanear un BAC y una CAJA", "OK");
+                await DisplayAlertAsync("Error", "Debe escanear un BAC y una CAJA", "OK");
                 return;
             }
 
-            var confirmar = await DisplayAlert("Confirmar", 
+            var confirmar = await DisplayAlertAsync("Confirmar", 
                 $"¿Empaquetar BAC {_currentBAC} en CAJA {_currentCaja}?", 
                 "Sí", "No");
             
@@ -305,7 +305,7 @@ namespace ABGAlmacenPTL.Pages.PTL
                 
                 if (success)
                 {
-                    await DisplayAlert("Empaquetado", 
+                    await DisplayAlertAsync("Empaquetado", 
                         $"BAC {_currentBAC} empaquetado en CAJA {_currentCaja} correctamente", 
                         "OK");
                     
@@ -314,12 +314,12 @@ namespace ABGAlmacenPTL.Pages.PTL
                 }
                 else
                 {
-                    await DisplayAlert("Error", "No se pudo empaquetar el BAC", "OK");
+                    await DisplayAlertAsync("Error", "No se pudo empaquetar el BAC", "OK");
                 }
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al empaquetar: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al empaquetar: {ex.Message}", "OK");
             }
         }
 
@@ -327,17 +327,17 @@ namespace ABGAlmacenPTL.Pages.PTL
         {
             if (string.IsNullOrEmpty(_currentBAC))
             {
-                await DisplayAlert("Error", "Debe escanear un BAC primero", "OK");
+                await DisplayAlertAsync("Error", "Debe escanear un BAC primero", "OK");
                 return;
             }
 
             if (_currentEstadoBAC == EstadoBAC.Cerrado)
             {
-                await DisplayAlert("Aviso", "El BAC ya está cerrado", "OK");
+                await DisplayAlertAsync("Aviso", "El BAC ya está cerrado", "OK");
                 return;
             }
 
-            var confirmar = await DisplayAlert("Confirmar", 
+            var confirmar = await DisplayAlertAsync("Confirmar", 
                 $"¿Cerrar BAC {_currentBAC}?", 
                 "Sí", "No");
             
@@ -358,14 +358,14 @@ namespace ABGAlmacenPTL.Pages.PTL
                     lblEstadoBAC.Text = "CERRADO";
                     lblEstadoBAC.BackgroundColor = Colors.Coral;
                     
-                    await DisplayAlert("BAC Cerrado", 
+                    await DisplayAlertAsync("BAC Cerrado", 
                         $"BAC {_currentBAC} cerrado correctamente", 
                         "OK");
                 }
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al cerrar BAC: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al cerrar BAC: {ex.Message}", "OK");
             }
         }
 
@@ -373,11 +373,11 @@ namespace ABGAlmacenPTL.Pages.PTL
         {
             if (string.IsNullOrEmpty(_currentBAC))
             {
-                await DisplayAlert("Error", "Debe escanear un BAC primero", "OK");
+                await DisplayAlertAsync("Error", "Debe escanear un BAC primero", "OK");
                 return;
             }
 
-            var confirmar = await DisplayAlert("Confirmar", 
+            var confirmar = await DisplayAlertAsync("Confirmar", 
                 $"¿Extraer BAC {_currentBAC} de su ubicación?", 
                 "Sí", "No");
             
@@ -396,7 +396,7 @@ namespace ABGAlmacenPTL.Pages.PTL
                     
                     if (success)
                     {
-                        await DisplayAlert("BAC Extraído", 
+                        await DisplayAlertAsync("BAC Extraído", 
                             $"BAC {_currentBAC} extraído correctamente", 
                             "OK");
                         
@@ -405,17 +405,17 @@ namespace ABGAlmacenPTL.Pages.PTL
                     }
                     else
                     {
-                        await DisplayAlert("Error", "No se pudo extraer el BAC", "OK");
+                        await DisplayAlertAsync("Error", "No se pudo extraer el BAC", "OK");
                     }
                 }
                 else
                 {
-                    await DisplayAlert("Aviso", "El BAC no tiene ubicación asignada", "OK");
+                    await DisplayAlertAsync("Aviso", "El BAC no tiene ubicación asignada", "OK");
                 }
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al extraer BAC: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al extraer BAC: {ex.Message}", "OK");
             }
         }
 
@@ -423,33 +423,33 @@ namespace ABGAlmacenPTL.Pages.PTL
         {
             if (string.IsNullOrEmpty(_currentCaja))
             {
-                await DisplayAlert("Error", "Debe tener una CAJA seleccionada", "OK");
+                await DisplayAlertAsync("Error", "Debe tener una CAJA seleccionada", "OK");
                 return;
             }
 
             // TODO: Implementar impresión real con TEC/ZEBRA
             if (TESTING_MODE)
             {
-                await DisplayAlert("Etiqueta", 
+                await DisplayAlertAsync("Etiqueta", 
                     $"Enviando etiqueta a impresora...\nSSCC: {_currentCaja}\n(Simulación - Requiere impresora TEC/ZEBRA)", 
                     "OK");
             }
-            else
-            {
-                await DisplayAlert("Error", "Impresora no configurada", "OK");
-            }
+            // else
+            // {
+            //     await DisplayAlertAsync("Error", "Impresora no configurada", "OK");
+            // }
         }
 
         private async void OnCambiarTipoCajaClicked(object? sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_currentCaja))
             {
-                await DisplayAlert("Error", "Debe tener una CAJA seleccionada", "OK");
+                await DisplayAlertAsync("Error", "Debe tener una CAJA seleccionada", "OK");
                 return;
             }
 
             // TODO: Implementar selector de tipos de caja
-            var action = await DisplayActionSheet(
+            var action = await DisplayActionSheetAsync(
                 "Seleccionar Tipo de Caja", 
                 "Cancelar", 
                 null, 
@@ -465,7 +465,7 @@ namespace ABGAlmacenPTL.Pages.PTL
                     lblTipoCaja.Text = tipoCaja;
                     lblNombreCaja.Text = action.Split('-')[1].Trim();
                     
-                    await DisplayAlert("Tipo Cambiado", 
+                    await DisplayAlertAsync("Tipo Cambiado", 
                         $"Tipo de caja cambiado a: {tipoCaja}", 
                         "OK");
                 }
@@ -476,7 +476,7 @@ namespace ABGAlmacenPTL.Pages.PTL
         {
             if (string.IsNullOrEmpty(_currentCaja))
             {
-                await DisplayAlert("Error", "Debe tener una CAJA seleccionada primero", "OK");
+                await DisplayAlertAsync("Error", "Debe tener una CAJA seleccionada primero", "OK");
                 return;
             }
 
@@ -494,17 +494,17 @@ namespace ABGAlmacenPTL.Pages.PTL
             // TODO: Implementar combinación real
             if (TESTING_MODE)
             {
-                await DisplayAlert("Cajas Combinadas", 
+                await DisplayAlertAsync("Cajas Combinadas", 
                     $"Cajas combinadas:\n{caja1} + {caja2}\n= Nueva caja unificada", 
                     "OK");
                 
                 // Recargar caja actualizada
                 await CargarCaja(caja1);
             }
-            else
-            {
-                await DisplayAlert("Error", "Data Access Layer no implementado aún", "OK");
-            }
+            // else
+            // {
+            //     await DisplayAlertAsync("Error", "Data Access Layer no implementado aún", "OK");
+            // }
         }
 
         private async void OnSalirClicked(object? sender, EventArgs e)

@@ -1,5 +1,5 @@
 using ABGAlmacenPTL.Configuration;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 

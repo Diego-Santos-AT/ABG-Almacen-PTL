@@ -9,7 +9,7 @@
         <VerticalStackLayout Padding="10" Spacing="10">
 
             <!-- Encabezado -->
-            <Frame BackgroundColor="#808080" Padding="10" CornerRadius="5">
+            <Border BackgroundColor="#808080" Padding="10" CornerRadius="5">
                 <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto">
                     <Label Grid.Column="0" Text="EMPAQUETADO BAC" FontSize="20" FontAttributes="Bold" 
                            TextColor="White" VerticalOptions="Center"/>
@@ -17,10 +17,10 @@
                             FontSize="16" WidthRequest="120" HeightRequest="50"
                             Clicked="OnSalirClicked"/>
                 </Grid>
-            </Frame>
+            </Border>
 
             <!-- Entrada de Código -->
-            <Frame BackgroundColor="#C0C0C0" Padding="10" CornerRadius="5">
+            <Border BackgroundColor="#C0C0C0" Padding="10" CornerRadius="5">
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Lectura Código (BAC / CAJA):" FontSize="14" FontAttributes="Bold"/>
                     <Entry x:Name="txtLecturaCodigo" FontSize="18" MaxLength="36" 
@@ -28,10 +28,10 @@
                            TextChanged="OnCodigoTextChanged"
                            Completed="OnCodigoCompleted"/>
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
             <!-- Información BAC -->
-            <Frame x:Name="frameBAC" BackgroundColor="#C0C0C0" Padding="10" CornerRadius="5" IsVisible="False">
+            <Border x:Name="frameBAC" BackgroundColor="#C0C0C0" Padding="10" CornerRadius="5" IsVisible="False">
                 <VerticalStackLayout Spacing="8">
                     <Label Text="INFORMACIÓN BAC" FontSize="16" FontAttributes="Bold" TextColor="#333"/>
                     
@@ -55,10 +55,10 @@
                         <Label Grid.Row="5" Grid.Column="1" x:Name="lblUnidades" FontSize="14" BackgroundColor="White" Padding="5"/>
                     </Grid>
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
             <!-- Información CAJA -->
-            <Frame x:Name="frameCaja" BackgroundColor="#C0C0C0" Padding="10" CornerRadius="5" IsVisible="False">
+            <Border x:Name="frameCaja" BackgroundColor="#C0C0C0" Padding="10" CornerRadius="5" IsVisible="False">
                 <VerticalStackLayout Spacing="8">
                     <Label Text="INFORMACIÓN CAJA" FontSize="16" FontAttributes="Bold" TextColor="#333"/>
                     
@@ -85,10 +85,10 @@
                         <Label Grid.Row="6" Grid.Column="1" x:Name="lblEstadoCaja" FontSize="14" Padding="5"/>
                     </Grid>
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
             <!-- Artículos del BAC/Caja -->
-            <Frame x:Name="frameArticulos" BackgroundColor="#C0C0C0" Padding="10" CornerRadius="5" IsVisible="False">
+            <Border x:Name="frameArticulos" BackgroundColor="#C0C0C0" Padding="10" CornerRadius="5" IsVisible="False">
                 <VerticalStackLayout Spacing="5">
                     <Label Text="ARTÍCULOS" FontSize="16" FontAttributes="Bold" TextColor="#333"/>
                     <CollectionView x:Name="cvArticulos" HeightRequest="200" BackgroundColor="#E0E0E0">
@@ -107,10 +107,10 @@
                         </CollectionView.EmptyView>
                     </CollectionView>
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
             <!-- Acciones Principales -->
-            <Frame x:Name="frameAcciones" BackgroundColor="#C0C0C0" Padding="10" CornerRadius="5" IsVisible="False">
+            <Border x:Name="frameAcciones" BackgroundColor="#C0C0C0" Padding="10" CornerRadius="5" IsVisible="False">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="ACCIONES" FontSize="16" FontAttributes="Bold" TextColor="#333"/>
                     
@@ -135,7 +135,7 @@
                     <Button x:Name="btnCombinarCajas" Text="COMBINAR CAJAS" BackgroundColor="#795548" TextColor="White"
                             FontSize="16" HeightRequest="60" Clicked="OnCombinarCajasClicked"/>
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
         </VerticalStackLayout>
     </ScrollView>

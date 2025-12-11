@@ -83,7 +83,7 @@ namespace ABGAlmacenPTL.Pages.PTL
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al procesar consulta: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al procesar consulta: {ex.Message}", "OK");
             }
         }
 
@@ -108,7 +108,7 @@ namespace ABGAlmacenPTL.Pages.PTL
                 // Validar longitud antes de parsear
                 if (ubicacionCodigo.Length != 12)
                 {
-                    await DisplayAlert("Error", "Código de ubicación debe ser de 12 dígitos", "OK");
+                    await DisplayAlertAsync("Error", "Código de ubicación debe ser de 12 dígitos", "OK");
                     return;
                 }
 
@@ -117,7 +117,7 @@ namespace ABGAlmacenPTL.Pages.PTL
                 
                 if (ubicacion == null)
                 {
-                    await DisplayAlert("Error", "No existe la Ubicación", "OK");
+                    await DisplayAlertAsync("Error", "No existe la Ubicación", "OK");
                     LimpiarDatos();
                     return;
                 }
@@ -172,7 +172,7 @@ namespace ABGAlmacenPTL.Pages.PTL
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al consultar ubicación: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al consultar ubicación: {ex.Message}", "OK");
                 LimpiarDatos();
             }
         }
@@ -186,7 +186,7 @@ namespace ABGAlmacenPTL.Pages.PTL
                 
                 if (bac == null)
                 {
-                    await DisplayAlert("Error", "No existe el BAC", "OK");
+                    await DisplayAlertAsync("Error", "No existe el BAC", "OK");
                     LimpiarDatos();
                     return;
                 }
@@ -227,7 +227,7 @@ namespace ABGAlmacenPTL.Pages.PTL
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al consultar BAC: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al consultar BAC: {ex.Message}", "OK");
                 LimpiarDatos();
             }
         }
@@ -241,7 +241,7 @@ namespace ABGAlmacenPTL.Pages.PTL
                 
                 if (caja == null)
                 {
-                    await DisplayAlert("Error", "No existe la CAJA", "OK");
+                    await DisplayAlertAsync("Error", "No existe la CAJA", "OK");
                     LimpiarDatos();
                     return;
                 }
@@ -265,7 +265,7 @@ namespace ABGAlmacenPTL.Pages.PTL
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al consultar caja: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al consultar caja: {ex.Message}", "OK");
                 LimpiarDatos();
             }
         }
@@ -296,7 +296,7 @@ namespace ABGAlmacenPTL.Pages.PTL
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al cargar artículos del BAC: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al cargar artículos del BAC: {ex.Message}", "OK");
             }
         }
 
@@ -326,7 +326,7 @@ namespace ABGAlmacenPTL.Pages.PTL
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al cargar artículos de la caja: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al cargar artículos de la caja: {ex.Message}", "OK");
             }
         }
 

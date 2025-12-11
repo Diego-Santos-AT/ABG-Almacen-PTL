@@ -37,7 +37,7 @@ namespace ABGAlmacenPTL.Pages.Generic
             page._tiempoSegundos = tiempoSegundos;
             page._tcs = new TaskCompletionSource<bool>();
             
-            await Application.Current.MainPage.Navigation.PushModalAsync(page);
+            await Application.Current!.Windows[0].Page!.Navigation.PushModalAsync(page);
             
             return await page._tcs.Task;
         }

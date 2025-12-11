@@ -47,7 +47,7 @@ namespace ABGAlmacenPTL.Pages.Generic
             // Cargar datos
             page.LoadData(dataTable, displayColumn, valueColumn ?? displayColumn);
             
-            await Application.Current.MainPage.Navigation.PushModalAsync(page);
+            await Application.Current!.Windows[0].Page!.Navigation.PushModalAsync(page);
             
             return await page._tcs.Task;
         }
@@ -70,7 +70,7 @@ namespace ABGAlmacenPTL.Pages.Generic
                 page._allItems.Add(item);
             }
             
-            await Application.Current.MainPage.Navigation.PushModalAsync(page);
+            await Application.Current!.Windows[0].Page!.Navigation.PushModalAsync(page);
             
             return await page._tcs.Task;
         }

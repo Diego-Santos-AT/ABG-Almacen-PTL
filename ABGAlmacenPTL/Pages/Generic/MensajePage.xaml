@@ -8,11 +8,11 @@
     <Grid Padding="20" RowDefinitions="*,Auto">
         
         <!-- Área de mensaje -->
-        <Frame Grid.Row="0"
+        <Border Grid.Row="0"
                BackgroundColor="White"
                CornerRadius="10"
                Padding="20"
-               HasShadow="True"
+              
                VerticalOptions="Center">
             
             <ScrollView>
@@ -24,7 +24,7 @@
                     VerticalTextAlignment="Center"/>
             </ScrollView>
             
-        </Frame>
+        </Border>
 
         <!-- Botón Aceptar -->
         <Button 

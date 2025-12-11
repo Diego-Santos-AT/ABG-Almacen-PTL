@@ -20,7 +20,7 @@
                 Padding="10"/>
 
             <!-- Campo de lectura de código -->
-            <Frame Grid.Row="1" BackgroundColor="White" CornerRadius="5" Padding="0" HasShadow="True">
+            <Border Grid.Row="1" BackgroundColor="White" CornerRadius="5" Padding="0">
                 <Entry 
                     x:Name="txtLecturaCodigo"
                     Placeholder="Escanear o introducir código"
@@ -28,7 +28,7 @@
                     MaxLength="36"
                     Completed="OnCodigoCompleted"
                     TextChanged="OnCodigoTextChanged"/>
-            </Frame>
+            </Border>
 
             <!-- Selector de puesto con color -->
             <Grid Grid.Row="2" ColumnDefinitions="Auto,*,60" ColumnSpacing="10">
@@ -54,7 +54,7 @@
             </Grid>
 
             <!-- Información del artículo -->
-            <Frame Grid.Row="3" BackgroundColor="#C0C0C0" CornerRadius="8" Padding="15" HasShadow="True">
+            <Border Grid.Row="3" BackgroundColor="#C0C0C0" CornerRadius="8" Padding="15">
                 <VerticalStackLayout Spacing="12">
                     
                     <!-- Código -->
@@ -102,7 +102,7 @@
                     </Grid>
 
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
             <!-- Botón Salir -->
             <Button 

@@ -72,7 +72,7 @@ namespace ABGAlmacenPTL.Pages
         /// </summary>
         private async void OnSalirClicked(object sender, EventArgs e)
         {
-            bool confirm = await DisplayAlert(
+            bool confirm = await DisplayAlertAsync(
                 "Salir", 
                 "¿Desea salir de la aplicación?", 
                 "Sí", 
