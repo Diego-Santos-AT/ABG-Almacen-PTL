@@ -31,7 +31,7 @@ namespace ABGAlmacenPTL.Pages.Generic
                 _ruta = ruta
             };
             
-            await Application.Current.MainPage.Navigation.PushModalAsync(page);
+            await Application.Current!.Windows[0].Page!.Navigation.PushModalAsync(page);
         }
 
         protected override void OnAppearing()

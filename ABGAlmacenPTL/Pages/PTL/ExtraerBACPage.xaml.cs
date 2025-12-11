@@ -69,7 +69,7 @@ namespace ABGAlmacenPTL.Pages.PTL
                 // Parsear código de ubicación (12 dígitos)
                 if (ubicacionCodigo.Length != 12 || !long.TryParse(ubicacionCodigo, out _))
                 {
-                    await DisplayAlert("Error", "Código de ubicación inválido", "OK");
+                    await DisplayAlertAsync("Error", "Código de ubicación inválido", "OK");
                     return;
                 }
 
@@ -109,7 +109,7 @@ namespace ABGAlmacenPTL.Pages.PTL
                             nombreCaja: "CAJA");
 
                         // Confirmar extracción
-                        bool confirmar = await DisplayAlert(
+                        bool confirmar = await DisplayAlertAsync(
                             "Confirmar Extracción",
                             $"¿Extraer BAC {_bacCodigo} de la ubicación?",
                             "Sí",
@@ -130,19 +130,19 @@ namespace ABGAlmacenPTL.Pages.PTL
                     }
                     else
                     {
-                        await DisplayAlert("Error", "La Ubicación no tiene ningún BAC asociado", "OK");
+                        await DisplayAlertAsync("Error", "La Ubicación no tiene ningún BAC asociado", "OK");
                         _ubicacionCodigo = string.Empty;
                     }
                 }
                 else
                 {
-                    await DisplayAlert("Error", "No existe la Ubicación", "OK");
+                    await DisplayAlertAsync("Error", "No existe la Ubicación", "OK");
                     _ubicacionCodigo = string.Empty;
                 }
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al validar ubicación: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al validar ubicación: {ex.Message}", "OK");
             }
         }
 
@@ -163,7 +163,7 @@ namespace ABGAlmacenPTL.Pages.PTL
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al extraer BAC: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al extraer BAC: {ex.Message}", "OK");
                 return false;
             }
         }

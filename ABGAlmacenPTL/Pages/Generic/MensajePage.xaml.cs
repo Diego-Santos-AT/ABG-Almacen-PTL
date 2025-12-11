@@ -25,7 +25,7 @@ namespace ABGAlmacenPTL.Pages.Generic
             page.lblMensaje.Text = mensaje;
             page._tcs = new TaskCompletionSource<bool>();
             
-            await Application.Current.MainPage.Navigation.PushModalAsync(page);
+            await Application.Current!.Windows[0].Page!.Navigation.PushModalAsync(page);
             await page._tcs.Task;
         }
 

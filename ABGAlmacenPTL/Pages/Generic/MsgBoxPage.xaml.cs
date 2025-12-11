@@ -72,7 +72,7 @@ namespace ABGAlmacenPTL.Pages.Generic
 
             page._tcs = new TaskCompletionSource<MsgBoxResult>();
             
-            await Application.Current.MainPage.Navigation.PushModalAsync(page);
+            await Application.Current!.Windows[0].Page!.Navigation.PushModalAsync(page);
             
             return await page._tcs.Task;
         }

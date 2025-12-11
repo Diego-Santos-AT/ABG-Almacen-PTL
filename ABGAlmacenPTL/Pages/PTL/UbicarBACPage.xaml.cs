@@ -84,7 +84,7 @@ namespace ABGAlmacenPTL.Pages.PTL
                 // Parsear código de ubicación
                 if (ubicacionCodigo.Length != 12)
                 {
-                    await DisplayAlert("Error", "Código de ubicación inválido", "OK");
+                    await DisplayAlertAsync("Error", "Código de ubicación inválido", "OK");
                     return;
                 }
 
@@ -123,21 +123,21 @@ namespace ABGAlmacenPTL.Pages.PTL
                     }
                     else
                     {
-                        await DisplayAlert("Error", "La Ubicación ya tiene asociado un BAC", "OK");
+                        await DisplayAlertAsync("Error", "La Ubicación ya tiene asociado un BAC", "OK");
                         _ubicacionCodigo = string.Empty;
                         lblUbicacion.Text = "-";
                     }
                 }
                 else
                 {
-                    await DisplayAlert("Error", "No existe la Ubicación", "OK");
+                    await DisplayAlertAsync("Error", "No existe la Ubicación", "OK");
                     _ubicacionCodigo = string.Empty;
                     lblUbicacion.Text = "-";
                 }
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al validar ubicación: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al validar ubicación: {ex.Message}", "OK");
             }
         }
 
@@ -184,13 +184,13 @@ namespace ABGAlmacenPTL.Pages.PTL
                 }
                 else
                 {
-                    await DisplayAlert("Error", "No existe el BAC", "OK");
+                    await DisplayAlertAsync("Error", "No existe el BAC", "OK");
                     _bacCodigo = string.Empty;
                 }
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al validar BAC: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al validar BAC: {ex.Message}", "OK");
             }
         }
 
@@ -212,7 +212,7 @@ namespace ABGAlmacenPTL.Pages.PTL
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al ubicar BAC: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al ubicar BAC: {ex.Message}", "OK");
                 return false;
             }
         }

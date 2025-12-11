@@ -63,7 +63,7 @@ namespace ABGAlmacenPTL.Pages.PTL
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al cargar puestos: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al cargar puestos: {ex.Message}", "OK");
             }
         }
 
@@ -138,7 +138,7 @@ namespace ABGAlmacenPTL.Pages.PTL
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al validar código: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al validar código: {ex.Message}", "OK");
             }
         }
 
@@ -194,13 +194,13 @@ namespace ABGAlmacenPTL.Pages.PTL
                 }
                 else
                 {
-                    await DisplayAlert("Error", "No existe el Artículo", "OK");
+                    await DisplayAlertAsync("Error", "No existe el Artículo", "OK");
                     LimpiarDatos();
                 }
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al buscar artículo: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al buscar artículo: {ex.Message}", "OK");
             }
 
             // Limpiar entrada para siguiente escaneo
@@ -236,13 +236,13 @@ namespace ABGAlmacenPTL.Pages.PTL
                 }
                 else
                 {
-                    await DisplayAlert("Error", "No existe el Artículo con ese EAN13", "OK");
+                    await DisplayAlertAsync("Error", "No existe el Artículo con ese EAN13", "OK");
                     LimpiarDatos();
                 }
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al buscar artículo por EAN13: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al buscar artículo por EAN13: {ex.Message}", "OK");
             }
             
             txtLecturaCodigo.Text = string.Empty;
@@ -278,7 +278,7 @@ namespace ABGAlmacenPTL.Pages.PTL
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al repartir: {ex.Message}", "OK");
+                await DisplayAlertAsync("Error", $"Error al repartir: {ex.Message}", "OK");
                 return false;
             }
         }

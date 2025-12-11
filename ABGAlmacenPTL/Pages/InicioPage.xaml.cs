@@ -48,7 +48,7 @@ namespace ABGAlmacenPTL.Pages
                 var canConnect = await _authService.ProbarConexionAsync();
                 if (!canConnect)
                 {
-                    await DisplayAlert("Error de Conexión", 
+                    await DisplayAlertAsync("Error de Conexión", 
                         $"No se pudo conectar al servidor {_abgConfig.ServidorConfigActual}\n" +
                         $"Base de datos: {_abgConfig.BDDConfig}\n\n" +
                         "Verifique la configuración de red y el servidor.", 
@@ -59,7 +59,7 @@ namespace ABGAlmacenPTL.Pages
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error de Conexión", 
+                await DisplayAlertAsync("Error de Conexión", 
                     $"Error al conectar con el servidor Config: {ex.Message}", 
                     "OK");
                 Application.Current?.Quit();
@@ -119,7 +119,7 @@ namespace ABGAlmacenPTL.Pages
         {
             if (string.IsNullOrWhiteSpace(txtUsuario.Text))
             {
-                await DisplayAlert("Error", "Debe ingresar un usuario", "OK");
+                await DisplayAlertAsync("Error", "Debe ingresar un usuario", "OK");
                 txtUsuario.Focus();
                 return;
             }
@@ -133,7 +133,7 @@ namespace ABGAlmacenPTL.Pages
                 
                 if (usuario == null)
                 {
-                    await DisplayAlert("Error", "Usuario no encontrado", "OK");
+                    await DisplayAlertAsync("Error", "Usuario no encontrado", "OK");
                     txtUsuario.Text = string.Empty;
                     txtUsuario.Focus();
                     lblEstado.Text = "Usuario inválido";
@@ -149,7 +149,7 @@ namespace ABGAlmacenPTL.Pages
                 
                 if (_empresasDisponibles.Count == 0)
                 {
-                    await DisplayAlert("Error", 
+                    await DisplayAlertAsync("Error", 
                         "No tiene asignada empresa actualmente.\nConsulte con el dpto. de informática.", 
                         "OK");
                     lblEstado.Text = "Sin empresas asignadas";
@@ -199,7 +199,7 @@ namespace ABGAlmacenPTL.Pages
             {
                 lblEstado.Text = "Error de conexión";
                 _ultimoUsuarioValidado = string.Empty; // Reset on connection error
-                await DisplayAlert("Error", 
+                await DisplayAlertAsync("Error", 
                     $"Error al conectar con el servidor Config: {ex.Message}", 
                     "OK");
             }
@@ -210,7 +210,7 @@ namespace ABGAlmacenPTL.Pages
             // Validar campos
             if (string.IsNullOrWhiteSpace(txtUsuario.Text))
             {
-                await DisplayAlert("Error", "Debe ingresar un usuario", "OK");
+                await DisplayAlertAsync("Error", "Debe ingresar un usuario", "OK");
                 txtUsuario.Focus();
                 return;
             }
@@ -230,13 +230,13 @@ namespace ABGAlmacenPTL.Pages
 
             if (pickerEmpresa.SelectedIndex < 0)
             {
-                await DisplayAlert("Error", "Debe seleccionar una empresa", "OK");
+                await DisplayAlertAsync("Error", "Debe seleccionar una empresa", "OK");
                 return;
             }
 
             if (pickerPuesto.SelectedIndex < 0)
             {
-                await DisplayAlert("Error", "Debe seleccionar un puesto", "OK");
+                await DisplayAlertAsync("Error", "Debe seleccionar un puesto", "OK");
                 return;
             }
 
@@ -255,14 +255,14 @@ namespace ABGAlmacenPTL.Pages
                     
                     if (reintentos >= 3)
                     {
-                        await DisplayAlert("Error", 
+                        await DisplayAlertAsync("Error", 
                             "Ha excedido el número de intentos permitidos. La aplicación se cerrará.", 
                             "OK");
                         Application.Current?.Quit();
                     }
                     else
                     {
-                        await DisplayAlert("Error", 
+                        await DisplayAlertAsync("Error", 
                             $"{mensaje}\nIntentos restantes: {3 - reintentos}", 
                             "OK");
                         txtPassword.Text = string.Empty;
@@ -334,7 +334,7 @@ namespace ABGAlmacenPTL.Pages
                         bool conexionOk = await dbManager.VerificarConexionGestionAlmacenAsync();
                         if (!conexionOk)
                         {
-                            await DisplayAlert("Advertencia", 
+                            await DisplayAlertAsync("Advertencia", 
                                 $"No se pudo conectar a la base de datos GestionAlmacen.\n" +
                                 $"Empresa: {empresaSeleccionada.NombreEmpresa}\n" +
                                 $"Servidor: {empresaSeleccionada.ServidorGA}\n" +
@@ -345,7 +345,7 @@ namespace ABGAlmacenPTL.Pages
                 }
                 catch (Exception exDB)
                 {
-                    await DisplayAlert("Advertencia", 
+                    await DisplayAlertAsync("Advertencia", 
                         $"Error al verificar conexión a base de datos: {exDB.Message}", 
                         "OK");
                 }
@@ -366,7 +366,7 @@ namespace ABGAlmacenPTL.Pages
             catch (Exception ex)
             {
                 lblEstado.Text = "Error de conexión";
-                await DisplayAlert("Error", 
+                await DisplayAlertAsync("Error", 
                     $"Error al iniciar sesión: {ex.Message}", 
                     "OK");
             }

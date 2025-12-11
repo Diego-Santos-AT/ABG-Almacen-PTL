@@ -21,7 +21,7 @@
 
             <!-- Campo de lectura de código y botón Salir -->
             <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="10">
-                <Frame Grid.Column="0" BackgroundColor="White" CornerRadius="5" Padding="0" HasShadow="True">
+                <Border Grid.Column="0" BackgroundColor="White" CornerRadius="5" Padding="0">
                     <Entry 
                         x:Name="txtLecturaCodigo"
                         Placeholder="Escanear Ubicación"
@@ -29,7 +29,7 @@
                         MaxLength="36"
                         Completed="OnCodigoCompleted"
                         TextChanged="OnCodigoTextChanged"/>
-                </Frame>
+                </Border>
                 
                 <Button 
                     Grid.Column="1"
@@ -46,7 +46,7 @@
             </Grid>
 
             <!-- Estado del BAC -->
-            <Frame Grid.Row="2" BackgroundColor="#C0C0C0" CornerRadius="8" Padding="15" HasShadow="True">
+            <Border Grid.Row="2" BackgroundColor="#C0C0C0" CornerRadius="8" Padding="15">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="Estado del BAC:" FontSize="14" FontAttributes="Bold"/>
                     
@@ -63,10 +63,10 @@
                         FontSize="14"
                         GroupName="Estado"/>
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
             <!-- Información del BAC -->
-            <Frame Grid.Row="3" BackgroundColor="#C0C0C0" CornerRadius="8" Padding="15" HasShadow="True">
+            <Border Grid.Row="3" BackgroundColor="#C0C0C0" CornerRadius="8" Padding="15">
                 <VerticalStackLayout Spacing="12">
                     
                     <!-- Ubicación -->
@@ -111,7 +111,7 @@
                     </Grid>
 
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
         </Grid>
     </ScrollView>
