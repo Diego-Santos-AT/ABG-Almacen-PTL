@@ -1,22 +1,25 @@
 using ABGAlmacenPTL.Pages.Generic;
 using ABGAlmacenPTL.Services;
 using ABGAlmacenPTL.Models;
+using ABGAlmacenPTL.Modules;
+using System.Data;
 
 namespace ABGAlmacenPTL.Pages.PTL
 {
     /// <summary>
     /// Formulario para ubicar BAC en el sistema PTL
     /// Migrado desde VB6 frmUbicarBAC.frm
+    /// Ahora usa stored procedures de SELENE para fidelidad 100% con VB6
     /// </summary>
     public partial class UbicarBACPage : ContentPage
     {
-        private readonly PTLService _ptlService;
+        private readonly PTLServiceEnhanced _ptlService;
         
         private string _ubicacionCodigo = string.Empty;
         private string _bacCodigo = string.Empty;
-        private EstadoBAC _estadoBAC = EstadoBAC.Abierto;
+        private string _estadoBAC = "ABIERTO";
 
-        public UbicarBACPage(PTLService ptlService)
+        public UbicarBACPage(PTLServiceEnhanced ptlService)
         {
             InitializeComponent();
             _ptlService = ptlService;
@@ -93,15 +96,18 @@ namespace ABGAlmacenPTL.Pages.PTL
                 int fil = int.Parse(ubicacionCodigo.Substring(6, 3));
                 int alt = int.Parse(ubicacionCodigo.Substring(9, 3));
 
-                // Buscar ubicación en BD
-                var ubicacion = await _ptlService.GetUbicacionByCodigoAsync(ubicacionCodigo);
+                // Usar stored procedure DameDatosUbicacionPTL (VB6-faithful)
+                var ubicacionData = await _ptlService.GetUbicacionDataAsync(ubicacionCodigo);
 
-                if (ubicacion != null)
+                if (ubicacionData != null && ubicacionData.Rows.Count > 0)
                 {
-                    // Verificar si ya tiene BAC asignado
-                    var bacEnUbicacion = await _ptlService.GetBACEnUbicacionAsync(ubicacionCodigo);
+                    var row = ubicacionData.Rows[0];
                     
-                    if (bacEnUbicacion == null)
+                    // Verificar si ya tiene BAC asignado
+                    bool tieneBAC = row.Table.Columns.Contains("TieneBAC") && 
+                                    Convert.ToBoolean(row["TieneBAC"] ?? false);
+                    
+                    if (!tieneBAC)
                     {
                         // Ubicación válida y libre
                         _ubicacionCodigo = ubicacionCodigo;
@@ -145,28 +151,27 @@ namespace ABGAlmacenPTL.Pages.PTL
         {
             try
             {
-                // Buscar BAC en BD
-                var bac = await _ptlService.GetBACByCodigoAsync(bacCodigo);
+                // Usar stored procedure DameDatosBACdePTL (VB6-faithful)
+                var bacData = await _ptlService.GetBACDataAsync(bacCodigo);
 
-                if (bac != null)
+                if (bacData != null && bacData.Rows.Count > 0)
                 {
+                    var row = bacData.Rows[0];
+                    
                     // Mostrar datos del BAC
                     _bacCodigo = bacCodigo;
-                    _estadoBAC = bac.Estado;
-
-                    var articulos = await _ptlService.GetArticulosEnBACAsync(bacCodigo);
-                    int totalUds = articulos.Sum(a => 1); // TODO: Sum actual quantities from junction table
+                    _estadoBAC = row["Estado"]?.ToString() ?? "ABIERTO";
 
                     RefrescarDatosBAC(
-                        bac: bac.CodigoBAC,
-                        estadoBAC: bac.Estado == EstadoBAC.Abierto ? "ABIERTO" : "CERRADO",
-                        grupo: bac.Grupo,
-                        tablilla: bac.Tablilla,
-                        uds: totalUds,
-                        peso: bac.Peso?.ToString("F2") ?? "0",
-                        volumen: bac.Volumen?.ToString("F3") ?? "0",
-                        tipoCaja: "STD", // TODO: Get from BAC type
-                        nombreCaja: "CAJA");
+                        bac: bacCodigo,
+                        estadoBAC: _estadoBAC,
+                        grupo: row["Grupo"]?.ToString(),
+                        tablilla: row["Tablilla"]?.ToString(),
+                        uds: row.Table.Columns.Contains("TotalUds") ? Convert.ToInt32(row["TotalUds"] ?? 0) : 0,
+                        peso: row.Table.Columns.Contains("Peso") ? (Convert.ToDecimal(row["Peso"] ?? 0)).ToString("F2") : "0",
+                        volumen: row.Table.Columns.Contains("Volumen") ? (Convert.ToDecimal(row["Volumen"] ?? 0)).ToString("F3") : "0",
+                        tipoCaja: row.Table.Columns.Contains("TipoCaja") ? row["TipoCaja"]?.ToString() ?? "STD" : "STD",
+                        nombreCaja: row.Table.Columns.Contains("NombreCaja") ? row["NombreCaja"]?.ToString() ?? "CAJA" : "CAJA");
 
                     // Si ya tenemos una ubicación, proceder a ubicar
                     if (!string.IsNullOrEmpty(_ubicacionCodigo))
@@ -198,15 +203,12 @@ namespace ABGAlmacenPTL.Pages.PTL
         {
             try
             {
-                // Obtener estado del BAC según selección
-                bool abrirBAC = rbAbrir.IsChecked;
-                EstadoBAC nuevoEstado = abrirBAC ? EstadoBAC.Abierto : EstadoBAC.Cerrado;
-
-                // Asignar BAC a ubicación
+                // Usar stored procedure UbicarBACenPTL (VB6-faithful)
+                // El stored procedure maneja el estado y toda la lógica de negocio
                 bool resultado = await _ptlService.AsignarBACaUbicacionAsync(
                     bacCodigo, 
-                    ubicacionCodigo, 
-                    nuevoEstado);
+                    ubicacionCodigo,
+                    Gestion.wPuestoTrabajo.Id); // Usar puesto de trabajo de la sesión
 
                 return resultado;
             }

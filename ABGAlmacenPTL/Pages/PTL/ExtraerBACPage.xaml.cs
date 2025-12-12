@@ -1,21 +1,24 @@
 using ABGAlmacenPTL.Pages.Generic;
 using ABGAlmacenPTL.Services;
 using ABGAlmacenPTL.Models;
+using ABGAlmacenPTL.Modules;
+using System.Data;
 
 namespace ABGAlmacenPTL.Pages.PTL
 {
     /// <summary>
     /// Formulario para extraer BAC del sistema PTL
     /// Migrado desde VB6 frmExtraerBAC.frm
+    /// Ahora usa stored procedures de SELENE para fidelidad 100% con VB6
     /// </summary>
     public partial class ExtraerBACPage : ContentPage
     {
-        private readonly PTLService _ptlService;
+        private readonly PTLServiceEnhanced _ptlService;
         
         private string _ubicacionCodigo = string.Empty;
         private string _bacCodigo = string.Empty;
 
-        public ExtraerBACPage(PTLService ptlService)
+        public ExtraerBACPage(PTLServiceEnhanced ptlService)
         {
             InitializeComponent();
             _ptlService = ptlService;
@@ -78,35 +81,42 @@ namespace ABGAlmacenPTL.Pages.PTL
                 int fil = int.Parse(ubicacionCodigo.Substring(6, 3));
                 int alt = int.Parse(ubicacionCodigo.Substring(9, 3));
 
-                // Buscar ubicación en BD
-                var ubicacion = await _ptlService.GetUbicacionByCodigoAsync(ubicacionCodigo);
+                // Usar stored procedure DameDatosUbicacionPTL (VB6-faithful)
+                var ubicacionData = await _ptlService.GetUbicacionDataAsync(ubicacionCodigo);
 
-                if (ubicacion != null)
+                if (ubicacionData != null && ubicacionData.Rows.Count > 0)
                 {
-                    // Buscar BAC en la ubicación
-                    var bac = await _ptlService.GetBACEnUbicacionAsync(ubicacionCodigo);
+                    var row = ubicacionData.Rows[0];
                     
-                    if (bac != null)
+                    // Verificar si tiene BAC asignado
+                    string? bacCodigo = row.Table.Columns.Contains("CodigoBAC") ? 
+                                      row["CodigoBAC"]?.ToString() : null;
+                    
+                    if (!string.IsNullOrEmpty(bacCodigo))
                     {
                         // Mostrar datos del BAC en la ubicación
                         _ubicacionCodigo = ubicacionCodigo;
-                        _bacCodigo = bac.CodigoBAC;
+                        _bacCodigo = bacCodigo;
 
                         lblUbicacion.Text = $"{alm:000}.{blo:000}.{fil:000}.{alt:000}";
                         
-                        var articulos = await _ptlService.GetArticulosEnBACAsync(bac.CodigoBAC);
-                        int totalUds = articulos.Count(); // TODO: Sum actual quantities from junction table
-
-                        RefrescarDatosBAC(
-                            bac: bac.CodigoBAC,
-                            estadoBAC: bac.Estado == EstadoBAC.Abierto ? "ABIERTO" : "CERRADO",
-                            grupo: bac.Grupo,
-                            tablilla: bac.Tablilla,
-                            uds: totalUds,
-                            peso: bac.Peso?.ToString("F2") ?? "0",
-                            volumen: bac.Volumen?.ToString("F3") ?? "0",
-                            tipoCaja: "STD", // TODO: Get from BAC type
-                            nombreCaja: "CAJA");
+                        // Obtener datos completos del BAC usando stored procedure
+                        var bacData = await _ptlService.GetBACDataAsync(bacCodigo);
+                        if (bacData != null && bacData.Rows.Count > 0)
+                        {
+                            var bacRow = bacData.Rows[0];
+                            
+                            RefrescarDatosBAC(
+                                bac: bacCodigo,
+                                estadoBAC: bacRow["Estado"]?.ToString() ?? "ABIERTO",
+                                grupo: bacRow["Grupo"]?.ToString(),
+                                tablilla: bacRow["Tablilla"]?.ToString(),
+                                uds: bacRow.Table.Columns.Contains("TotalUds") ? Convert.ToInt32(bacRow["TotalUds"] ?? 0) : 0,
+                                peso: bacRow.Table.Columns.Contains("Peso") ? (Convert.ToDecimal(bacRow["Peso"] ?? 0)).ToString("F2") : "0",
+                                volumen: bacRow.Table.Columns.Contains("Volumen") ? (Convert.ToDecimal(bacRow["Volumen"] ?? 0)).ToString("F3") : "0",
+                                tipoCaja: bacRow.Table.Columns.Contains("TipoCaja") ? bacRow["TipoCaja"]?.ToString() ?? "STD" : "STD",
+                                nombreCaja: bacRow.Table.Columns.Contains("NombreCaja") ? bacRow["NombreCaja"]?.ToString() ?? "CAJA" : "CAJA");
+                        }
 
                         // Confirmar extracción
                         bool confirmar = await DisplayAlertAsync(
@@ -117,7 +127,7 @@ namespace ABGAlmacenPTL.Pages.PTL
 
                         if (confirmar)
                         {
-                            bool extraido = await ExtraerBAC(_bacCodigo, _ubicacionCodigo);
+                            bool extraido = await ExtraerBAC(_bacCodigo);
                             if (extraido)
                             {
                                 await MensajePage.ShowAsync(
@@ -146,18 +156,15 @@ namespace ABGAlmacenPTL.Pages.PTL
             }
         }
 
-        private async Task<bool> ExtraerBAC(string bacCodigo, string ubicacionCodigo)
+        private async Task<bool> ExtraerBAC(string bacCodigo)
         {
             try
             {
-                // Obtener estado del BAC según selección
-                bool cerrarBAC = rbCerrar.IsChecked;
-                EstadoBAC nuevoEstado = cerrarBAC ? EstadoBAC.Cerrado : EstadoBAC.Abierto;
-
-                // Extraer BAC de ubicación
-                bool resultado = await _ptlService.ExtraerBACDeUbicacionAsync(
+                // Usar stored procedure ExtraerBACdePTL (VB6-faithful)
+                // El stored procedure maneja toda la lógica de negocio
+                bool resultado = await _ptlService.ExtraerBACAsync(
                     bacCodigo,
-                    nuevoEstado);
+                    Gestion.wPuestoTrabajo.Id); // Usar puesto de trabajo de la sesión
 
                 return resultado;
             }

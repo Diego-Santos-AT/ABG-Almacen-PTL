@@ -90,11 +90,16 @@ public static class MauiProgram
 		// Register database connection manager (VB6-faithful)
 		builder.Services.AddScoped<DatabaseConnectionManager>();
 		
+		// Register dynamic database services (VB6-faithful - stored procedures)
+		builder.Services.AddScoped<IDynamicDatabaseService, DynamicDatabaseService>();
+		builder.Services.AddScoped<PTLStoredProcedureService>();
+		
 		// Register repositories
 		builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 		
 		// Register services
 		builder.Services.AddScoped<PTLService>();
+		builder.Services.AddScoped<PTLServiceEnhanced>(); // Enhanced service with stored procedures
 
 		// Register pages
 		builder.Services.AddTransient<InicioPage>();

@@ -1,26 +1,30 @@
 using Microsoft.EntityFrameworkCore;
 using ABGAlmacenPTL.Data;
 using ABGAlmacenPTL.Models.Config;
+using System.Data;
 
 namespace ABGAlmacenPTL.Services;
 
 /// <summary>
 /// Servicio de autenticación
 /// Migrado desde VB6: frmInicio.frm - ValidaUsuario/ValidaContraseña
+/// Ahora usa stored procedures dinámicos de Config DB para fidelidad 100% con VB6
 /// </summary>
 public class AuthService
 {
     private readonly ConfigContext _configContext;
     private readonly ABGConfigService _abgConfig;
+    private readonly IDynamicDatabaseService _dbService;
     
     // Usuario actual de la sesión
     public Usuario? UsuarioActual { get; private set; }
     public Empresa? EmpresaActual { get; private set; }
     
-    public AuthService(ConfigContext configContext, ABGConfigService abgConfig)
+    public AuthService(ConfigContext configContext, ABGConfigService abgConfig, IDynamicDatabaseService dbService)
     {
         _configContext = configContext;
         _abgConfig = abgConfig;
+        _dbService = dbService;
     }
     
     /// <summary>
@@ -42,11 +46,42 @@ public class AuthService
     /// <summary>
     /// Busca y valida un usuario en la base de datos Config
     /// Migrado desde VB6: edC.BuscaUsuario txtUsuarios.Text
+    /// Ahora usa stored procedure BuscaUsuario de Config DB (VB6-faithful)
     /// </summary>
     public async Task<Usuario?> BuscarUsuarioAsync(string nombreUsuario)
     {
-        return await _configContext.Usuarios
-            .FirstOrDefaultAsync(u => u.NombreUsuario == nombreUsuario);
+        try
+        {
+            // Usar stored procedure BuscaUsuario de Config DB (como VB6)
+            var parameters = new Dictionary<string, object>
+            {
+                { "NombreUsuario", nombreUsuario }
+            };
+            
+            var result = await _dbService.ExecuteStoredProcedureAsync("BuscaUsuario", parameters, "Config");
+            
+            if (result.Rows.Count == 0)
+                return null;
+            
+            var row = result.Rows[0];
+            
+            // Mapear resultado a modelo Usuario
+            return new Usuario
+            {
+                UsuarioId = GetIntValue(row, "UsuarioId", "usuide"),
+                NombreUsuario = GetStringValue(row, "NombreUsuario", "usunom") ?? "",
+                Contraseña = GetStringValue(row, "Contraseña", "usucon"),
+                NombrePC = GetStringValue(row, "NombrePC", "usunpc"),
+                Instancias = GetNullableIntValue(row, "Instancias", "usuins")
+            };
+        }
+        catch (Exception ex)
+        {
+            // Fallback a EF Core si el stored procedure no existe o falla
+            System.Diagnostics.Debug.WriteLine($"Error usando stored procedure BuscaUsuario, fallback a EF Core: {ex.Message}");
+            return await _configContext.Usuarios
+                .FirstOrDefaultAsync(u => u.NombreUsuario == nombreUsuario);
+        }
     }
     
     /// <summary>
@@ -96,18 +131,54 @@ public class AuthService
     /// <summary>
     /// Obtiene las empresas a las que el usuario tiene acceso
     /// Migrado desde VB6: edC.DameEmpresasAccesoUsuario
+    /// Ahora usa stored procedure DameEmpresasAccesoUsuario de Config DB (VB6-faithful)
     /// </summary>
     public async Task<List<Empresa>> ObtenerEmpresasUsuarioAsync(int usuarioId)
     {
-        var empresasIds = await _configContext.UsuariosEmpresas
-            .Where(ue => ue.UsuarioId == usuarioId)
-            .Select(ue => ue.EmpresaId)
-            .ToListAsync();
-        
-        return await _configContext.Empresas
-            .Where(e => empresasIds.Contains(e.CodigoEmpresa) && e.Activa == true)
-            .OrderBy(e => e.NombreEmpresa)
-            .ToListAsync();
+        try
+        {
+            // Usar stored procedure DameEmpresasAccesoUsuario de Config DB (como VB6)
+            var parameters = new Dictionary<string, object>
+            {
+                { "UsuarioId", usuarioId }
+            };
+            
+            var result = await _dbService.ExecuteStoredProcedureAsync("DameEmpresasAccesoUsuario", parameters, "Config");
+            
+            var empresas = new List<Empresa>();
+            foreach (DataRow row in result.Rows)
+            {
+                empresas.Add(new Empresa
+                {
+                    CodigoEmpresa = GetIntValue(row, "CodigoEmpresa", "empcod"),
+                    NombreEmpresa = GetStringValue(row, "NombreEmpresa", "empnom") ?? "",
+                    BaseDatos = GetStringValue(row, "BaseDatos", "empbdd"),
+                    Usuario = GetStringValue(row, "Usuario", "empusr"),
+                    Clave = GetStringValue(row, "Clave", "empkey"),
+                    ServidorGA = GetStringValue(row, "ServidorGA", "empservidorga"),
+                    BaseDatosGA = GetStringValue(row, "BaseDatosGA", "empbga"),
+                    UsuarioGA = GetStringValue(row, "UsuarioGA", "empuga"),
+                    ClaveGA = GetStringValue(row, "ClaveGA", "empkga"),
+                    Activa = GetNullableBoolValue(row, "Activa", "empact")
+                });
+            }
+            
+            return empresas.OrderBy(e => e.NombreEmpresa).ToList();
+        }
+        catch (Exception ex)
+        {
+            // Fallback a EF Core si el stored procedure no existe o falla
+            System.Diagnostics.Debug.WriteLine($"Error usando stored procedure DameEmpresasAccesoUsuario, fallback a EF Core: {ex.Message}");
+            var empresasIds = await _configContext.UsuariosEmpresas
+                .Where(ue => ue.UsuarioId == usuarioId)
+                .Select(ue => ue.EmpresaId)
+                .ToListAsync();
+            
+            return await _configContext.Empresas
+                .Where(e => empresasIds.Contains(e.CodigoEmpresa) && e.Activa == true)
+                .OrderBy(e => e.NombreEmpresa)
+                .ToListAsync();
+        }
     }
     
     /// <summary>
@@ -201,5 +272,67 @@ public class AuthService
     {
         UsuarioActual = null;
         EmpresaActual = null;
+    }
+    
+    // Helper methods for safe DataRow value extraction
+    
+    /// <summary>
+    /// Obtiene un valor entero de una fila, probando múltiples nombres de columna
+    /// </summary>
+    private int GetIntValue(DataRow row, params string[] columnNames)
+    {
+        foreach (var colName in columnNames)
+        {
+            if (row.Table.Columns.Contains(colName) && row[colName] != DBNull.Value)
+            {
+                return Convert.ToInt32(row[colName]);
+            }
+        }
+        return 0;
+    }
+    
+    /// <summary>
+    /// Obtiene un valor entero nullable de una fila, probando múltiples nombres de columna
+    /// </summary>
+    private int? GetNullableIntValue(DataRow row, params string[] columnNames)
+    {
+        foreach (var colName in columnNames)
+        {
+            if (row.Table.Columns.Contains(colName) && row[colName] != DBNull.Value)
+            {
+                return Convert.ToInt32(row[colName]);
+            }
+        }
+        return null;
+    }
+    
+    /// <summary>
+    /// Obtiene un valor string de una fila, probando múltiples nombres de columna
+    /// </summary>
+    private string? GetStringValue(DataRow row, params string[] columnNames)
+    {
+        foreach (var colName in columnNames)
+        {
+            if (row.Table.Columns.Contains(colName) && row[colName] != DBNull.Value)
+            {
+                return row[colName].ToString();
+            }
+        }
+        return null;
+    }
+    
+    /// <summary>
+    /// Obtiene un valor boolean nullable de una fila, probando múltiples nombres de columna
+    /// </summary>
+    private bool? GetNullableBoolValue(DataRow row, params string[] columnNames)
+    {
+        foreach (var colName in columnNames)
+        {
+            if (row.Table.Columns.Contains(colName) && row[colName] != DBNull.Value)
+            {
+                return Convert.ToBoolean(row[colName]);
+            }
+        }
+        return true; // Default to true for Activa field
     }
 }
