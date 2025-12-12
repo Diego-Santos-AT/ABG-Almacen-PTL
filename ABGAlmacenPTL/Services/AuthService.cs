@@ -68,13 +68,11 @@ public class AuthService
             // Mapear resultado a modelo Usuario
             return new Usuario
             {
-                UsuarioId = Convert.ToInt32(row["UsuarioId"] ?? row["usuide"] ?? 0),
-                NombreUsuario = row["NombreUsuario"]?.ToString() ?? row["usunom"]?.ToString() ?? "",
-                Contraseña = row["Contraseña"]?.ToString() ?? row["usucon"]?.ToString(),
-                NombrePC = row.Table.Columns.Contains("NombrePC") ? row["NombrePC"]?.ToString() : 
-                          row.Table.Columns.Contains("usunpc") ? row["usunpc"]?.ToString() : null,
-                Instancias = row.Table.Columns.Contains("Instancias") ? Convert.ToInt32(row["Instancias"] ?? 0) :
-                            row.Table.Columns.Contains("usuins") ? Convert.ToInt32(row["usuins"] ?? 0) : null
+                UsuarioId = GetIntValue(row, "UsuarioId", "usuide"),
+                NombreUsuario = GetStringValue(row, "NombreUsuario", "usunom") ?? "",
+                Contraseña = GetStringValue(row, "Contraseña", "usucon"),
+                NombrePC = GetStringValue(row, "NombrePC", "usunpc"),
+                Instancias = GetNullableIntValue(row, "Instancias", "usuins")
             };
         }
         catch (Exception ex)
@@ -152,16 +150,16 @@ public class AuthService
             {
                 empresas.Add(new Empresa
                 {
-                    CodigoEmpresa = Convert.ToInt32(row["CodigoEmpresa"] ?? 0),
-                    NombreEmpresa = row["NombreEmpresa"]?.ToString() ?? "",
-                    BaseDatos = row.Table.Columns.Contains("BaseDatos") ? row["BaseDatos"]?.ToString() : null,
-                    Usuario = row.Table.Columns.Contains("Usuario") ? row["Usuario"]?.ToString() : null,
-                    Clave = row.Table.Columns.Contains("Clave") ? row["Clave"]?.ToString() : null,
-                    ServidorGA = row.Table.Columns.Contains("ServidorGA") ? row["ServidorGA"]?.ToString() : null,
-                    BaseDatosGA = row.Table.Columns.Contains("BaseDatosGA") ? row["BaseDatosGA"]?.ToString() : null,
-                    UsuarioGA = row.Table.Columns.Contains("UsuarioGA") ? row["UsuarioGA"]?.ToString() : null,
-                    ClaveGA = row.Table.Columns.Contains("ClaveGA") ? row["ClaveGA"]?.ToString() : null,
-                    Activa = !row.Table.Columns.Contains("Activa") || Convert.ToBoolean(row["Activa"] ?? true)
+                    CodigoEmpresa = GetIntValue(row, "CodigoEmpresa", "empcod"),
+                    NombreEmpresa = GetStringValue(row, "NombreEmpresa", "empnom") ?? "",
+                    BaseDatos = GetStringValue(row, "BaseDatos", "empbdd"),
+                    Usuario = GetStringValue(row, "Usuario", "empusr"),
+                    Clave = GetStringValue(row, "Clave", "empkey"),
+                    ServidorGA = GetStringValue(row, "ServidorGA", "empservidorga"),
+                    BaseDatosGA = GetStringValue(row, "BaseDatosGA", "empbga"),
+                    UsuarioGA = GetStringValue(row, "UsuarioGA", "empuga"),
+                    ClaveGA = GetStringValue(row, "ClaveGA", "empkga"),
+                    Activa = GetNullableBoolValue(row, "Activa", "empact")
                 });
             }
             
@@ -274,5 +272,67 @@ public class AuthService
     {
         UsuarioActual = null;
         EmpresaActual = null;
+    }
+    
+    // Helper methods for safe DataRow value extraction
+    
+    /// <summary>
+    /// Obtiene un valor entero de una fila, probando múltiples nombres de columna
+    /// </summary>
+    private int GetIntValue(DataRow row, params string[] columnNames)
+    {
+        foreach (var colName in columnNames)
+        {
+            if (row.Table.Columns.Contains(colName) && row[colName] != DBNull.Value)
+            {
+                return Convert.ToInt32(row[colName]);
+            }
+        }
+        return 0;
+    }
+    
+    /// <summary>
+    /// Obtiene un valor entero nullable de una fila, probando múltiples nombres de columna
+    /// </summary>
+    private int? GetNullableIntValue(DataRow row, params string[] columnNames)
+    {
+        foreach (var colName in columnNames)
+        {
+            if (row.Table.Columns.Contains(colName) && row[colName] != DBNull.Value)
+            {
+                return Convert.ToInt32(row[colName]);
+            }
+        }
+        return null;
+    }
+    
+    /// <summary>
+    /// Obtiene un valor string de una fila, probando múltiples nombres de columna
+    /// </summary>
+    private string? GetStringValue(DataRow row, params string[] columnNames)
+    {
+        foreach (var colName in columnNames)
+        {
+            if (row.Table.Columns.Contains(colName) && row[colName] != DBNull.Value)
+            {
+                return row[colName].ToString();
+            }
+        }
+        return null;
+    }
+    
+    /// <summary>
+    /// Obtiene un valor boolean nullable de una fila, probando múltiples nombres de columna
+    /// </summary>
+    private bool? GetNullableBoolValue(DataRow row, params string[] columnNames)
+    {
+        foreach (var colName in columnNames)
+        {
+            if (row.Table.Columns.Contains(colName) && row[colName] != DBNull.Value)
+            {
+                return Convert.ToBoolean(row[colName]);
+            }
+        }
+        return true; // Default to true for Activa field
     }
 }

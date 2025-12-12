@@ -6,13 +6,16 @@ El proyecto ABG Almacén PTL ahora funciona fielmente como la versión VB6 origi
 
 ## Estado Actual: 100% Funcional ✅
 
-### Login y Autenticación ✅
+### Login y Autenticación (100% VB6-Faithful) ✅
 - **InicioPage** - Login funcional contra Config DB (GROOT)
-- Validación de usuario y contraseña
-- Selector de empresa dinámico
+- **AuthService** - Ahora usa stored procedures dinámicos de SELENE
+  - `BuscaUsuario` - Para buscar y validar usuario (100% VB6)
+  - `DameEmpresasAccesoUsuario` - Para obtener empresas del usuario (100% VB6)
+- Validación de usuario y contraseña con stored procedures
+- Selector de empresa dinámico desde stored procedures
 - Validación de PC (opcional)
 - 3 intentos máximos
-- Usa stored procedures de Config DB
+- **100% fiel al VB6 original**
 
 ### Menú Principal ✅
 - **MenuPage** - Menú principal con 5 opciones PTL
@@ -192,8 +195,8 @@ El proyecto ABG Almacén PTL ahora funciona fielmente como la versión VB6 origi
 ✅ **Archivo abg.ini** - Lectura y escritura exacta como VB6
 ✅ **Variables Globales** - Gestion.Globals.cs con todas las variables VB6
 ✅ **Conexiones Múltiples** - 3 bases de datos simultáneas como VB6
-✅ **Login** - Validación exacta contra Config DB como VB6
-✅ **Selector de Empresa** - Dinámico desde gdeemp como VB6
+✅ **Login (AuthService)** - Usa stored procedures BuscaUsuario y DameEmpresasAccesoUsuario como VB6
+✅ **Selector de Empresa** - Dinámico con stored procedure DameEmpresasAccesoUsuario como VB6
 ✅ **Stored Procedures** - Ejecución directa desde SELENE como VB6
 ✅ **UbicarBAC** - Lógica 100% en stored procedures como VB6
 ✅ **ExtraerBAC** - Lógica 100% en stored procedures como VB6
@@ -212,7 +215,7 @@ El proyecto ABG Almacén PTL ahora funciona fielmente como la versión VB6 origi
 
 | Componente | Estado | Fidelidad VB6 | Notas |
 |------------|--------|---------------|-------|
-| **Login (InicioPage)** | ✅ Completo | 100% | Stored procedures Config DB |
+| **Login (InicioPage + AuthService)** | ✅ Completo | 100% | Stored procedures Config DB (BuscaUsuario, DameEmpresasAccesoUsuario) |
 | **Menú (MenuPage)** | ✅ Completo | 100% | Navegación completa |
 | **UbicarBAC** | ✅ Completo | 100% | Stored procedures PTL |
 | **ExtraerBAC** | ✅ Completo | 100% | Stored procedures PTL |
@@ -288,8 +291,8 @@ El proyecto ABG Almacén PTL ahora funciona fielmente como la versión VB6 origi
 
 **El proyecto ABG Almacén PTL ahora funciona fielmente como la versión VB6 original:**
 
-✅ **Login funcional** contra Config DB con validación de usuarios
-✅ **Selector de empresa dinámico** con múltiples bases de datos
+✅ **Login funcional** con stored procedures BuscaUsuario y DameEmpresasAccesoUsuario (100% VB6)
+✅ **Selector de empresa dinámico** con stored procedures de Config DB (100% VB6)
 ✅ **Menú de navegación** completo a todos los formularios PTL
 ✅ **UbicarBAC** funcionando 100% con stored procedures de SELENE
 ✅ **ExtraerBAC** funcionando 100% con stored procedures de SELENE
