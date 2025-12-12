@@ -99,6 +99,7 @@ public static class MauiProgram
 		
 		// Register services
 		builder.Services.AddScoped<PTLService>();
+		builder.Services.AddScoped<PTLServiceEnhanced>(); // Enhanced service with stored procedures
 
 		// Register pages
 		builder.Services.AddTransient<InicioPage>();
