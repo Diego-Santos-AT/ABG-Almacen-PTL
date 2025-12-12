@@ -48,7 +48,7 @@ namespace ABGAlmacenPTL.Services
                 using (var command = new SqlCommand(procedureName, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandTimeout = 30; // Timeout de 30 segundos
+                    command.CommandTimeout = _configService.BDDTime; // Timeout from abg.ini
 
                     // Agregar parámetros si existen
                     if (parameters != null)
@@ -84,7 +84,7 @@ namespace ABGAlmacenPTL.Services
                 using (var command = new SqlCommand(procedureName, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandTimeout = 30;
+                    command.CommandTimeout = _configService.BDDTime;
 
                     // Agregar parámetros si existen
                     if (parameters != null)
@@ -117,7 +117,7 @@ namespace ABGAlmacenPTL.Services
                 using (var command = new SqlCommand(procedureName, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.CommandTimeout = 30;
+                    command.CommandTimeout = _configService.BDDTime;
 
                     // Agregar parámetros si existen
                     if (parameters != null)
@@ -150,7 +150,7 @@ namespace ABGAlmacenPTL.Services
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.CommandType = CommandType.Text;
-                    command.CommandTimeout = 30;
+                    command.CommandTimeout = _configService.BDDTime;
 
                     // Agregar parámetros si existen
                     if (parameters != null)
@@ -184,7 +184,7 @@ namespace ABGAlmacenPTL.Services
                 var dict = new Dictionary<string, object>();
                 foreach (DataColumn column in dataTable.Columns)
                 {
-                    dict[column.ColumnName] = row[column] == DBNull.Value ? null! : row[column];
+                    dict[column.ColumnName] = row[column] == DBNull.Value ? (object?)null! : row[column];
                 }
                 results.Add(dict);
             }

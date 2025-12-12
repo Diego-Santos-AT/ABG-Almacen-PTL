@@ -23,6 +23,12 @@ namespace ABGAlmacenPTL.Services
         /// </summary>
         public async Task<int> UbicarBACenPTLAsync(string codigoBAC, string codigoUbicacion, int idPuesto)
         {
+            if (string.IsNullOrWhiteSpace(codigoBAC))
+                throw new ArgumentException("El código BAC no puede estar vacío", nameof(codigoBAC));
+            
+            if (string.IsNullOrWhiteSpace(codigoUbicacion))
+                throw new ArgumentException("El código de ubicación no puede estar vacío", nameof(codigoUbicacion));
+            
             var parameters = new Dictionary<string, object>
             {
                 { "CodigoBAC", codigoBAC },
